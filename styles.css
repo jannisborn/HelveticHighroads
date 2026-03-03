@@ -1,0 +1,727 @@
+:root {
+  --bg-0: #eef8f0;
+  --bg-1: #d5efdd;
+  --bg-2: #c0e7ce;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.9);
+  --ink: #132d22;
+  --ink-soft: #4d685b;
+  --line: rgba(21, 75, 49, 0.16);
+  --line-strong: rgba(21, 75, 49, 0.25);
+  --green-1: #2ea85f;
+  --green-2: #1f7f47;
+  --green-3: #90c95f;
+  --orange-1: #fc8f1f;
+  --orange-2: #e66e00;
+  --shadow: 0 20px 46px rgba(13, 42, 28, 0.16);
+  --shadow-soft: 0 10px 24px rgba(13, 42, 28, 0.09);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Outfit", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 9% 3%, rgba(252, 176, 62, 0.26), rgba(252, 176, 62, 0) 30%),
+    radial-gradient(circle at 93% 4%, rgba(66, 174, 96, 0.3), rgba(66, 174, 96, 0) 32%),
+    radial-gradient(circle at 86% 86%, rgba(31, 127, 71, 0.22), rgba(31, 127, 71, 0) 44%),
+    linear-gradient(160deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+  min-height: 100vh;
+}
+
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.33;
+  background-image:
+    linear-gradient(to right, rgba(20, 84, 54, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 84, 54, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+}
+
+.shell {
+  width: min(1240px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.topbar {
+  position: sticky;
+  top: 0.45rem;
+  z-index: 20;
+  margin-top: 0.45rem;
+  margin-bottom: 0.45rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.58rem 0.82rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(11px);
+  box-shadow: var(--shadow-soft);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 800;
+  font-family: "Sora", sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.brand-dot {
+  width: 0.66rem;
+  height: 0.66rem;
+  border-radius: 50%;
+  background: linear-gradient(130deg, var(--green-1), var(--green-2));
+  box-shadow: 0 0 0 0.18rem rgba(46, 168, 95, 0.2);
+}
+
+nav {
+  display: inline-flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.93rem;
+  padding: 0.32rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+nav a:hover {
+  color: var(--green-2);
+  border-color: rgba(31, 127, 71, 0.22);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.32fr 0.68fr;
+  gap: 0.9rem;
+  padding: 0.92rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 6% 12%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 48%),
+    linear-gradient(136deg, rgba(255, 255, 255, 0.74), rgba(230, 247, 236, 0.82));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.hero-copy {
+  align-self: center;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "Sora", sans-serif;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(1.7rem, 4.8vw, 2.9rem);
+  line-height: 1.04;
+  max-width: 14ch;
+}
+
+h2 {
+  font-size: clamp(1.45rem, 3.1vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.lead {
+  margin: 0.45rem 0 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: clamp(0.92rem, 1.7vw, 1.02rem);
+  line-height: 1.4;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 0.67rem 0.98rem;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(132deg, var(--green-1), var(--green-2));
+  box-shadow: 0 12px 24px rgba(31, 127, 71, 0.28);
+}
+
+.btn-ghost {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.88);
+  border-color: var(--line);
+}
+
+.hero-logo-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 170px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.45) 40%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.88), rgba(225, 246, 233, 0.9));
+}
+
+.hero-logo {
+  width: min(225px, 100%);
+  height: auto;
+  transform: translateY(4px);
+}
+
+.hero-progress {
+  margin-top: 0.6rem;
+}
+
+.hero-progress-title {
+  margin: 0;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.card {
+  margin-top: 1rem;
+  padding: 1.02rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  backdrop-filter: blur(3px);
+  box-shadow: var(--shadow-soft);
+}
+
+.map-section {
+  margin-top: 0.72rem;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+a,
+.section-head a {
+  color: var(--green-2);
+  font-weight: 700;
+}
+
+.map-unit-note {
+  margin: 0.45rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.89rem;
+}
+
+.map-frame-wrap {
+  margin-top: 0.78rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: #d6eadc;
+}
+
+.map-frame-wrap iframe {
+  width: 100%;
+  height: min(72vh, 690px);
+  border: 0;
+  display: block;
+}
+
+.stats {
+  margin-top: 0.45rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.48rem;
+}
+
+.stat {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.55rem 0.6rem;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.stat-value {
+  margin: 0.16rem 0 0;
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--green-2);
+}
+
+.progress-track {
+  margin-top: 0;
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #d4e8d9;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green-3), var(--green-1));
+  transition: width 0.35s ease;
+}
+
+.progress-row {
+  margin-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.progress-pct {
+  margin: 0;
+  min-width: 2.7rem;
+  text-align: right;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+p {
+  margin: 0 0 0.7rem;
+  line-height: 1.55;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.rule-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.rule-list li {
+  position: relative;
+  padding-left: 1.15rem;
+}
+
+.rule-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.56rem;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 50%;
+  background: linear-gradient(130deg, var(--green-1), var(--green-2));
+}
+
+.pass-grid {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.86rem;
+}
+
+.pass-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.pass-card img {
+  display: block;
+  width: 100%;
+  height: 195px;
+  object-fit: cover;
+}
+
+.pass-card .meta {
+  padding: 0.68rem 0.74rem 0.78rem;
+}
+
+.pass-card .name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.pass-card .source {
+  margin: 0.25rem 0 0;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.strava-section {
+  background:
+    radial-gradient(circle at 4% 8%, rgba(255, 212, 142, 0.55), rgba(255, 212, 142, 0) 38%),
+    linear-gradient(142deg, rgba(255, 248, 235, 0.92), rgba(255, 236, 204, 0.9));
+  border-color: rgba(220, 137, 43, 0.35);
+}
+
+.strava-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #964600;
+}
+
+.strava-logo {
+  width: 4.26rem;
+  height: 4.26rem;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.strava-section a {
+  color: var(--orange-2);
+}
+
+.ride-list {
+  margin-top: 0.54rem;
+  display: grid;
+  gap: 0.72rem;
+}
+
+.ride-card {
+  border: 1px solid rgba(218, 143, 59, 0.4);
+  border-radius: 14px;
+  padding: 0.84rem;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.ride-card .title {
+  margin: 0 0 0.25rem;
+  font-weight: 800;
+}
+
+.ride-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem 0.74rem;
+}
+
+.small {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.table-wrap {
+  margin-top: 0.62rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.58rem 0.36rem;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+td {
+  font-size: 0.93rem;
+}
+
+.col-completed,
+.col-strava,
+.completed-cell,
+.strava-cell {
+  text-align: center;
+}
+
+.strava-th-logo {
+  width: 3.15rem;
+  height: 3.15rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.complete-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.complete-icon.pending {
+  color: #d11f1f;
+  background: rgba(209, 31, 31, 0.1);
+  border: 1px solid rgba(209, 31, 31, 0.26);
+}
+
+.complete-icon.done {
+  color: #187436;
+  background: rgba(24, 116, 54, 0.12);
+  border: 1px solid rgba(24, 116, 54, 0.25);
+}
+
+.strava-row-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.strava-row-logo {
+  width: 3.3rem;
+  height: 3.3rem;
+  display: block;
+}
+
+.strava-row-logo-muted {
+  opacity: 0.42;
+}
+
+.strava-empty {
+  color: var(--ink-soft);
+  opacity: 0.65;
+  font-weight: 700;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  padding: 0.16rem 0.45rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status.done {
+  color: #187436;
+  background: rgba(24, 116, 54, 0.11);
+}
+
+.status.pending {
+  color: #4e6158;
+  background: rgba(87, 107, 97, 0.1);
+}
+
+.footer {
+  margin: 1rem auto 1.4rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.hero,
+.card,
+.stat,
+.pass-card,
+.ride-card {
+  animation: rise-in 0.46s ease both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1110px) {
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  .shell {
+    width: min(1240px, calc(100% - 1.2rem));
+  }
+
+  .topbar {
+    position: static;
+    border-radius: 18px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-logo-wrap {
+    order: -1;
+  }
+
+  .pass-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ride-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  table {
+    min-width: 620px;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .strava-logo {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .strava-th-logo {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .strava-row-logo {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: min(1240px, calc(100% - 0.9rem));
+  }
+
+  nav {
+    display: none;
+  }
+
+  .stats,
+  .pass-grid,
+  .ride-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-frame-wrap iframe {
+    height: 390px;
+  }
+
+  table {
+    min-width: 520px;
+  }
+
+  th,
+  td {
+    padding: 0.42rem 0.22rem;
+  }
+
+  th {
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    font-size: 0.82rem;
+  }
+
+  .strava-title {
+    gap: 0.35rem;
+  }
+
+  .strava-logo {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .strava-th-logo {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .strava-row-logo {
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .complete-icon {
+    width: 1.02rem;
+    height: 1.02rem;
+    font-size: 0.76rem;
+  }
+
+  .progress-pct {
+    min-width: 2.2rem;
+    font-size: 0.68rem;
+  }
+
+  .col-completed,
+  .col-strava,
+  .completed-cell,
+  .strava-cell {
+    width: 2.4rem;
+  }
+}

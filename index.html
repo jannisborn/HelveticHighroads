@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Helvetic Highroads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <header class="topbar shell">
+    <a class="brand" href="#">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Helvetic Highlands
+    </a>
+    <nav aria-label="Main sections">
+      <a href="#map">Map</a>
+      <a href="#story">Story</a>
+      <a href="#cantons">Strava & Tracker</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Helvetic Highlands</h1>
+        <p class="lead">Riding the highest paved road in all 26 Swiss cantons in one contiguous line!</p>
+        <div class="hero-progress">
+          <p class="hero-progress-title">Progress Dashboard</p>
+          <div class="stats" id="stats"></div>
+        </div>
+      </div>
+      <div class="hero-logo-wrap">
+        <img src="./assets/logo.png" alt="Helvetic Highroads logo" class="hero-logo">
+      </div>
+    </section>
+
+    <section class="card map-section" id="map">
+      <div class="section-head">
+        <h2>Project Overview Map</h2>
+        <a href="https://www.komoot.com/tour/2745092627?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP&ref=wtd" target="_blank" rel="noopener noreferrer">Open Komoot tour</a>
+      </div>
+      <p class="map-unit-note">Komoot preview shows metric values (km / m).</p>
+      <div class="map-frame-wrap">
+        <iframe
+          title="Helvetic Highroads Komoot Tour"
+          src="https://www.komoot.com/de-de/tour/2745092627/embed?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP"
+          loading="lazy"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="card" id="story">
+      <h2>Story</h2>
+      <p>
+        <strong>Mathis</strong> and <strong>Jannis</strong> ride to the highest paved road in every Swiss canton and leave a Helvetic Highroads sticker at each top.
+      </p>
+      <p>
+        This idea comes from a short film from the
+        <a href="https://de.eoft.eu/en" target="_blank" rel="noopener noreferrer">European Outdoor Film Tour (EOFT)</a>,
+        where Tobi climbed the highest point of each canton and celebrated with a Gipfeli ritual.
+      </p>
+      <p>
+        Tobi's site:
+        <a href="https://tobiasrenggli.ch/about.html" target="_blank" rel="noopener noreferrer">tobiasrenggli.ch/about.html</a>
+      </p>
+    </section>
+
+    <section class="card" id="rules">
+      <h2>Rules</h2>
+      <ul class="rule-list">
+        <li>Ride throughout the year</li>
+        <li>Start each ride where the previous ride ended</li>
+        <li>Do not ride the same road twice </li>
+        <li>Do not cross your own track</li>
+        <li>Visit each neighboring country at least once: Germany, France, Italy, Austria, and Liechtenstein</li>
+        <li>Reach at least one canton peak on every ride</li>
+      </ul>
+    </section>
+
+    <section class="card" id="passes">
+      <div class="section-head">
+        <h2>Iconic Passes On The Route</h2>
+      </div>
+      <div class="pass-grid" id="pass-grid"></div>
+    </section>
+
+    <section class="card strava-section" id="cantons">
+      <h2 class="strava-title">
+        <img class="strava-logo" src="./assets/strava-logo.png" alt="" aria-hidden="true">
+        Canton Peak Tracker
+      </h2>
+      <p class="muted">Counter-clockwise order: start in Zürich and then Schaffhausen. Red cross = pending, green check = completed.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Canton</th>
+              <th>Peak Road</th>
+              <th>Altitude (m)</th>
+              <th class="col-completed">Completed</th>
+              <th class="col-strava"><img class="strava-th-logo" src="./assets/strava-logo.png" alt="Strava"></th>
+            </tr>
+          </thead>
+          <tbody id="canton-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <p>Copyright &copy; Jannis Born</p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
