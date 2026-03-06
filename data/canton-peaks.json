@@ -4,7 +4,8 @@
     "canton": "Schaffhausen",
     "peak": "Schmidshau",
     "altitudeM": 870,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/17579373613"
   },
   {
     "order": 2,
@@ -81,14 +82,16 @@
     "canton": "Ticino",
     "peak": "Nufenen Pass",
     "altitudeM": 2478,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/16809539577"
   },
   {
     "order": 13,
     "canton": "Uri",
     "peak": "Furka Pass",
     "altitudeM": 2429,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/16809539577"
   },
   {
     "order": 14,

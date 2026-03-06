@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "name": "Foggy even on Zurichberg but happy that the bike is fixed",
+    "date": "2025-12-22",
+    "distanceKm": 33.21,
+    "elevationM": 449,
+    "cantons": [
+      "Ticino",
+      "Uri"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/16809539577",
+    "stravaActivityId": 16809539577
+  },
+  {
+    "name": "IBM",
+    "date": "2026-03-02",
+    "distanceKm": 20.157,
+    "elevationM": 215,
+    "cantons": [
+      "Schaffhausen"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/17579373613",
+    "stravaActivityId": 17579373613
+  }
+]
