@@ -107,4 +107,4 @@ Notes:
 
 - The repo remote should use SSH so `git push` can authenticate non-interactively.
 - GitHub Pages must already publish from the branch you push to.
-- The script commits `data/rides.json`, `data/canton-peaks.json`, and `data/state.json` when they change.
+- The script only publishes when `data/rides.json` or `data/canton-peaks.json` changes. `data/state.json` stays local-only unless a real website-data update is being committed.
