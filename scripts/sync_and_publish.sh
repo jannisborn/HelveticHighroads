@@ -21,6 +21,36 @@ trap cleanup EXIT
 
 cd "${REPO_ROOT}"
 
+current_branch() {
+  local branch
+
+  branch="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+  if [ -z "${branch}" ]; then
+    branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  fi
+  if [ -z "${branch}" ] || [ "${branch}" = "HEAD" ]; then
+    branch="main"
+  fi
+
+  printf '%s\n' "${branch}"
+}
+
+push_branch_if_needed() {
+  local branch ahead_count
+
+  branch="$(current_branch)"
+
+  if git rev-parse --verify --quiet "@{u}" >/dev/null 2>&1; then
+    ahead_count="$(git rev-list --count "@{u}..HEAD")"
+    if [ "${ahead_count}" = "0" ]; then
+      echo "No commits to push."
+      return 0
+    fi
+  fi
+
+  git push origin "${branch}"
+}
+
 if command -v uv >/dev/null 2>&1; then
   uv run --with tqdm python3 scripts/sync_strava.py --max-pages 5
 else
@@ -31,8 +61,9 @@ git add data/rides.json data/canton-peaks.json data/state.json
 
 if git diff --cached --quiet -- data/rides.json data/canton-peaks.json data/state.json; then
   echo "No website data changes to publish."
+  push_branch_if_needed
   exit 0
 fi
 
 git commit -m "chore: sync Strava website data"
-git push origin "$(git branch --show-current)"
+push_branch_if_needed
