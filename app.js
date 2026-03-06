@@ -1,58 +1,22 @@
-const project = {
-  totalDistanceKm: 2010.9096811404852,
-  totalElevationM: 39219.78116423186,
-  komootTourUrl: "https://www.komoot.com/tour/2745092627?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP&ref=wtd",
-  neighboringCountries: ["Germany", "France", "Italy", "Austria", "Liechtenstein"]
+let project = null;
+let rides = [];
+let cantonPeaks = [];
+let passGallery = [];
+
+const dataFiles = {
+  project: "./data/project.json",
+  rides: "./data/rides.json",
+  cantonPeaks: "./data/canton-peaks.json",
+  passGallery: "./data/pass-gallery.json"
 };
 
-const rides = [];
-
-const cantonPeaks = [
-  { order: 1, canton: "Schaffhausen", peak: "Schmidshau", altitudeM: 870, done: false },
-  { order: 2, canton: "Aargau", peak: "Salhöhe Pass", altitudeM: 779, done: false },
-  { order: 3, canton: "Basel-Stadt", peak: "St. Chrischona", altitudeM: 522, done: false },
-  { order: 4, canton: "Basel-Landschaft", peak: "Waldweid Restaurant", altitudeM: 1023, done: false },
-  { order: 5, canton: "Solothurn", peak: "Obergrenchenberg", altitudeM: 1358, done: false },
-  { order: 6, canton: "Jura", peak: "Le point de vue", altitudeM: 1177, done: false },
-  { order: 7, canton: "Neuchâtel", peak: "Chasseral", altitudeM: 1607, done: false },
-  { order: 8, canton: "Geneva", peak: "Moniaz", altitudeM: 517, done: false },
-  { order: 9, canton: "Fribourg", peak: "Salzmatt Bergsommer", altitudeM: 1637, done: false },
-  { order: 10, canton: "Vaud", peak: "Col de Bretaye", altitudeM: 1805, done: false },
-  { order: 11, canton: "Valais", peak: "Nufenen Pass", altitudeM: 2478, done: false },
-  { order: 12, canton: "Ticino", peak: "Nufenen Pass", altitudeM: 2478, done: false },
-  { order: 13, canton: "Uri", peak: "Furka Pass", altitudeM: 2429, done: false },
-  { order: 14, canton: "Bern", peak: "Oberaar Restaurant", altitudeM: 2382, done: false },
-  { order: 15, canton: "Lucerne", peak: "Glaubenberg Pass", altitudeM: 1543, done: false },
-  { order: 16, canton: "Obwalden", peak: "Tannensee", altitudeM: 1976, done: false },
-  { order: 17, canton: "Nidwalden", peak: "Acherli Pass", altitudeM: 1398, done: false },
-  { order: 18, canton: "Glarus", peak: "Klausen Pass", altitudeM: 1300, done: false },
-  { order: 19, canton: "Graubünden", peak: "Umbrail Pass", altitudeM: 2501, done: false },
-  { order: 20, canton: "Appenzell Innerrhoden", peak: "Berggasthaus Scheidegg", altitudeM: 1353, done: false },
-  { order: 21, canton: "Appenzell Ausserrhoden", peak: "Schwägalp Pass", altitudeM: 1299, done: false },
-  { order: 22, canton: "St. Gallen", peak: "Vorder Höhi Pass", altitudeM: 1537, done: false },
-  { order: 23, canton: "Schwyz", peak: "Wildspitz", altitudeM: 1580, done: false },
-  { order: 24, canton: "Zug", peak: "Gottschalkenberg", altitudeM: 1164, done: false },
-  { order: 25, canton: "Zürich", peak: "Alp Scheidegg", altitudeM: 1196, done: false },
-  { order: 26, canton: "Thurgau", peak: "Sternenberg Pass", altitudeM: 952, done: false }
-];
-
-const passGallery = [
-  {
-    name: "Furka Pass",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Furkapass%20westside.jpg",
-    sourceUrl: "https://en.wikipedia.org/wiki/Furka_Pass"
-  },
-  {
-    name: "Nufenen Pass",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Nufenenpass-restaurant.jpg",
-    sourceUrl: "https://en.wikipedia.org/wiki/Nufenen_Pass"
-  },
-  {
-    name: "Umbrail Pass",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Umbrail.jpg",
-    sourceUrl: "https://en.wikipedia.org/wiki/Umbrail_Pass"
+async function loadJson(path) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Failed to load ${path}: ${response.status} ${response.statusText}`);
   }
-];
+  return response.json();
+}
 
 function formatNumber(value, digits = 0) {
   return new Intl.NumberFormat("en-CH", {
@@ -65,6 +29,46 @@ function clampPercent(value) {
   return Math.max(0, Math.min(100, value));
 }
 
+function buildKomootEmbedUrl(tourUrl, locale = "de-de") {
+  try {
+    const url = new URL(tourUrl);
+    const tourMatch = url.pathname.match(/\/tour\/(\d+)/);
+    if (!tourMatch) {
+      return null;
+    }
+
+    const tourId = tourMatch[1];
+    const shareToken = url.searchParams.get("share_token");
+    const base = `https://www.komoot.com/${locale}/tour/${tourId}/embed`;
+
+    if (!shareToken) {
+      return base;
+    }
+    return `${base}?share_token=${encodeURIComponent(shareToken)}`;
+  } catch (_error) {
+    return null;
+  }
+}
+
+function renderKomootMap() {
+  const mapLink = document.getElementById("komoot-tour-link");
+  const mapEmbed = document.getElementById("komoot-tour-embed");
+
+  if (mapLink && project?.komootTourUrl) {
+    mapLink.href = project.komootTourUrl;
+  }
+
+  const localeFromData =
+    typeof project?.komootEmbedLocale === "string" && project.komootEmbedLocale.trim()
+      ? project.komootEmbedLocale.trim().toLowerCase()
+      : "de-de";
+
+  const embedUrl = buildKomootEmbedUrl(project?.komootTourUrl || "", localeFromData);
+  if (mapEmbed && embedUrl) {
+    mapEmbed.src = embedUrl;
+  }
+}
+
 function renderStats() {
   const statsHost = document.getElementById("stats");
 
@@ -72,8 +76,14 @@ function renderStats() {
   const completedKm = rides.reduce((sum, r) => sum + (r.distanceKm || 0), 0);
   const completedElevation = rides.reduce((sum, r) => sum + (r.elevationM || 0), 0);
 
-  const countriesVisited = new Set();
-  rides.forEach((ride) => (ride.countriesVisited || []).forEach((country) => countriesVisited.add(country)));
+  const countriesMentioned = new Set();
+  rides.forEach((ride) => {
+    const countries =
+      Array.isArray(ride.countriesVisited) && ride.countriesVisited.length
+        ? ride.countriesVisited
+        : ["Switzerland"];
+    countries.forEach((country) => countriesMentioned.add(country));
+  });
 
   const kmProgressPct = clampPercent((completedKm / project.totalDistanceKm) * 100);
   const elevProgressPct = clampPercent((completedElevation / project.totalElevationM) * 100);
@@ -88,8 +98,8 @@ function renderStats() {
       value: `${rides.length}`
     },
     {
-      label: "Countries Visited",
-      value: `${countriesVisited.size} / ${project.neighboringCountries.length}`
+      label: "Countries visited",
+      value: `${countriesMentioned.size}`
     },
     {
       label: "KM Progress",
@@ -179,8 +189,8 @@ function renderCantons() {
     .sort((a, b) => a.order - b.order)
     .map((c) => {
       const completedIcon = c.done
-        ? '<span class="complete-icon done" aria-label="Completed">✓</span>'
-        : '<span class="complete-icon pending" aria-label="Not completed">✗</span>';
+        ? '<span class="complete-icon done" aria-label="Completed">✅</span>'
+        : '<span class="complete-icon pending" aria-label="Not completed">❌</span>';
 
       let stravaCell = '<span class="strava-empty">-</span>';
       if (c.done) {
@@ -203,7 +213,43 @@ function renderCantons() {
     .join("");
 }
 
-renderStats();
-renderPassGallery();
-renderRides();
-renderCantons();
+function showDataLoadError(message) {
+  const statsHost = document.getElementById("stats");
+  if (!statsHost) {
+    return;
+  }
+
+  statsHost.innerHTML = `
+    <article class="stat">
+      <p class="stat-label">Data Load Error</p>
+      <p class="stat-value">${message}</p>
+    </article>
+  `;
+}
+
+async function init() {
+  try {
+    const [projectData, ridesData, cantonPeaksData, passGalleryData] = await Promise.all([
+      loadJson(dataFiles.project),
+      loadJson(dataFiles.rides),
+      loadJson(dataFiles.cantonPeaks),
+      loadJson(dataFiles.passGallery)
+    ]);
+
+    project = projectData;
+    rides = Array.isArray(ridesData) ? ridesData : [];
+    cantonPeaks = Array.isArray(cantonPeaksData) ? cantonPeaksData : [];
+    passGallery = Array.isArray(passGalleryData) ? passGalleryData : [];
+
+    renderKomootMap();
+    renderStats();
+    renderPassGallery();
+    renderRides();
+    renderCantons();
+  } catch (error) {
+    console.error("Failed to initialize dashboard data.", error);
+    showDataLoadError("Could not load data files. Start a local server and reload.");
+  }
+}
+
+init();

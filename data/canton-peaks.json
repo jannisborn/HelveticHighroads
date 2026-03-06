@@ -1,0 +1,184 @@
+[
+  {
+    "order": 1,
+    "canton": "Schaffhausen",
+    "peak": "Schmidshau",
+    "altitudeM": 870,
+    "done": false
+  },
+  {
+    "order": 2,
+    "canton": "Aargau",
+    "peak": "Salhöhe Pass",
+    "altitudeM": 779,
+    "done": false
+  },
+  {
+    "order": 3,
+    "canton": "Basel Stadt",
+    "peak": "St. Chrischona",
+    "altitudeM": 522,
+    "done": false
+  },
+  {
+    "order": 4,
+    "canton": "Basel Land",
+    "peak": "Waldweid Restaurant",
+    "altitudeM": 1023,
+    "done": false
+  },
+  {
+    "order": 5,
+    "canton": "Solothurn",
+    "peak": "Obergrenchenberg",
+    "altitudeM": 1358,
+    "done": false
+  },
+  {
+    "order": 6,
+    "canton": "Jura",
+    "peak": "Le point de vue",
+    "altitudeM": 1177,
+    "done": false
+  },
+  {
+    "order": 7,
+    "canton": "Neuchâtel",
+    "peak": "Chasseral",
+    "altitudeM": 1607,
+    "done": false
+  },
+  {
+    "order": 8,
+    "canton": "Genève",
+    "peak": "Moniaz",
+    "altitudeM": 517,
+    "done": false
+  },
+  {
+    "order": 9,
+    "canton": "Fribourg",
+    "peak": "Salzmatt Bergsommer",
+    "altitudeM": 1637,
+    "done": false
+  },
+  {
+    "order": 10,
+    "canton": "Vaud",
+    "peak": "Col de Bretaye",
+    "altitudeM": 1805,
+    "done": false
+  },
+  {
+    "order": 11,
+    "canton": "Valais",
+    "peak": "Nufenen Pass",
+    "altitudeM": 2478,
+    "done": false
+  },
+  {
+    "order": 12,
+    "canton": "Ticino",
+    "peak": "Nufenen Pass",
+    "altitudeM": 2478,
+    "done": false
+  },
+  {
+    "order": 13,
+    "canton": "Uri",
+    "peak": "Furka Pass",
+    "altitudeM": 2429,
+    "done": false
+  },
+  {
+    "order": 14,
+    "canton": "Bern",
+    "peak": "Oberaar Restaurant",
+    "altitudeM": 2382,
+    "done": false
+  },
+  {
+    "order": 15,
+    "canton": "Luzern",
+    "peak": "Glaubenberg Pass",
+    "altitudeM": 1543,
+    "done": false
+  },
+  {
+    "order": 16,
+    "canton": "Obwalden",
+    "peak": "Tannensee",
+    "altitudeM": 1976,
+    "done": false
+  },
+  {
+    "order": 17,
+    "canton": "Nidwalden",
+    "peak": "Acherli Pass",
+    "altitudeM": 1398,
+    "done": false
+  },
+  {
+    "order": 18,
+    "canton": "Glarus",
+    "peak": "Klausen Pass",
+    "altitudeM": 1300,
+    "done": false
+  },
+  {
+    "order": 19,
+    "canton": "Graubünden",
+    "peak": "Umbrail Pass",
+    "altitudeM": 2501,
+    "done": false
+  },
+  {
+    "order": 20,
+    "canton": "Appenzell Innerrhoden",
+    "peak": "Berggasthaus Scheidegg",
+    "altitudeM": 1353,
+    "done": false
+  },
+  {
+    "order": 21,
+    "canton": "Appenzell Ausserrhoden",
+    "peak": "Schwägalp Pass",
+    "altitudeM": 1299,
+    "done": false
+  },
+  {
+    "order": 22,
+    "canton": "St. Gallen",
+    "peak": "Vorder Höhi Pass",
+    "altitudeM": 1537,
+    "done": false
+  },
+  {
+    "order": 23,
+    "canton": "Schwyz",
+    "peak": "Wildspitz",
+    "altitudeM": 1580,
+    "done": false
+  },
+  {
+    "order": 24,
+    "canton": "Zug",
+    "peak": "Gottschalkenberg",
+    "altitudeM": 1164,
+    "done": false
+  },
+  {
+    "order": 25,
+    "canton": "Zürich",
+    "peak": "Alp Scheidegg",
+    "altitudeM": 1196,
+    "done": false
+  },
+  {
+    "order": 26,
+    "canton": "Thurgau",
+    "peak": "Sternenberg Pass",
+    "altitudeM": 952,
+    "done": false
+  }
+]

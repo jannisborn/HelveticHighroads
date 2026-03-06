@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Furka Pass",
+    "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Furkapass%20westside.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Furka_Pass"
+  },
+  {
+    "name": "Nufenen Pass",
+    "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Nufenenpass-restaurant.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Nufenen_Pass"
+  },
+  {
+    "name": "Umbrail Pass",
+    "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Umbrail.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Umbrail_Pass"
+  }
+]

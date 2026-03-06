@@ -15,7 +15,7 @@
   <header class="topbar shell">
     <a class="brand" href="#">
       <span class="brand-dot" aria-hidden="true"></span>
-      Helvetic Highlands
+      Helvetic Highroads
     </a>
     <nav aria-label="Main sections">
       <a href="#map">Map</a>
@@ -27,7 +27,7 @@
   <main class="shell">
     <section class="hero">
       <div class="hero-copy">
-        <h1>Helvetic Highlands</h1>
+        <h1>Helvetic Highroads</h1>
         <p class="lead">Riding the highest paved road in all 26 Swiss cantons in one contiguous line!</p>
         <div class="hero-progress">
           <p class="hero-progress-title">Progress Dashboard</p>
@@ -42,13 +42,13 @@
     <section class="card map-section" id="map">
       <div class="section-head">
         <h2>Project Overview Map</h2>
-        <a href="https://www.komoot.com/tour/2745092627?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP&ref=wtd" target="_blank" rel="noopener noreferrer">Open Komoot tour</a>
+        <a id="komoot-tour-link" href="#" target="_blank" rel="noopener noreferrer">Open Komoot tour</a>
       </div>
-      <p class="map-unit-note">Komoot preview shows metric values (km / m).</p>
       <div class="map-frame-wrap">
         <iframe
+          id="komoot-tour-embed"
           title="Helvetic Highroads Komoot Tour"
-          src="https://www.komoot.com/de-de/tour/2745092627/embed?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP"
+          src="about:blank"
           loading="lazy"
           allowfullscreen
         ></iframe>
@@ -95,7 +95,6 @@
         <img class="strava-logo" src="./assets/strava-logo.png" alt="" aria-hidden="true">
         Canton Peak Tracker
       </h2>
-      <p class="muted">Counter-clockwise order: start in Zürich and then Schaffhausen. Red cross = pending, green check = completed.</p>
       <div class="table-wrap">
         <table>
           <thead>
