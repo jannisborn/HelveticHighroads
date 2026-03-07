@@ -1,2 +1,17 @@
 [
+  {
+    "name": "🚴🗻Helvetic Highroads Stage 1: ZRH ➡️ Koblenz via Schmidshau",
+    "date": "2026-03-07",
+    "distanceKm": 100.824,
+    "elevationM": 1041,
+    "cantons": [
+      "Schaffhausen"
+    ],
+    "countriesVisited": [
+      "Switzerland",
+      "Germany"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/17641922761",
+    "stravaActivityId": 17641922761
+  }
 ]
