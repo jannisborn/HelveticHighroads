@@ -4,8 +4,8 @@
     "canton": "Schaffhausen",
     "peak": "Schmidshau",
     "altitudeM": 870,
-    "done": false,
-    "stravaUrl": "https://www.strava.com/activities/17579373613"
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/17634421553"
   },
   {
     "order": 2,
@@ -175,7 +175,8 @@
     "canton": "Zürich",
     "peak": "Alp Scheidegg",
     "altitudeM": 1196,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/17634421553"
   },
   {
     "order": 26,
