@@ -267,6 +267,176 @@ a,
   display: block;
 }
 
+.profile-section {
+  background:
+    radial-gradient(circle at 7% 8%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 36%),
+    linear-gradient(145deg, rgba(247, 252, 248, 0.94), rgba(229, 245, 234, 0.92));
+}
+
+.profile-shell {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(241, 249, 243, 0.96)),
+    linear-gradient(135deg, rgba(46, 168, 95, 0.08), rgba(31, 127, 71, 0.02));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#route-profile-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.profile-bg {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.profile-grid-line {
+  stroke: rgba(74, 84, 79, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 4 8;
+}
+
+.profile-grid-line-key {
+  stroke: rgba(74, 84, 79, 0.34);
+  stroke-width: 1.55;
+}
+
+.profile-grid-line-mid {
+  stroke: rgba(74, 84, 79, 0.26);
+  stroke-width: 1.35;
+}
+
+.profile-baseline,
+.profile-distance-tick {
+  stroke: rgba(74, 84, 79, 0.3);
+  stroke-width: 1.3;
+}
+
+.profile-country-block {
+  stroke: rgba(64, 78, 71, 0.16);
+  stroke-width: 1;
+}
+
+.profile-country-block-complete {
+  fill: rgba(19, 95, 56, 0.18);
+  stroke: none;
+}
+
+.profile-country-boundary {
+  stroke: rgba(64, 78, 71, 0.3);
+  stroke-width: 1.5;
+}
+
+.profile-country-label,
+.profile-canton-label,
+.profile-country-flag-icon,
+.profile-canton-logo {
+  pointer-events: none;
+}
+
+.profile-canton-block {
+  stroke: rgba(64, 78, 71, 0.14);
+  stroke-width: 1;
+}
+
+.profile-canton-block-complete {
+  fill: rgba(19, 95, 56, 0.15);
+  stroke: none;
+}
+
+.profile-canton-boundary {
+  stroke: rgba(64, 78, 71, 0.22);
+  stroke-width: 1.15;
+}
+
+.profile-canton-logo {
+  overflow: hidden;
+}
+
+.profile-elevation-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  fill: rgba(74, 84, 79, 0.72);
+}
+
+.profile-area {
+  fill: url(#profile-area-fill);
+}
+
+.profile-area-complete {
+  fill: url(#profile-complete-fill);
+}
+
+.profile-line {
+  fill: none;
+  stroke: rgba(46, 168, 95, 0.42);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.profile-line-complete {
+  stroke: #135f38;
+  stroke-width: 4.2;
+}
+
+.profile-progress-line {
+  stroke: rgba(19, 95, 56, 0.24);
+  stroke-width: 2;
+  stroke-dasharray: 7 9;
+}
+
+.profile-progress-dot {
+  fill: #135f38;
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 3;
+}
+
+.profile-marker-pole {
+  stroke: rgba(19, 45, 34, 0.16);
+  stroke-width: 1.8;
+}
+
+.profile-marker-dot {
+  fill: #fff;
+  stroke: rgba(31, 127, 71, 0.4);
+  stroke-width: 2.4;
+}
+
+.profile-marker-flag {
+  fill: rgba(255, 255, 255, 0.92);
+  stroke: rgba(21, 75, 49, 0.2);
+  stroke-width: 1.2;
+}
+
+.profile-marker-logo {
+  overflow: hidden;
+}
+
+.profile-marker-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: rgba(19, 45, 34, 0.78);
+  dominant-baseline: middle;
+}
+
+.profile-marker.is-done .profile-marker-dot {
+  fill: #135f38;
+  stroke: rgba(255, 255, 255, 0.92);
+}
+
+.profile-marker.is-done .profile-marker-flag {
+  fill: #135f38;
+  stroke: rgba(19, 95, 56, 0.95);
+}
+
+.profile-marker.is-done .profile-marker-name {
+  fill: rgba(19, 45, 34, 0.96);
+}
+
 .stats {
   margin-top: 0.45rem;
   display: grid;
@@ -295,6 +465,22 @@ a,
   font-size: 0.96rem;
   font-weight: 800;
   color: var(--green-2);
+}
+
+.stat-country-flags {
+  margin-top: 0.34rem;
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+}
+
+.stat-country-flag {
+  width: 1.5rem;
+  height: auto;
+  display: block;
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
 .progress-track {
@@ -631,6 +817,10 @@ td {
     width: 2.3rem;
     height: 2.3rem;
   }
+
+  .profile-marker-name {
+    font-size: 10.5px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -698,6 +888,10 @@ td {
   .progress-pct {
     min-width: 2.2rem;
     font-size: 0.68rem;
+  }
+
+  .profile-marker-name {
+    font-size: 9.2px;
   }
 
   .col-completed,

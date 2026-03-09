@@ -1,0 +1,89 @@
+{
+  "startCountryCode": "CH",
+  "crossings": [
+    {
+      "fromCountryCode": "CH",
+      "toCountryCode": "DE",
+      "approxKm": 39.219,
+      "lat": 47.647722,
+      "lng": 8.60235
+    },
+    {
+      "fromCountryCode": "DE",
+      "toCountryCode": "CH",
+      "approxKm": 42.5,
+      "lat": 47.673402,
+      "lng": 8.606019
+    },
+    {
+      "fromCountryCode": "CH",
+      "toCountryCode": "DE",
+      "approxKm": 71.875,
+      "lat": 47.748885,
+      "lng": 8.454844
+    },
+    {
+      "fromCountryCode": "DE",
+      "toCountryCode": "CH",
+      "approxKm": 115.625,
+      "lat": 47.561446,
+      "lng": 8.074182
+    },
+    {
+      "fromCountryCode": "CH",
+      "toCountryCode": "DE",
+      "approxKm": 172.344,
+      "lat": 47.538564,
+      "lng": 7.707214
+    },
+    {
+      "fromCountryCode": "DE",
+      "toCountryCode": "CH",
+      "approxKm": 185.781,
+      "lat": 47.536336,
+      "lng": 7.708515
+    },
+    {
+      "fromCountryCode": "CH",
+      "toCountryCode": "FR",
+      "approxKm": 505.934,
+      "lat": 46.199124,
+      "lng": 6.223427
+    },
+    {
+      "fromCountryCode": "FR",
+      "toCountryCode": "CH",
+      "approxKm": 564.663,
+      "lat": 46.392146,
+      "lng": 6.806966
+    },
+    {
+      "fromCountryCode": "CH",
+      "toCountryCode": "IT",
+      "approxKm": 1551.675,
+      "lat": 46.538847,
+      "lng": 10.434533
+    },
+    {
+      "fromCountryCode": "IT",
+      "toCountryCode": "AT",
+      "approxKm": 1609.933,
+      "lat": 46.848106,
+      "lng": 10.50574
+    },
+    {
+      "fromCountryCode": "AT",
+      "toCountryCode": "LI",
+      "approxKm": 1752.209,
+      "lat": 47.248598,
+      "lng": 9.556706
+    },
+    {
+      "fromCountryCode": "LI",
+      "toCountryCode": "CH",
+      "approxKm": 1757.876,
+      "lat": 47.259712,
+      "lng": 9.527682
+    }
+  ]
+}

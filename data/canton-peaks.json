@@ -4,6 +4,8 @@
     "canton": "Schaffhausen",
     "peak": "Schmidshau",
     "altitudeM": 870,
+    "profileKm": 61.8,
+    "profileWaypointIndex": 1,
     "done": true,
     "stravaUrl": "https://www.strava.com/activities/17641922761"
   },
@@ -12,6 +14,8 @@
     "canton": "Aargau",
     "peak": "Salhöhe Pass",
     "altitudeM": 779,
+    "profileKm": 137.695,
+    "profileWaypointIndex": 2,
     "done": false
   },
   {
@@ -19,6 +23,8 @@
     "canton": "Basel Stadt",
     "peak": "St. Chrischona",
     "altitudeM": 522,
+    "profileKm": 180.009,
+    "profileWaypointIndex": 3,
     "done": false
   },
   {
@@ -26,6 +32,8 @@
     "canton": "Basel Land",
     "peak": "Waldweid Restaurant",
     "altitudeM": 1023,
+    "profileKm": 224.098,
+    "profileWaypointIndex": 5,
     "done": false
   },
   {
@@ -33,6 +41,8 @@
     "canton": "Solothurn",
     "peak": "Obergrenchenberg",
     "altitudeM": 1358,
+    "profileKm": 285.991,
+    "profileWaypointIndex": 6,
     "done": false
   },
   {
@@ -40,6 +50,8 @@
     "canton": "Jura",
     "peak": "Le point de vue",
     "altitudeM": 1177,
+    "profileKm": 327.507,
+    "profileWaypointIndex": 7,
     "done": false
   },
   {
@@ -47,6 +59,8 @@
     "canton": "Neuchâtel",
     "peak": "Chasseral",
     "altitudeM": 1607,
+    "profileKm": 353.487,
+    "profileWaypointIndex": 8,
     "done": false
   },
   {
@@ -54,6 +68,8 @@
     "canton": "Genève",
     "peak": "Moniaz",
     "altitudeM": 517,
+    "profileKm": 515.335,
+    "profileWaypointIndex": 9,
     "done": false
   },
   {
@@ -61,6 +77,8 @@
     "canton": "Fribourg",
     "peak": "Salzmatt Bergsommer",
     "altitudeM": 1637,
+    "profileKm": 675.247,
+    "profileWaypointIndex": 10,
     "done": false
   },
   {
@@ -68,6 +86,8 @@
     "canton": "Vaud",
     "peak": "Col de Bretaye",
     "altitudeM": 1805,
+    "profileKm": 763.748,
+    "profileWaypointIndex": 13,
     "done": false
   },
   {
@@ -75,6 +95,8 @@
     "canton": "Valais",
     "peak": "Nufenen Pass",
     "altitudeM": 2478,
+    "profileKm": 934.239,
+    "profileWaypointIndex": 15,
     "done": false
   },
   {
@@ -82,6 +104,8 @@
     "canton": "Ticino",
     "peak": "Nufenen Pass",
     "altitudeM": 2478,
+    "profileKm": 935.5,
+    "profileWaypointIndex": 15,
     "done": false,
     "stravaUrl": "https://www.strava.com/activities/16809539577"
   },
@@ -90,6 +114,8 @@
     "canton": "Uri",
     "peak": "Furka Pass",
     "altitudeM": 2429,
+    "profileKm": 998.509,
+    "profileWaypointIndex": 17,
     "done": false,
     "stravaUrl": "https://www.strava.com/activities/16809539577"
   },
@@ -98,6 +124,8 @@
     "canton": "Bern",
     "peak": "Oberaar Restaurant",
     "altitudeM": 2382,
+    "profileKm": 1021.176,
+    "profileWaypointIndex": 18,
     "done": false
   },
   {
@@ -105,6 +133,8 @@
     "canton": "Luzern",
     "peak": "Glaubenberg Pass",
     "altitudeM": 1543,
+    "profileKm": 1099.3,
+    "profileWaypointIndex": 19,
     "done": false
   },
   {
@@ -112,6 +142,8 @@
     "canton": "Obwalden",
     "peak": "Tannensee",
     "altitudeM": 1976,
+    "profileKm": 1183.329,
+    "profileWaypointIndex": 22,
     "done": false
   },
   {
@@ -119,13 +151,17 @@
     "canton": "Nidwalden",
     "peak": "Acherli Pass",
     "altitudeM": 1398,
+    "profileKm": 1216.8,
+    "profileWaypointIndex": 23,
     "done": false
   },
   {
     "order": 18,
     "canton": "Glarus",
-    "peak": "Klausen Pass",
-    "altitudeM": 1300,
+    "peak": "Obererbs",
+    "altitudeM": 1690,
+    "profileKm": 1342.086,
+    "profileWaypointIndex": 25,
     "done": false
   },
   {
@@ -133,13 +169,17 @@
     "canton": "Graubünden",
     "peak": "Umbrail Pass",
     "altitudeM": 2501,
+    "profileKm": 1551.341,
+    "profileWaypointIndex": 26,
     "done": false
   },
   {
     "order": 20,
     "canton": "Appenzell Innerrhoden",
-    "peak": "Berggasthaus Scheidegg",
-    "altitudeM": 1353,
+    "peak": "Kamor Trestenkopf",
+    "altitudeM": 1610,
+    "profileKm": 1781.3,
+    "profileWaypointIndex": 30,
     "done": false
   },
   {
@@ -147,13 +187,17 @@
     "canton": "Appenzell Ausserrhoden",
     "peak": "Schwägalp Pass",
     "altitudeM": 1299,
+    "profileKm": 1811.506,
+    "profileWaypointIndex": 31,
     "done": false
   },
   {
     "order": 22,
     "canton": "St. Gallen",
-    "peak": "Vorder Höhi Pass",
-    "altitudeM": 1537,
+    "peak": "Kamor Trestenkopf",
+    "altitudeM": 1720,
+    "profileKm": 1775.214,
+    "profileWaypointIndex": 32,
     "done": false
   },
   {
@@ -161,6 +205,8 @@
     "canton": "Schwyz",
     "peak": "Wildspitz",
     "altitudeM": 1580,
+    "profileKm": 1896.232,
+    "profileWaypointIndex": 35,
     "done": false
   },
   {
@@ -168,6 +214,8 @@
     "canton": "Zug",
     "peak": "Gottschalkenberg",
     "altitudeM": 1164,
+    "profileKm": 1938.451,
+    "profileWaypointIndex": 37,
     "done": false
   },
   {
@@ -175,6 +223,8 @@
     "canton": "Zürich",
     "peak": "Alp Scheidegg",
     "altitudeM": 1196,
+    "profileKm": 1983.139,
+    "profileWaypointIndex": 40,
     "done": false
   },
   {
@@ -182,6 +232,8 @@
     "canton": "Thurgau",
     "peak": "Sternenberg Pass",
     "altitudeM": 952,
+    "profileKm": 2004.441,
+    "profileWaypointIndex": 41,
     "done": false
   }
 ]
