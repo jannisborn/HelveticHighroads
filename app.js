@@ -108,7 +108,8 @@ const countryNameToCode = {
 const summitPhotos = [
   // EXAMPLES — replace with your real entries
   // { canton: "Zürich",  photo: "assets/summit_pictures/zurich-2026-03-01.jpg", date: "2026-03-01", altitudeM: 915, ride: "https://strava.com/activities/...", note: "Windy" },
-  { canton: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg" },
+  { kind: "canton", region: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg", altitudeM: 870 },
+  { kind: "country", region: "Germany", photo: "assets/summit_pictures/germany-2026-03-07.jpg" },
 ];
 
 async function loadJson(path) {
@@ -1081,7 +1082,7 @@ function renderSummitPhotos() {
   const container = document.getElementById('summit-photos-grid');
   if (!container || !Array.isArray(summitPhotos)) return;
 
-  // Option: sort by date desc if dates are present
+  // Sort by date desc when dates exist
   const items = [...summitPhotos].sort((a, b) => {
     const da = a.date ? new Date(a.date).getTime() : 0;
     const db = b.date ? new Date(b.date).getTime() : 0;
@@ -1089,19 +1090,28 @@ function renderSummitPhotos() {
   });
 
   const cards = items.map((it) => {
-    const canton = it.canton || "Canton";
-    const src = it.photo || "assets/summit_pictures/placeholder.jpg"; // fallback
+    const kind = (it.kind || '').toLowerCase();           // "canton" | "country"
+    const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
+    const src = it.photo
+      || (kind === 'country' ? "assets/foreign/placeholder.jpg" : "assets/summits/placeholder.jpg");
+
+    // Label text (overlay)
+    const labelText = kind === 'country'
+      ? `Country: ${region}`
+      : `Canton: ${region}`;
+
+    // Metadata line under the image
     const meta = [
       it.date ? `Date : ${it.date}` : null,
       typeof it.altitudeM === 'number' ? `Altitude : ${it.altitudeM} m` : null,
-      it.ride ? `Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>` : null,
+      it.ride ? `Sortie : ${it.ride}voir</a>` : null,
       it.note ? `Note : ${it.note}` : null,
     ].filter(Boolean).join(" · ");
 
     return `
       <article class="summit-card">
-        <img class="summit-card__img" src="${src}" alt="Picture on top – ${canton}">
-        <span class="summit-card__label">${canton}</span>
+        ${src}
+        <span class="summit-card__label">${labelText}</span>
         ${meta ? `<div class="summit-card__meta">${meta}</div>` : ``}
       </article>
     `;
@@ -1110,7 +1120,7 @@ function renderSummitPhotos() {
   container.innerHTML = cards;
 }
 
-// Safe to call on DOMContentLoaded even if scripts are at the end of <body>
+// Ensure rendering after DOM is ready (or call directly if your scripts are at end of <body>)
 document.addEventListener('DOMContentLoaded', renderSummitPhotos);
 
 init();
