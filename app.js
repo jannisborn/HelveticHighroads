@@ -94,6 +94,23 @@ const countryNameToCode = {
   Liechtenstein: "LI"
 };
 
+/* --------------------------
+ * Summit Photos Data
+ * --------------------------
+ * One entry per *photo taken at a summit* (can be multiple per ride).
+ * Required: `canton`, `photo`
+ * Optional: `date`, `ride` (string or URL), `altitudeM`, `note`
+ *
+ * Place images under: assets/summit_pictures/
+ * You can reference either a relative path ("assets/summit_pictures/zh-2026-03-01.jpg")
+ * or an absolute URL if hosted elsewhere.
+ */
+const summitPhotos = [
+  // EXAMPLES — replace with your real entries
+  // { canton: "Zürich",  photo: "assets/summit_pictures/zurich-2026-03-01.jpg", date: "2026-03-01", altitudeM: 915, ride: "https://strava.com/activities/...", note: "Windy" },
+  { canton: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg" },
+];
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
@@ -399,8 +416,8 @@ function renderStats() {
       value: `${countriesMentioned.size}`,
       extraHtml: visitedCountryCodes.length
         ? `<div class="stat-country-flags">${visitedCountryCodes
-            .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
-            .join("")}</div>`
+          .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
+          .join("")}</div>`
         : ""
     },
     {
@@ -735,9 +752,9 @@ function renderElevationProfile() {
   const nufenenLayout =
     nufenenMarkers.length === 2
       ? {
-          boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
-          topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
-        }
+        boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
+        topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
+      }
       : null;
 
   const gridHtml = elevationTicks
@@ -784,11 +801,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10"></rect>
           </clipPath>
           <rect class="profile-country-block" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10" fill="${visual.fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -841,11 +857,11 @@ function renderElevationProfile() {
       const fill = isSwissCanton ? "#e7efe9" : "#d7dcd8";
       const title = isSwissCanton
         ? escapeHtml(
-            `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          )
+          `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        )
         : escapeHtml(
-            `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          );
+          `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        );
 
       return `
         <g class="profile-canton-section">
@@ -854,11 +870,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8"></rect>
           </clipPath>
           <rect class="profile-canton-block" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8" fill="${fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -949,27 +964,27 @@ function renderElevationProfile() {
     .join("");
   const nufenenSharedLabelHtml = nufenenLayout
     ? (() => {
-        const flagWidth = 38;
-        const flagHeight = 27;
-        const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
-        const bottomFlagY = topFlagY + 30;
-        const labelLines = splitPeakLabel("Nufenen Pass", 10);
-        const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
-        const nameX = flagX + flagWidth + 3;
-        const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
-        const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
-        const labelHtml = labelLines
-          .map((line, index) => {
-            const attrs =
-              index === 0
-                ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
-                : `x="${nameX.toFixed(1)}" dy="11.8"`;
-            return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
-          })
-          .join("");
+      const flagWidth = 38;
+      const flagHeight = 27;
+      const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
+      const bottomFlagY = topFlagY + 30;
+      const labelLines = splitPeakLabel("Nufenen Pass", 10);
+      const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
+      const nameX = flagX + flagWidth + 3;
+      const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
+      const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
+      const labelHtml = labelLines
+        .map((line, index) => {
+          const attrs =
+            index === 0
+              ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
+              : `x="${nameX.toFixed(1)}" dy="11.8"`;
+          return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
+        })
+        .join("");
 
-        return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
-      })()
+      return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
+    })()
     : "";
 
   const profileLinePath = buildSvgLinePath(allPoints);
@@ -1002,13 +1017,12 @@ function renderElevationProfile() {
     ${countryBoundariesHtml}
     ${cantonSectionsRectsHtml}
     ${cantonBoundariesHtml}
-    ${
-      completedKm > 0
-        ? `
+    ${completedKm > 0
+      ? `
       <line class="profile-progress-line" x1="${currentPoint.x.toFixed(1)}" y1="${plotTop}" x2="${currentPoint.x.toFixed(1)}" y2="${cantonBandBottom.toFixed(1)}"></line>
       <circle class="profile-progress-dot" cx="${currentPoint.x.toFixed(1)}" cy="${currentPoint.y.toFixed(1)}" r="6.2"></circle>
     `
-        : ""
+      : ""
     }
     ${markersHtml}
     ${nufenenSharedLabelHtml}
@@ -1062,5 +1076,41 @@ async function init() {
     showDataLoadError("Could not load data files. Start a local server and reload.");
   }
 }
+
+function renderSummitPhotos() {
+  const container = document.getElementById('summit-photos-grid');
+  if (!container || !Array.isArray(summitPhotos)) return;
+
+  // Option: sort by date desc if dates are present
+  const items = [...summitPhotos].sort((a, b) => {
+    const da = a.date ? new Date(a.date).getTime() : 0;
+    const db = b.date ? new Date(b.date).getTime() : 0;
+    return db - da;
+  });
+
+  const cards = items.map((it) => {
+    const canton = it.canton || "Canton";
+    const src = it.photo || "assets/summit_pictures/placeholder.jpg"; // fallback
+    const meta = [
+      it.date ? `Date : ${it.date}` : null,
+      typeof it.altitudeM === 'number' ? `Altitude : ${it.altitudeM} m` : null,
+      it.ride ? `Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>` : null,
+      it.note ? `Note : ${it.note}` : null,
+    ].filter(Boolean).join(" · ");
+
+    return `
+      <article class="summit-card">
+        <img class="summit-card__img" src="${src}" alt="Picture on top – ${canton}">
+        <span class="summit-card__label">${canton}</span>
+        ${meta ? `<div class="summit-card__meta">${meta}</div>` : ``}
+      </article>
+    `;
+  }).join("");
+
+  container.innerHTML = cards;
+}
+
+// Safe to call on DOMContentLoaded even if scripts are at the end of <body>
+document.addEventListener('DOMContentLoaded', renderSummitPhotos);
 
 init();
