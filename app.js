@@ -94,22 +94,40 @@ const countryNameToCode = {
   Liechtenstein: "LI"
 };
 
-/* --------------------------
- * Summit Photos Data
- * --------------------------
- * One entry per *photo taken at a summit* (can be multiple per ride).
- * Required: `canton`, `photo`
- * Optional: `date`, `ride` (string or URL), `altitudeM`, `note`
- *
- * Place images under: assets/summit_pictures/
- * You can reference either a relative path ("assets/summit_pictures/zh-2026-03-01.jpg")
- * or an absolute URL if hosted elsewhere.
- */
 const summitPhotos = [
-  // EXAMPLES — replace with your real entries
   // { canton: "Zürich",  photo: "assets/summit_pictures/zurich-2026-03-01.jpg", date: "2026-03-01", altitudeM: 915, ride: "https://strava.com/activities/...", note: "Windy" },
-  { kind: "canton", region: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg", altitudeM: 870 },
+  { kind: "canton", region: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg" },
+  { kind: "canton", region: "Aargau", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Basel Stadt", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Basel Land", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Solothurn", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Jura", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Neuchâtel", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Genève", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Fribourg", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Vaud", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Valais", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Ticino", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Uri", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Bern", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Luzern", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Obwalden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Nidwalden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Glarus", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Graubünden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Appenzell Innerrhoden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Appenzell Ausserrhoden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "St. Gallen", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Schwyz", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Zug", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Zürich", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Thurgau", photo: "assets/summit_pictures/locked.jpg" },
+
   { kind: "country", region: "Germany", photo: "assets/summit_pictures/germany-2026-03-07.jpg" },
+  { kind: "country", region: "France", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Italy", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Austria", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Liechtenstein", photo: "assets/summit_pictures/locked.jpg" },
 ];
 
 async function loadJson(path) {
@@ -327,9 +345,19 @@ function buildCountryFlagMarkup(code, x, y, width, height) {
 
 function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   const safeClassName = escapeHtml(className);
+  const safeCode = String(code || "").toUpperCase();
+
+  let w = width;
+  let h = height;
+  if (safeCode === "CH") {
+    const s = Math.min(width, height);
+    w = s;
+    h = s;
+  }
+
   return `
-    <svg class="${safeClassName}" viewBox="0 0 ${width} ${height}" aria-hidden="true" focusable="false">
-      ${buildCountryFlagMarkup(code, 0, 0, width, height)}
+    <svg class="${safeClassName}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">
+      ${buildCountryFlagMarkup(safeCode, 0, 0, w, h)}
     </svg>
   `;
 }
@@ -1072,6 +1100,7 @@ async function init() {
     renderPassGallery();
     renderRides();
     renderCantons();
+    renderSummitPhotos();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
@@ -1079,48 +1108,70 @@ async function init() {
 }
 
 function renderSummitPhotos() {
-  const container = document.getElementById('summit-photos-grid');
-  if (!container || !Array.isArray(summitPhotos)) return;
+  const root = document.getElementById('summit-photos-root')
+    || document.getElementById('summit-photos-grid');
+  if (!root || !Array.isArray(summitPhotos)) return;
 
-  // Sort by date desc when dates exist
   const items = [...summitPhotos].sort((a, b) => {
     const da = a.date ? new Date(a.date).getTime() : 0;
     const db = b.date ? new Date(b.date).getTime() : 0;
     return db - da;
   });
 
-  const cards = items.map((it) => {
-    const kind = (it.kind || '').toLowerCase();           // "canton" | "country"
+  const cantons = items.filter(it => (it.kind || '').toLowerCase() === 'canton');
+  const countries = items.filter(it => (it.kind || '').toLowerCase() === 'country');
+
+  const FALLBACK = 'assets/summit_pictures/locked.jpg';
+
+  const card = (it) => {
+    const kind = (it.kind || '').toLowerCase();
     const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
-    const src = it.photo
-      || (kind === 'country' ? "assets/foreign/placeholder.jpg" : "assets/summits/placeholder.jpg");
+    const place = it.place ? ` — ${it.place}` : '';
+    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK;
 
-    // Label text (overlay)
-    const labelText = kind === 'country'
-      ? `Country: ${region}`
-      : `Canton: ${region}`;
+    const labelText = (kind === 'country')
+      ? `${region}`
+      : `${region}`;
 
-    // Metadata line under the image
-    const meta = [
-      it.date ? `Date : ${it.date}` : null,
-      typeof it.altitudeM === 'number' ? `Altitude : ${it.altitudeM} m` : null,
-      it.ride ? `Sortie : ${it.ride}voir</a>` : null,
-      it.note ? `Note : ${it.note}` : null,
-    ].filter(Boolean).join(" · ");
+    const metaParts = [];
+    if (it.date) metaParts.push(`Date : ${it.date}`);
+    if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
+    if (it.ride) metaParts.push(`Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>`);
+    if (it.note) metaParts.push(`Note : ${it.note}`);
+    const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
 
     return `
       <article class="summit-card">
-        ${src}
+        <img class="summit-card__img"
+             src="${imgSrc}"
+             alt="${labelText}"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='${FALLBACK}'">
         <span class="summit-card__label">${labelText}</span>
-        ${meta ? `<div class="summit-card__meta">${meta}</div>` : ``}
+        ${metaHtml}
       </article>
     `;
-  }).join("");
+  };
 
-  container.innerHTML = cards;
+  const cantonGrid = cantons.map(card).join('');
+  const countryGrid = countries.map(card).join('');
+
+  root.innerHTML = `
+    ${cantons.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Cantons</h3>
+        <div class="summit-photos__grid">${cantonGrid}</div>
+      </div>
+    ` : ''}
+
+    ${countries.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Countries</h3>
+        <div class="summit-photos__grid">${countryGrid}</div>
+      </div>
+    ` : ''}
+  `;
 }
-
-// Ensure rendering after DOM is ready (or call directly if your scripts are at end of <body>)
-document.addEventListener('DOMContentLoaded', renderSummitPhotos);
+``
 
 init();
