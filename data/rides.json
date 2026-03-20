@@ -13,5 +13,20 @@
     ],
     "stravaUrl": "https://www.strava.com/activities/17641922761",
     "stravaActivityId": 17641922761
+  },
+  {
+    "name": "🚴🗻Helvetic Highroads Stage 2: Koblenz ➡️ Basel",
+    "date": "2026-03-20",
+    "distanceKm": 87.639,
+    "elevationM": 1370,
+    "cantons": [
+      "Basel Stadt",
+      "Aargau"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/17794160836",
+    "stravaActivityId": 17794160836
   }
 ]
