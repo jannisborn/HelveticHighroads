@@ -1172,44 +1172,40 @@ async function init() {
 function renderSummitPhotos() {
   const root = document.getElementById('summit-photos-root')
     || document.getElementById('summit-photos-grid');
-  if (!root || !Array.isArray(summitPhotos)) return;
+  if (!root) return;
 
-  const items = [...summitPhotos].sort((a, b) => {
-    const da = a.date ? new Date(a.date).getTime() : 0;
-    const db = b.date ? new Date(b.date).getTime() : 0;
-    return db - da;
-  });
-
-  const cantons = items.filter(it => (it.kind || '').toLowerCase() === 'canton');
-  const countries = items.filter(it => (it.kind || '').toLowerCase() === 'country');
-
-  const FALLBACK = 'assets/summit_pictures/locked.jpg';
+  const items = buildSummitPhotoItems();
+  const cantons = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'canton')
+    .sort(compareSummitPhotoItems);
+  const countries = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'country')
+    .sort(compareSummitPhotoItems);
 
   const card = (it) => {
     const kind = (it.kind || '').toLowerCase();
     const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
     const place = it.place ? ` — ${it.place}` : '';
-    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK;
-
-    const labelText = (kind === 'country')
-      ? `${region}`
-      : `${region}`;
+    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK_SUMMIT_PHOTO;
+    const labelText = `${region}`;
+    const altText = `${region}${place}`;
 
     const metaParts = [];
+    if (it.place) metaParts.push(`Summit : ${escapeHtml(it.place)}`);
     if (it.date) metaParts.push(`Date : ${it.date}`);
     if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
-    if (it.ride) metaParts.push(`Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>`);
-    if (it.note) metaParts.push(`Note : ${it.note}`);
+    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">voir</a>`);
+    if (it.note) metaParts.push(`Note : ${escapeHtml(it.note)}`);
     const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
 
     return `
       <article class="summit-card">
         <img class="summit-card__img"
-             src="${imgSrc}"
-             alt="${labelText}"
+             src="${escapeHtml(imgSrc)}"
+             alt="${escapeHtml(altText)}"
              loading="lazy"
-             onerror="this.onerror=null;this.src='${FALLBACK}'">
-        <span class="summit-card__label">${labelText}</span>
+             onerror="this.onerror=null;this.src='${FALLBACK_SUMMIT_PHOTO}'">
+        <span class="summit-card__label">${escapeHtml(labelText)}</span>
         ${metaHtml}
       </article>
     `;
@@ -1234,6 +1230,5 @@ function renderSummitPhotos() {
     ` : ''}
   `;
 }
-``
 
 init();
