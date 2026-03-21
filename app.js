@@ -94,41 +94,8 @@ const countryNameToCode = {
   Liechtenstein: "LI"
 };
 
-const summitPhotos = [
-  // { canton: "Zürich",  photo: "assets/summit_pictures/zurich-2026-03-01.jpg", date: "2026-03-01", altitudeM: 915, ride: "https://strava.com/activities/...", note: "Windy" },
-  { kind: "canton", region: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg" },
-  { kind: "canton", region: "Aargau", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Basel Stadt", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Basel Land", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Solothurn", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Jura", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Neuchâtel", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Genève", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Fribourg", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Vaud", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Valais", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Ticino", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Uri", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Bern", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Luzern", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Obwalden", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Nidwalden", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Glarus", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Graubünden", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Appenzell Innerrhoden", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Appenzell Ausserrhoden", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "St. Gallen", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Schwyz", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Zug", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Zürich", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "canton", region: "Thurgau", photo: "assets/summit_pictures/locked.jpg" },
+const FALLBACK_SUMMIT_PHOTO = "assets/summit_pictures/locked.jpg";
 
-  { kind: "country", region: "Germany", photo: "assets/summit_pictures/germany-2026-03-07.jpg" },
-  { kind: "country", region: "France", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "country", region: "Italy", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "country", region: "Austria", photo: "assets/summit_pictures/locked.jpg" },
-  { kind: "country", region: "Liechtenstein", photo: "assets/summit_pictures/locked.jpg" },
-];
 
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
@@ -160,6 +127,101 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function getDateTimestamp(value) {
+  if (!value) return 0;
+
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function slugifySummitPhotoName(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ß/g, "ss")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+}
+
+function buildSummitPhotoPath(region, date) {
+  if (!region || !date) return FALLBACK_SUMMIT_PHOTO;
+  return `assets/summit_pictures/${slugifySummitPhotoName(region)}-${date}.jpg`;
+}
+
+function compareSummitPhotoItems(a, b) {
+  const aHasDate = Boolean(a?.date);
+  const bHasDate = Boolean(b?.date);
+
+  if (aHasDate !== bHasDate) {
+    return aHasDate ? -1 : 1;
+  }
+
+  if (aHasDate && bHasDate) {
+    const timestampDiff = getDateTimestamp(a.date) - getDateTimestamp(b.date);
+    if (timestampDiff !== 0) {
+      return timestampDiff;
+    }
+  }
+
+  const aOrder = Number.isFinite(a?.order) ? a.order : Number.MAX_SAFE_INTEGER;
+  const bOrder = Number.isFinite(b?.order) ? b.order : Number.MAX_SAFE_INTEGER;
+  if (aOrder !== bOrder) {
+    return aOrder - bOrder;
+  }
+
+  return String(a?.region || "").localeCompare(String(b?.region || ""), "de-CH");
+}
+
+function buildSummitPhotoItems() {
+  const sortedRides = [...rides].sort((a, b) => getDateTimestamp(b.date) - getDateTimestamp(a.date));
+  const rideByStravaUrl = new Map(
+    sortedRides
+      .filter((ride) => ride && ride.stravaUrl)
+      .map((ride) => [ride.stravaUrl, ride])
+  );
+
+  const cantonItems = cantonPeaks.map((peak) => {
+    const linkedRide = peak && peak.stravaUrl ? rideByStravaUrl.get(peak.stravaUrl) : null;
+    const fallbackRide = sortedRides.find(
+      (ride) => Array.isArray(ride.cantons) && ride.cantons.includes(peak.canton)
+    );
+    const ride = peak.done ? (linkedRide || fallbackRide || null) : null;
+
+    return {
+      kind: "canton",
+      region: peak.canton,
+      place: peak.done ? peak.peak : undefined,
+      photo: ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      date: ride ? ride.date : undefined,
+      order: peak.order,
+      altitudeM: peak.done ? peak.altitudeM : undefined,
+      ride: peak.done ? ((ride && ride.stravaUrl) || peak.stravaUrl || undefined) : undefined
+    };
+  });
+
+  const neighboringCountries = Array.isArray(project?.neighboringCountries)
+    ? project.neighboringCountries
+    : Object.keys(countryNameToCode).filter((country) => country !== "Switzerland");
+
+  const countryItems = neighboringCountries.map((country, index) => {
+    const ride = sortedRides.find(
+      (candidate) => Array.isArray(candidate.countriesVisited) && candidate.countriesVisited.includes(country)
+    );
+
+    return {
+      kind: "country",
+      region: country,
+      photo: ride ? buildSummitPhotoPath(country, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      date: ride ? ride.date : undefined,
+      order: index + 1,
+      ride: ride ? ride.stravaUrl : undefined
+    };
+  });
+
+  return [...cantonItems, ...countryItems];
 }
 
 function truncateLabel(value, maxLength = 18) {
@@ -1110,44 +1172,40 @@ async function init() {
 function renderSummitPhotos() {
   const root = document.getElementById('summit-photos-root')
     || document.getElementById('summit-photos-grid');
-  if (!root || !Array.isArray(summitPhotos)) return;
+  if (!root) return;
 
-  const items = [...summitPhotos].sort((a, b) => {
-    const da = a.date ? new Date(a.date).getTime() : 0;
-    const db = b.date ? new Date(b.date).getTime() : 0;
-    return db - da;
-  });
-
-  const cantons = items.filter(it => (it.kind || '').toLowerCase() === 'canton');
-  const countries = items.filter(it => (it.kind || '').toLowerCase() === 'country');
-
-  const FALLBACK = 'assets/summit_pictures/locked.jpg';
+  const items = buildSummitPhotoItems();
+  const cantons = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'canton')
+    .sort(compareSummitPhotoItems);
+  const countries = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'country')
+    .sort(compareSummitPhotoItems);
 
   const card = (it) => {
     const kind = (it.kind || '').toLowerCase();
     const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
     const place = it.place ? ` — ${it.place}` : '';
-    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK;
-
-    const labelText = (kind === 'country')
-      ? `${region}`
-      : `${region}`;
+    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK_SUMMIT_PHOTO;
+    const labelText = `${region}`;
+    const altText = `${region}${place}`;
 
     const metaParts = [];
+    if (it.place) metaParts.push(`Summit : ${escapeHtml(it.place)}`);
     if (it.date) metaParts.push(`Date : ${it.date}`);
     if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
-    if (it.ride) metaParts.push(`Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>`);
-    if (it.note) metaParts.push(`Note : ${it.note}`);
+    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">voir</a>`);
+    if (it.note) metaParts.push(`Note : ${escapeHtml(it.note)}`);
     const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
 
     return `
       <article class="summit-card">
         <img class="summit-card__img"
-             src="${imgSrc}"
-             alt="${labelText}"
+             src="${escapeHtml(imgSrc)}"
+             alt="${escapeHtml(altText)}"
              loading="lazy"
-             onerror="this.onerror=null;this.src='${FALLBACK}'">
-        <span class="summit-card__label">${labelText}</span>
+             onerror="this.onerror=null;this.src='${FALLBACK_SUMMIT_PHOTO}'">
+        <span class="summit-card__label">${escapeHtml(labelText)}</span>
         ${metaHtml}
       </article>
     `;
@@ -1172,6 +1230,5 @@ function renderSummitPhotos() {
     ` : ''}
   `;
 }
-``
 
 init();
