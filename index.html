@@ -1,14 +1,18 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Helvetic Highroads</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
   <div class="bg-noise" aria-hidden="true"></div>
 
@@ -22,6 +26,7 @@
       <a href="#map">Map</a>
       <a href="#story">Story</a>
       <a href="#cantons">Strava & Tracker</a>
+      <a href="#summit-photos">Summit Pictures</a>
     </nav>
   </header>
 
@@ -42,12 +47,8 @@
 
     <section class="card profile-section" id="profile">
       <div class="profile-shell">
-        <svg
-          id="route-profile-svg"
-          viewBox="0 0 1600 548"
-          role="img"
-          aria-labelledby="route-profile-title route-profile-desc"
-        ></svg>
+        <svg id="route-profile-svg" viewBox="0 0 1600 548" role="img"
+          aria-labelledby="route-profile-title route-profile-desc"></svg>
       </div>
     </section>
 
@@ -57,20 +58,16 @@
         <a id="komoot-tour-link" href="#" target="_blank" rel="noopener noreferrer">Open Komoot tour</a>
       </div>
       <div class="map-frame-wrap">
-        <iframe
-          id="komoot-tour-embed"
-          title="Helvetic Highroads Komoot Tour"
-          src="about:blank"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+        <iframe id="komoot-tour-embed" title="Helvetic Highroads Komoot Tour" src="about:blank" loading="lazy"
+          allowfullscreen></iframe>
       </div>
     </section>
 
     <section class="card" id="story">
       <h2>Story</h2>
       <p>
-        <strong>Mathis</strong> and <strong>Jannis</strong> ride to the highest paved road in every Swiss canton and leave a Helvetic Highroads sticker at each top.
+        <strong>Mathis</strong> and <strong>Jannis</strong> ride to the highest paved road in every Swiss canton and
+        leave a Helvetic Highroads sticker at each top.
       </p>
       <p>
         This idea comes from a short film from the
@@ -79,7 +76,8 @@
       </p>
       <p>
         Tobi's site:
-        <a href="https://tobiasrenggli.ch/about.html" target="_blank" rel="noopener noreferrer">tobiasrenggli.ch/about.html</a>
+        <a href="https://tobiasrenggli.ch/about.html" target="_blank"
+          rel="noopener noreferrer">tobiasrenggli.ch/about.html</a>
       </p>
     </section>
 
@@ -123,6 +121,12 @@
         </table>
       </div>
     </section>
+
+    <section id="summit-photos" class="summit-photos" aria-labelledby="summit-photos-title">
+      <h2 id="summit-photos-title">Summit Pictures</h2>
+      <p>Pictures from each summit</p>
+      <div id="summit-photos-root" aria-live="polite"></div>
+    </section>
   </main>
 
   <footer class="shell footer">
@@ -131,4 +135,5 @@
 
   <script src="./app.js"></script>
 </body>
+
 </html>

@@ -94,6 +94,42 @@ const countryNameToCode = {
   Liechtenstein: "LI"
 };
 
+const summitPhotos = [
+  // { canton: "Zürich",  photo: "assets/summit_pictures/zurich-2026-03-01.jpg", date: "2026-03-01", altitudeM: 915, ride: "https://strava.com/activities/...", note: "Windy" },
+  { kind: "canton", region: "Schaffhausen", photo: "assets/summit_pictures/schaffhausen-2026-03-07.jpg" },
+  { kind: "canton", region: "Aargau", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Basel Stadt", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Basel Land", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Solothurn", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Jura", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Neuchâtel", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Genève", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Fribourg", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Vaud", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Valais", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Ticino", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Uri", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Bern", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Luzern", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Obwalden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Nidwalden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Glarus", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Graubünden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Appenzell Innerrhoden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Appenzell Ausserrhoden", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "St. Gallen", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Schwyz", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Zug", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Zürich", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "canton", region: "Thurgau", photo: "assets/summit_pictures/locked.jpg" },
+
+  { kind: "country", region: "Germany", photo: "assets/summit_pictures/germany-2026-03-07.jpg" },
+  { kind: "country", region: "France", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Italy", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Austria", photo: "assets/summit_pictures/locked.jpg" },
+  { kind: "country", region: "Liechtenstein", photo: "assets/summit_pictures/locked.jpg" },
+];
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
@@ -309,9 +345,19 @@ function buildCountryFlagMarkup(code, x, y, width, height) {
 
 function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   const safeClassName = escapeHtml(className);
+  const safeCode = String(code || "").toUpperCase();
+
+  let w = width;
+  let h = height;
+  if (safeCode === "CH") {
+    const s = Math.min(width, height);
+    w = s;
+    h = s;
+  }
+
   return `
-    <svg class="${safeClassName}" viewBox="0 0 ${width} ${height}" aria-hidden="true" focusable="false">
-      ${buildCountryFlagMarkup(code, 0, 0, width, height)}
+    <svg class="${safeClassName}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">
+      ${buildCountryFlagMarkup(safeCode, 0, 0, w, h)}
     </svg>
   `;
 }
@@ -399,8 +445,8 @@ function renderStats() {
       value: `${countriesMentioned.size}`,
       extraHtml: visitedCountryCodes.length
         ? `<div class="stat-country-flags">${visitedCountryCodes
-            .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
-            .join("")}</div>`
+          .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
+          .join("")}</div>`
         : ""
     },
     {
@@ -735,9 +781,9 @@ function renderElevationProfile() {
   const nufenenLayout =
     nufenenMarkers.length === 2
       ? {
-          boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
-          topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
-        }
+        boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
+        topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
+      }
       : null;
 
   const gridHtml = elevationTicks
@@ -784,11 +830,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10"></rect>
           </clipPath>
           <rect class="profile-country-block" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10" fill="${visual.fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -841,11 +886,11 @@ function renderElevationProfile() {
       const fill = isSwissCanton ? "#e7efe9" : "#d7dcd8";
       const title = isSwissCanton
         ? escapeHtml(
-            `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          )
+          `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        )
         : escapeHtml(
-            `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          );
+          `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        );
 
       return `
         <g class="profile-canton-section">
@@ -854,11 +899,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8"></rect>
           </clipPath>
           <rect class="profile-canton-block" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8" fill="${fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -949,27 +993,27 @@ function renderElevationProfile() {
     .join("");
   const nufenenSharedLabelHtml = nufenenLayout
     ? (() => {
-        const flagWidth = 38;
-        const flagHeight = 27;
-        const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
-        const bottomFlagY = topFlagY + 30;
-        const labelLines = splitPeakLabel("Nufenen Pass", 10);
-        const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
-        const nameX = flagX + flagWidth + 3;
-        const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
-        const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
-        const labelHtml = labelLines
-          .map((line, index) => {
-            const attrs =
-              index === 0
-                ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
-                : `x="${nameX.toFixed(1)}" dy="11.8"`;
-            return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
-          })
-          .join("");
+      const flagWidth = 38;
+      const flagHeight = 27;
+      const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
+      const bottomFlagY = topFlagY + 30;
+      const labelLines = splitPeakLabel("Nufenen Pass", 10);
+      const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
+      const nameX = flagX + flagWidth + 3;
+      const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
+      const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
+      const labelHtml = labelLines
+        .map((line, index) => {
+          const attrs =
+            index === 0
+              ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
+              : `x="${nameX.toFixed(1)}" dy="11.8"`;
+          return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
+        })
+        .join("");
 
-        return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
-      })()
+      return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
+    })()
     : "";
 
   const profileLinePath = buildSvgLinePath(allPoints);
@@ -1002,13 +1046,12 @@ function renderElevationProfile() {
     ${countryBoundariesHtml}
     ${cantonSectionsRectsHtml}
     ${cantonBoundariesHtml}
-    ${
-      completedKm > 0
-        ? `
+    ${completedKm > 0
+      ? `
       <line class="profile-progress-line" x1="${currentPoint.x.toFixed(1)}" y1="${plotTop}" x2="${currentPoint.x.toFixed(1)}" y2="${cantonBandBottom.toFixed(1)}"></line>
       <circle class="profile-progress-dot" cx="${currentPoint.x.toFixed(1)}" cy="${currentPoint.y.toFixed(1)}" r="6.2"></circle>
     `
-        : ""
+      : ""
     }
     ${markersHtml}
     ${nufenenSharedLabelHtml}
@@ -1057,10 +1100,78 @@ async function init() {
     renderPassGallery();
     renderRides();
     renderCantons();
+    renderSummitPhotos();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
   }
 }
+
+function renderSummitPhotos() {
+  const root = document.getElementById('summit-photos-root')
+    || document.getElementById('summit-photos-grid');
+  if (!root || !Array.isArray(summitPhotos)) return;
+
+  const items = [...summitPhotos].sort((a, b) => {
+    const da = a.date ? new Date(a.date).getTime() : 0;
+    const db = b.date ? new Date(b.date).getTime() : 0;
+    return db - da;
+  });
+
+  const cantons = items.filter(it => (it.kind || '').toLowerCase() === 'canton');
+  const countries = items.filter(it => (it.kind || '').toLowerCase() === 'country');
+
+  const FALLBACK = 'assets/summit_pictures/locked.jpg';
+
+  const card = (it) => {
+    const kind = (it.kind || '').toLowerCase();
+    const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
+    const place = it.place ? ` — ${it.place}` : '';
+    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK;
+
+    const labelText = (kind === 'country')
+      ? `${region}`
+      : `${region}`;
+
+    const metaParts = [];
+    if (it.date) metaParts.push(`Date : ${it.date}`);
+    if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
+    if (it.ride) metaParts.push(`Ride : <a href="${it.ride}" target="_blank" rel="noopener">voir</a>`);
+    if (it.note) metaParts.push(`Note : ${it.note}`);
+    const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
+
+    return `
+      <article class="summit-card">
+        <img class="summit-card__img"
+             src="${imgSrc}"
+             alt="${labelText}"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='${FALLBACK}'">
+        <span class="summit-card__label">${labelText}</span>
+        ${metaHtml}
+      </article>
+    `;
+  };
+
+  const cantonGrid = cantons.map(card).join('');
+  const countryGrid = countries.map(card).join('');
+
+  root.innerHTML = `
+    ${cantons.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Cantons</h3>
+        <div class="summit-photos__grid">${cantonGrid}</div>
+      </div>
+    ` : ''}
+
+    ${countries.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Countries</h3>
+        <div class="summit-photos__grid">${countryGrid}</div>
+      </div>
+    ` : ''}
+  `;
+}
+``
 
 init();

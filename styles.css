@@ -901,3 +901,50 @@ td {
     width: 2.4rem;
   }
 }
+
+.summit-photos {
+  margin-block: 1rem 2rem;
+}
+
+.summit-photos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.summit-card {
+  position: relative;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+.summit-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  /* keeps tiles consistent */
+  object-fit: cover;
+  background: #f6f6f6;
+  display: block;
+}
+
+.summit-card__label {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.summit-card__meta {
+  font-size: 12px;
+  color: #666;
+  padding: 8px 10px 10px;
+  /* below image */
+}
