@@ -1163,6 +1163,7 @@ async function init() {
     renderRides();
     renderCantons();
     renderSummitPhotos();
+    setupLightboxEvents();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
@@ -1194,7 +1195,7 @@ function renderSummitPhotos() {
     if (it.place) metaParts.push(`Summit : ${escapeHtml(it.place)}`);
     if (it.date) metaParts.push(`Date : ${it.date}`);
     if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
-    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">voir</a>`);
+    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">see</a>`);
     if (it.note) metaParts.push(`Note : ${escapeHtml(it.note)}`);
     const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
 
@@ -1229,6 +1230,57 @@ function renderSummitPhotos() {
       </div>
     ` : ''}
   `;
+}
+
+function openLightbox(url, altText = "") {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  if (!box || !img) return;
+  img.src = url;
+  img.alt = altText || "Expanded image";
+  box.classList.add("is-open");
+  document.documentElement.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  if (!box || !img) return;
+  box.classList.remove("is-open");
+  img.src = "";
+  img.alt = "";
+  document.documentElement.style.overflow = "";
+}
+
+function setupLightboxEvents() {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  const closeBtn = box ? box.querySelector(".hh-lightbox__close") : null;
+  const root = document.getElementById('summit-photos-root')
+    || document.getElementById('summit-photos-grid');
+
+  if (root) {
+    root.addEventListener("click", (ev) => {
+      const target = ev.target;
+      if (target && target.matches("img.summit-card__img")) {
+        const full = target.getAttribute("data-fullsrc") || target.getAttribute("src");
+        const alt = target.getAttribute("alt") || "";
+        if (full) openLightbox(full, alt);
+      }
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+
+  if (box) {
+    box.addEventListener("click", (ev) => {
+      if (ev.target === box) closeLightbox();
+    });
+  }
+
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") closeLightbox();
+  });
 }
 
 init();

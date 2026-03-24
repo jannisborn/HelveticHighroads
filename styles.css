@@ -932,8 +932,9 @@ td {
 
 .summit-card__label {
   position: absolute;
+  top: 8px;
+  bottom: auto;
   left: 8px;
-  bottom: 8px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   padding: 6px 10px;
@@ -947,4 +948,50 @@ td {
   color: #666;
   padding: 8px 10px 10px;
   /* below image */
+}
+
+.hh-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .72);
+  display: none;
+  /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.hh-lightbox.is-open {
+  display: flex;
+}
+
+.hh-lightbox__img {
+  max-width: min(92vw, 1200px);
+  max-height: 92vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .4);
+  background: #111;
+  object-fit: contain;
+}
+
+.hh-lightbox__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, .92);
+  color: #222;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hh-lightbox__close:hover {
+  background: #fff;
+}
+
+.summit-card__img {
+  cursor: zoom-in;
 }
