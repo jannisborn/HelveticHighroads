@@ -94,6 +94,9 @@ const countryNameToCode = {
   Liechtenstein: "LI"
 };
 
+const FALLBACK_SUMMIT_PHOTO = "assets/summit_pictures/locked.jpg";
+
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
@@ -124,6 +127,101 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function getDateTimestamp(value) {
+  if (!value) return 0;
+
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function slugifySummitPhotoName(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ß/g, "ss")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+}
+
+function buildSummitPhotoPath(region, date) {
+  if (!region || !date) return FALLBACK_SUMMIT_PHOTO;
+  return `assets/summit_pictures/${slugifySummitPhotoName(region)}-${date}.jpg`;
+}
+
+function compareSummitPhotoItems(a, b) {
+  const aHasDate = Boolean(a?.date);
+  const bHasDate = Boolean(b?.date);
+
+  if (aHasDate !== bHasDate) {
+    return aHasDate ? -1 : 1;
+  }
+
+  if (aHasDate && bHasDate) {
+    const timestampDiff = getDateTimestamp(a.date) - getDateTimestamp(b.date);
+    if (timestampDiff !== 0) {
+      return timestampDiff;
+    }
+  }
+
+  const aOrder = Number.isFinite(a?.order) ? a.order : Number.MAX_SAFE_INTEGER;
+  const bOrder = Number.isFinite(b?.order) ? b.order : Number.MAX_SAFE_INTEGER;
+  if (aOrder !== bOrder) {
+    return aOrder - bOrder;
+  }
+
+  return String(a?.region || "").localeCompare(String(b?.region || ""), "de-CH");
+}
+
+function buildSummitPhotoItems() {
+  const sortedRides = [...rides].sort((a, b) => getDateTimestamp(b.date) - getDateTimestamp(a.date));
+  const rideByStravaUrl = new Map(
+    sortedRides
+      .filter((ride) => ride && ride.stravaUrl)
+      .map((ride) => [ride.stravaUrl, ride])
+  );
+
+  const cantonItems = cantonPeaks.map((peak) => {
+    const linkedRide = peak && peak.stravaUrl ? rideByStravaUrl.get(peak.stravaUrl) : null;
+    const fallbackRide = sortedRides.find(
+      (ride) => Array.isArray(ride.cantons) && ride.cantons.includes(peak.canton)
+    );
+    const ride = peak.done ? (linkedRide || fallbackRide || null) : null;
+
+    return {
+      kind: "canton",
+      region: peak.canton,
+      place: peak.done ? peak.peak : undefined,
+      photo: ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      date: ride ? ride.date : undefined,
+      order: peak.order,
+      altitudeM: peak.done ? peak.altitudeM : undefined,
+      ride: peak.done ? ((ride && ride.stravaUrl) || peak.stravaUrl || undefined) : undefined
+    };
+  });
+
+  const neighboringCountries = Array.isArray(project?.neighboringCountries)
+    ? project.neighboringCountries
+    : Object.keys(countryNameToCode).filter((country) => country !== "Switzerland");
+
+  const countryItems = neighboringCountries.map((country, index) => {
+    const ride = sortedRides.find(
+      (candidate) => Array.isArray(candidate.countriesVisited) && candidate.countriesVisited.includes(country)
+    );
+
+    return {
+      kind: "country",
+      region: country,
+      photo: ride ? buildSummitPhotoPath(country, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      date: ride ? ride.date : undefined,
+      order: index + 1,
+      ride: ride ? ride.stravaUrl : undefined
+    };
+  });
+
+  return [...cantonItems, ...countryItems];
 }
 
 function truncateLabel(value, maxLength = 18) {
@@ -309,9 +407,19 @@ function buildCountryFlagMarkup(code, x, y, width, height) {
 
 function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   const safeClassName = escapeHtml(className);
+  const safeCode = String(code || "").toUpperCase();
+
+  let w = width;
+  let h = height;
+  if (safeCode === "CH") {
+    const s = Math.min(width, height);
+    w = s;
+    h = s;
+  }
+
   return `
-    <svg class="${safeClassName}" viewBox="0 0 ${width} ${height}" aria-hidden="true" focusable="false">
-      ${buildCountryFlagMarkup(code, 0, 0, width, height)}
+    <svg class="${safeClassName}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">
+      ${buildCountryFlagMarkup(safeCode, 0, 0, w, h)}
     </svg>
   `;
 }
@@ -399,8 +507,8 @@ function renderStats() {
       value: `${countriesMentioned.size}`,
       extraHtml: visitedCountryCodes.length
         ? `<div class="stat-country-flags">${visitedCountryCodes
-            .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
-            .join("")}</div>`
+          .map((countryCode) => buildCountryFlagSvg(countryCode, 24, 16, "stat-country-flag"))
+          .join("")}</div>`
         : ""
     },
     {
@@ -735,9 +843,9 @@ function renderElevationProfile() {
   const nufenenLayout =
     nufenenMarkers.length === 2
       ? {
-          boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
-          topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
-        }
+        boxCenterX: (nufenenMarkers[0].x + nufenenMarkers[1].x) / 2,
+        topRowIndex: Math.min(nufenenMarkers[0].rowIndex, nufenenMarkers[1].rowIndex)
+      }
       : null;
 
   const gridHtml = elevationTicks
@@ -784,11 +892,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10"></rect>
           </clipPath>
           <rect class="profile-country-block" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" rx="10" fill="${visual.fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-country-block profile-country-block-complete" x="${sectionStartX.toFixed(1)}" y="${countryBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${countryBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -841,11 +948,11 @@ function renderElevationProfile() {
       const fill = isSwissCanton ? "#e7efe9" : "#d7dcd8";
       const title = isSwissCanton
         ? escapeHtml(
-            `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          )
+          `${section.cantonName || section.cantonCode || ""} (${String(section.cantonCode || "").toUpperCase()}) • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        )
         : escapeHtml(
-            `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
-          );
+          `${String(section.countryCode || "").toUpperCase()} • ${formatNumber(startKm, 1)}-${formatNumber(endKm, 1)} km`
+        );
 
       return `
         <g class="profile-canton-section">
@@ -854,11 +961,10 @@ function renderElevationProfile() {
             <rect x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8"></rect>
           </clipPath>
           <rect class="profile-canton-block" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${sectionWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" rx="8" fill="${fill}"></rect>
-          ${
-            completedWidth > 0
-              ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
-              : ""
-          }
+          ${completedWidth > 0
+          ? `<rect class="profile-canton-block profile-canton-block-complete" x="${sectionStartX.toFixed(1)}" y="${cantonBandTop.toFixed(1)}" width="${completedWidth.toFixed(1)}" height="${cantonBandHeight.toFixed(1)}" clip-path="url(#${clipPathId})"></rect>`
+          : ""
+        }
         </g>
       `;
     })
@@ -949,27 +1055,27 @@ function renderElevationProfile() {
     .join("");
   const nufenenSharedLabelHtml = nufenenLayout
     ? (() => {
-        const flagWidth = 38;
-        const flagHeight = 27;
-        const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
-        const bottomFlagY = topFlagY + 30;
-        const labelLines = splitPeakLabel("Nufenen Pass", 10);
-        const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
-        const nameX = flagX + flagWidth + 3;
-        const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
-        const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
-        const labelHtml = labelLines
-          .map((line, index) => {
-            const attrs =
-              index === 0
-                ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
-                : `x="${nameX.toFixed(1)}" dy="11.8"`;
-            return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
-          })
-          .join("");
+      const flagWidth = 38;
+      const flagHeight = 27;
+      const topFlagY = 16 + nufenenLayout.topRowIndex * 30;
+      const bottomFlagY = topFlagY + 30;
+      const labelLines = splitPeakLabel("Nufenen Pass", 10);
+      const flagX = nufenenLayout.boxCenterX - flagWidth / 2;
+      const nameX = flagX + flagWidth + 3;
+      const centerY = ((topFlagY + flagHeight / 2) + (bottomFlagY + flagHeight / 2)) / 2;
+      const nameY = centerY - (labelLines.length > 1 ? 5.3 : 0);
+      const labelHtml = labelLines
+        .map((line, index) => {
+          const attrs =
+            index === 0
+              ? `x="${nameX.toFixed(1)}" y="${nameY.toFixed(1)}"`
+              : `x="${nameX.toFixed(1)}" dy="11.8"`;
+          return `<tspan ${attrs}>${escapeHtml(line)}</tspan>`;
+        })
+        .join("");
 
-        return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
-      })()
+      return `<text class="profile-marker-name" text-anchor="start">${labelHtml}</text>`;
+    })()
     : "";
 
   const profileLinePath = buildSvgLinePath(allPoints);
@@ -1002,13 +1108,12 @@ function renderElevationProfile() {
     ${countryBoundariesHtml}
     ${cantonSectionsRectsHtml}
     ${cantonBoundariesHtml}
-    ${
-      completedKm > 0
-        ? `
+    ${completedKm > 0
+      ? `
       <line class="profile-progress-line" x1="${currentPoint.x.toFixed(1)}" y1="${plotTop}" x2="${currentPoint.x.toFixed(1)}" y2="${cantonBandBottom.toFixed(1)}"></line>
       <circle class="profile-progress-dot" cx="${currentPoint.x.toFixed(1)}" cy="${currentPoint.y.toFixed(1)}" r="6.2"></circle>
     `
-        : ""
+      : ""
     }
     ${markersHtml}
     ${nufenenSharedLabelHtml}
@@ -1057,10 +1162,125 @@ async function init() {
     renderPassGallery();
     renderRides();
     renderCantons();
+    renderSummitPhotos();
+    setupLightboxEvents();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
   }
+}
+
+function renderSummitPhotos() {
+  const root = document.getElementById('summit-photos-root')
+    || document.getElementById('summit-photos-grid');
+  if (!root) return;
+
+  const items = buildSummitPhotoItems();
+  const cantons = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'canton')
+    .sort(compareSummitPhotoItems);
+  const countries = items
+    .filter((it) => (it.kind || '').toLowerCase() === 'country')
+    .sort(compareSummitPhotoItems);
+
+  const card = (it) => {
+    const kind = (it.kind || '').toLowerCase();
+    const region = it.region || (kind === 'canton' ? 'Canton' : 'Country');
+    const place = it.place ? ` — ${it.place}` : '';
+    const imgSrc = (it.photo && String(it.photo).trim()) ? it.photo : FALLBACK_SUMMIT_PHOTO;
+    const labelText = `${region}`;
+    const altText = `${region}${place}`;
+
+    const metaParts = [];
+    if (it.place) metaParts.push(`Summit : ${escapeHtml(it.place)}`);
+    if (it.date) metaParts.push(`Date : ${it.date}`);
+    if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
+    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">see</a>`);
+    if (it.note) metaParts.push(`Note : ${escapeHtml(it.note)}`);
+    const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
+
+    return `
+      <article class="summit-card">
+        <img class="summit-card__img"
+             src="${escapeHtml(imgSrc)}"
+             alt="${escapeHtml(altText)}"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='${FALLBACK_SUMMIT_PHOTO}'">
+        <span class="summit-card__label">${escapeHtml(labelText)}</span>
+        ${metaHtml}
+      </article>
+    `;
+  };
+
+  const cantonGrid = cantons.map(card).join('');
+  const countryGrid = countries.map(card).join('');
+
+  root.innerHTML = `
+    ${cantons.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Cantons</h3>
+        <div class="summit-photos__grid">${cantonGrid}</div>
+      </div>
+    ` : ''}
+
+    ${countries.length ? `
+      <div class="summit-photos__group">
+        <h3 class="subheading">Countries</h3>
+        <div class="summit-photos__grid">${countryGrid}</div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function openLightbox(url, altText = "") {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  if (!box || !img) return;
+  img.src = url;
+  img.alt = altText || "Expanded image";
+  box.classList.add("is-open");
+  document.documentElement.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  if (!box || !img) return;
+  box.classList.remove("is-open");
+  img.src = "";
+  img.alt = "";
+  document.documentElement.style.overflow = "";
+}
+
+function setupLightboxEvents() {
+  const box = document.getElementById("hh-lightbox");
+  const img = document.getElementById("hh-lightbox-img");
+  const closeBtn = box ? box.querySelector(".hh-lightbox__close") : null;
+  const root = document.getElementById('summit-photos-root')
+    || document.getElementById('summit-photos-grid');
+
+  if (root) {
+    root.addEventListener("click", (ev) => {
+      const target = ev.target;
+      if (target && target.matches("img.summit-card__img")) {
+        const full = target.getAttribute("data-fullsrc") || target.getAttribute("src");
+        const alt = target.getAttribute("alt") || "";
+        if (full) openLightbox(full, alt);
+      }
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+
+  if (box) {
+    box.addEventListener("click", (ev) => {
+      if (ev.target === box) closeLightbox();
+    });
+  }
+
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") closeLightbox();
+  });
 }
 
 init();
