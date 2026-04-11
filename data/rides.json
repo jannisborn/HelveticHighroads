@@ -28,5 +28,21 @@
     ],
     "stravaUrl": "https://www.strava.com/activities/17794160836",
     "stravaActivityId": 17794160836
+  },
+  {
+    "name": "🏔️🚴Helvetic Highroads Stage 3: Basel ➡️ St Imier",
+    "date": "2026-04-11",
+    "distanceKm": 149.148,
+    "elevationM": 3033,
+    "cantons": [
+      "Basel Land",
+      "Solothurn",
+      "Jura"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/18068463238",
+    "stravaActivityId": 18068463238
   }
 ]

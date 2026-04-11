@@ -36,7 +36,8 @@
     "altitudeM": 1023,
     "profileKm": 224.098,
     "profileWaypointIndex": 5,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/18068463238"
   },
   {
     "order": 5,
@@ -45,7 +46,8 @@
     "altitudeM": 1358,
     "profileKm": 285.991,
     "profileWaypointIndex": 6,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/18068463238"
   },
   {
     "order": 6,
@@ -54,7 +56,8 @@
     "altitudeM": 1177,
     "profileKm": 327.507,
     "profileWaypointIndex": 7,
-    "done": false
+    "done": true,
+    "stravaUrl": "https://www.strava.com/activities/18068463238"
   },
   {
     "order": 7,
