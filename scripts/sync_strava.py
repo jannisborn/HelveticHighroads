@@ -424,6 +424,31 @@ def extract_countries_from_activity(activity: Dict[str, Any], country_names: Lis
     return extracted
 
 
+def clean_featured_rider_name(value: str) -> str:
+    return re.sub(r"\s+", " ", str(value)).strip(" \t\r\n,.;:")
+
+
+def extract_featured_riders_from_activity(activity: Dict[str, Any]) -> List[str]:
+    description = str(activity.get("description") or "")
+    if not description:
+        return []
+
+    match = re.search(r"(?i)\bFeaturing:\s*([^\n\r.]+)", description)
+    if not match:
+        return []
+
+    riders: List[str] = []
+    seen = set()
+    for chunk in match.group(1).split(","):
+        rider_name = clean_featured_rider_name(chunk)
+        rider_key = normalize_text(rider_name)
+        if not rider_name or not rider_key or rider_key in seen:
+            continue
+        riders.append(rider_name)
+        seen.add(rider_key)
+    return riders
+
+
 def activity_to_ride(
     activity: Dict[str, Any], canton_names: List[str], country_names: List[str]
 ) -> Dict[str, Any]:
@@ -441,6 +466,7 @@ def activity_to_ride(
         "elevationM": round(elevation_m),
         "cantons": extract_cantons_from_activity(activity, canton_names),
         "countriesVisited": extract_countries_from_activity(activity, country_names),
+        "featuredRiders": extract_featured_riders_from_activity(activity),
         "stravaUrl": ACTIVITY_WEB_URL.format(activity_id),
         "stravaActivityId": activity_id,
     }
@@ -478,6 +504,7 @@ def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, 
         existing["countriesVisited"] = new_ride["countriesVisited"] or existing.get(
             "countriesVisited", []
         )
+        existing["featuredRiders"] = list(new_ride.get("featuredRiders") or [])
 
     def sort_key(ride: Dict[str, Any]) -> tuple:
         dt = parse_iso_datetime(f"{ride.get('date')}T00:00:00+00:00")
@@ -514,6 +541,94 @@ def update_canton_peaks(canton_peaks: List[Dict[str, Any]], rides: List[Dict[str
     return updated
 
 
+def build_featured_riders(rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def ride_sort_key(ride: Dict[str, Any]) -> tuple:
+        dt = parse_iso_datetime(f"{ride.get('date')}T00:00:00+00:00")
+        ts = to_unix_timestamp(dt) if dt else 0
+        return (ts, extract_activity_id_from_ride(ride) or 0)
+
+    grouped: Dict[str, Dict[str, Any]] = {}
+
+    for ride in sorted(rides, key=ride_sort_key):
+        ride_names = ride.get("featuredRiders")
+        if not isinstance(ride_names, list):
+            continue
+
+        ride_name = str(ride.get("name") or "").strip()
+        ride_date = str(ride.get("date") or "").strip()
+        ride_url = str(ride.get("stravaUrl") or "").strip()
+        ride_entry = {
+            "date": ride_date,
+            "name": ride_name,
+            "stravaUrl": ride_url,
+        }
+        ride_entry_key = (
+            ride_entry["date"],
+            ride_entry["name"],
+            ride_entry["stravaUrl"],
+        )
+
+        for raw_rider_name in ride_names:
+            rider_name = clean_featured_rider_name(raw_rider_name)
+            rider_key = normalize_text(rider_name)
+            if not rider_name or not rider_key:
+                continue
+
+            group = grouped.setdefault(
+                rider_key,
+                {
+                    "name": rider_name,
+                    "rides": [],
+                    "rideCount": 0,
+                    "peakCount": 0,
+                    "cantons": [],
+                    "distanceKm": 0.0,
+                    "elevationM": 0,
+                    "_seen_ride_keys": set(),
+                    "_seen_cantons": set(),
+                },
+            )
+            if not group.get("name"):
+                group["name"] = rider_name
+
+            if ride_entry_key in group["_seen_ride_keys"]:
+                continue
+            group["_seen_ride_keys"].add(ride_entry_key)
+            group["rides"].append(ride_entry)
+            group["rideCount"] += 1
+            group["distanceKm"] += float(ride.get("distanceKm") or 0.0)
+            group["elevationM"] += round(float(ride.get("elevationM") or 0.0))
+
+            ride_cantons = ride.get("cantons")
+            if isinstance(ride_cantons, list):
+                for raw_canton in ride_cantons:
+                    canton = str(raw_canton).strip()
+                    canton_key = normalize_text(canton)
+                    if not canton or not canton_key or canton_key in group["_seen_cantons"]:
+                        continue
+                    group["_seen_cantons"].add(canton_key)
+                    group["cantons"].append(canton)
+
+            group["peakCount"] = len(group["cantons"])
+
+    featured_riders: List[Dict[str, Any]] = []
+    for rider_key in sorted(grouped, key=lambda value: grouped[value]["name"].casefold()):
+        group = grouped[rider_key]
+        featured_riders.append(
+            {
+                "name": group["name"],
+                "rideCount": group["rideCount"],
+                "peakCount": group["peakCount"],
+                "cantons": group["cantons"],
+                "distanceKm": round(group["distanceKm"], 3),
+                "elevationM": round(group["elevationM"]),
+                "rides": group["rides"],
+            }
+        )
+
+    return featured_riders
+
+
 def activities_with_prefix(activities: List[Dict[str, Any]], prefix: str) -> List[Dict[str, Any]]:
     normalized_prefix = normalize_text(prefix)
     if not normalized_prefix:
@@ -538,6 +653,8 @@ def print_summary(
     refreshed_known_count: int,
     rides_before: int,
     rides_after: int,
+    featured_before: int,
+    featured_after: int,
     canton_done_before: int,
     canton_done_after: int,
     dry_run: bool,
@@ -547,6 +664,7 @@ def print_summary(
     print(f"[{mode}] matched title-tag ride activities: {matched_count}")
     print(f"[{mode}] refreshed known ride activities: {refreshed_known_count}")
     print(f"[{mode}] rides: {rides_before} -> {rides_after}")
+    print(f"[{mode}] featured riders: {featured_before} -> {featured_after}")
     print(f"[{mode}] completed canton peaks: {canton_done_before} -> {canton_done_after}")
 
 
@@ -557,6 +675,7 @@ def main() -> int:
     rides_path = args.data_dir / "rides.json"
     canton_peaks_path = args.data_dir / "canton-peaks.json"
     pass_gallery_path = args.data_dir / "pass-gallery.json"
+    featured_riders_path = args.data_dir / "featured-riders.json"
     state_path = args.data_dir / "state.json"
 
     for path in (project_path, rides_path, canton_peaks_path, pass_gallery_path):
@@ -572,6 +691,7 @@ def main() -> int:
     project = read_json(project_path)
     rides = read_json(rides_path)
     canton_peaks = read_json(canton_peaks_path)
+    featured_riders = read_json(featured_riders_path) if featured_riders_path.exists() else []
     state = read_json(state_path) if state_path.exists() else {}
     credentials = read_json(args.credentials)
 
@@ -579,6 +699,8 @@ def main() -> int:
         raise ValueError("data/rides.json must contain a JSON list.")
     if not isinstance(canton_peaks, list):
         raise ValueError("data/canton-peaks.json must contain a JSON list.")
+    if not isinstance(featured_riders, list):
+        raise ValueError("data/featured-riders.json must contain a JSON list.")
     if not isinstance(state, dict):
         raise ValueError("data/state.json must contain a JSON object.")
 
@@ -643,6 +765,7 @@ def main() -> int:
 
     merged_rides = merge_rides(rides, new_rides)
     updated_cantons = update_canton_peaks(canton_peaks, merged_rides)
+    updated_featured_riders = build_featured_riders(merged_rides)
 
     done_before = sum(1 for row in canton_peaks if row.get("done"))
     done_after = sum(1 for row in updated_cantons if row.get("done"))
@@ -664,6 +787,8 @@ def main() -> int:
         refreshed_known_count=len(refreshed_known_ride_activities),
         rides_before=len(rides),
         rides_after=len(merged_rides),
+        featured_before=len(featured_riders),
+        featured_after=len(updated_featured_riders),
         canton_done_before=done_before,
         canton_done_after=done_after,
         dry_run=args.dry_run,
@@ -674,12 +799,15 @@ def main() -> int:
 
     rides_changed = merged_rides != rides
     cantons_changed = updated_cantons != canton_peaks
+    featured_riders_changed = updated_featured_riders != featured_riders
     state_changed = updated_state != state
 
     if rides_changed:
         write_json(rides_path, merged_rides)
     if cantons_changed:
         write_json(canton_peaks_path, updated_cantons)
+    if featured_riders_changed:
+        write_json(featured_riders_path, updated_featured_riders)
     if state_changed:
         write_json(state_path, updated_state)
 
@@ -688,6 +816,7 @@ def main() -> int:
 
     print(f"[APPLIED] rides changed: {rides_changed}")
     print(f"[APPLIED] canton peaks changed: {cantons_changed}")
+    print(f"[APPLIED] featured riders changed: {featured_riders_changed}")
     print(f"[APPLIED] state changed: {state_changed}")
     if args.no_write_refresh_token:
         print("[APPLIED] refresh token write: skipped (--no-write-refresh-token)")

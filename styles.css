@@ -549,6 +549,56 @@ p {
   background: linear-gradient(130deg, var(--green-1), var(--green-2));
 }
 
+.featuring-section {
+  background:
+    radial-gradient(circle at 92% 14%, rgba(252, 176, 62, 0.18), rgba(252, 176, 62, 0) 32%),
+    linear-gradient(144deg, rgba(255, 255, 255, 0.84), rgba(239, 248, 242, 0.82));
+}
+
+.featuring-head {
+  align-items: flex-start;
+}
+
+.featuring-copy {
+  margin: 0.35rem 0 0;
+  max-width: 48ch;
+}
+
+.featuring-grid {
+  margin-top: 0.78rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.72rem;
+}
+
+.feature-card {
+  min-height: 100%;
+  padding: 0.68rem 0.84rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.feature-card__summary,
+.featuring-empty {
+  margin: 0;
+}
+
+.feature-card__summary {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.feature-card__summary strong {
+  color: var(--ink);
+}
+
+.featuring-empty {
+  color: var(--ink-soft);
+}
+
 .pass-grid {
   margin-top: 0.5rem;
   display: grid;
@@ -656,12 +706,14 @@ table {
 th,
 td {
   text-align: left;
-  padding: 0.58rem 0.36rem;
+  padding: 0.42rem 0.36rem;
+  vertical-align: middle;
   border-bottom: 1px solid var(--line);
 }
 
 th {
   font-size: 0.75rem;
+  line-height: 1.15;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-soft);
@@ -669,6 +721,7 @@ th {
 
 td {
   font-size: 0.93rem;
+  line-height: 1.25;
 }
 
 .col-completed,
@@ -679,15 +732,15 @@ td {
 }
 
 .strava-th-logo {
-  width: 3.15rem;
-  height: 3.15rem;
+  width: 2.05rem;
+  height: 2.05rem;
   display: inline-block;
   vertical-align: middle;
 }
 
 .complete-icon {
   display: inline-block;
-  font-size: 1.08rem;
+  font-size: 0.92rem;
   line-height: 1;
 }
 
@@ -698,8 +751,8 @@ td {
 }
 
 .strava-row-logo {
-  width: 3.3rem;
-  height: 3.3rem;
+  width: 2.1rem;
+  height: 2.1rem;
   display: block;
 }
 
@@ -800,7 +853,7 @@ td {
 
   th,
   td {
-    padding: 0.5rem 0.3rem;
+    padding: 0.38rem 0.3rem;
   }
 
   .strava-logo {
@@ -809,13 +862,13 @@ td {
   }
 
   .strava-th-logo {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 1.85rem;
+    height: 1.85rem;
   }
 
   .strava-row-logo {
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 1.9rem;
+    height: 1.9rem;
   }
 
   .profile-marker-name {
@@ -848,7 +901,7 @@ td {
 
   th,
   td {
-    padding: 0.42rem 0.22rem;
+    padding: 0.34rem 0.22rem;
   }
 
   th {
@@ -870,19 +923,19 @@ td {
   }
 
   .strava-th-logo {
-    width: 1.45rem;
-    height: 1.45rem;
+    width: 1.3rem;
+    height: 1.3rem;
   }
 
   .strava-row-logo {
-    width: 1.65rem;
-    height: 1.65rem;
+    width: 1.45rem;
+    height: 1.45rem;
   }
 
   .complete-icon {
     width: 1.02rem;
     height: 1.02rem;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
   }
 
   .progress-pct {

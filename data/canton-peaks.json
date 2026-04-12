@@ -180,6 +180,15 @@
   },
   {
     "order": 20,
+    "canton": "St. Gallen",
+    "peak": "Kamor Trestenkopf",
+    "altitudeM": 1720,
+    "profileKm": 1775.214,
+    "profileWaypointIndex": 32,
+    "done": false
+  },
+  {
+    "order": 21,
     "canton": "Appenzell Innerrhoden",
     "peak": "Kamor Trestenkopf",
     "altitudeM": 1610,
@@ -188,21 +197,12 @@
     "done": false
   },
   {
-    "order": 21,
+    "order": 22,
     "canton": "Appenzell Ausserrhoden",
     "peak": "Schwägalp Pass",
     "altitudeM": 1299,
     "profileKm": 1811.506,
     "profileWaypointIndex": 31,
-    "done": false
-  },
-  {
-    "order": 22,
-    "canton": "St. Gallen",
-    "peak": "Kamor Trestenkopf",
-    "altitudeM": 1720,
-    "profileKm": 1775.214,
-    "profileWaypointIndex": 32,
     "done": false
   },
   {
