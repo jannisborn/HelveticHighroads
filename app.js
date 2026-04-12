@@ -2,6 +2,7 @@ let project = null;
 let rides = [];
 let cantonPeaks = [];
 let passGallery = [];
+let featuredRiders = [];
 let routeProfile = null;
 
 const dataFiles = {
@@ -9,6 +10,7 @@ const dataFiles = {
   rides: "./data/rides.json",
   cantonPeaks: "./data/canton-peaks.json",
   passGallery: "./data/pass-gallery.json",
+  featuredRiders: "./data/featured-riders.json",
   routeProfile: "./data/route-profile.json"
 };
 
@@ -560,6 +562,47 @@ function renderPassGallery() {
       </article>
     `
     )
+    .join("");
+}
+
+function renderFeaturedRiders() {
+  const host = document.getElementById("featured-riders-list");
+  if (!host) {
+    return;
+  }
+
+  if (!featuredRiders.length) {
+    host.innerHTML = '<p class="muted featuring-empty">No guest riders added yet.</p>';
+    return;
+  }
+
+  host.innerHTML = featuredRiders
+    .map((rider) => {
+      const name = escapeHtml(rider?.name || "Guest rider");
+      const rideCount = Number(rider?.rideCount) || 0;
+      const peakCount = Number(rider?.peakCount) || 0;
+      const distanceKm = Number(rider?.distanceKm) || 0;
+      const elevationM = Number(rider?.elevationM) || 0;
+      const cantonNames = Array.isArray(rider?.cantons) ? rider.cantons.filter(Boolean) : [];
+      const totalDistanceKm = Number(project?.totalDistanceKm) || 0;
+      const totalElevationM = Number(project?.totalElevationM) || 0;
+      const distancePct = totalDistanceKm > 0 ? (distanceKm / totalDistanceKm) * 100 : 0;
+      const elevationPct = totalElevationM > 0 ? (elevationM / totalElevationM) * 100 : 0;
+      const summaryParts = [
+        `${rideCount} ride${rideCount === 1 ? "" : "s"}`,
+        `${peakCount} peak${peakCount === 1 ? "" : "s"}${cantonNames.length ? ` (${escapeHtml(cantonNames.join(", "))})` : ""}`,
+        `${formatNumber(distanceKm, 1)} km (${formatNumber(distancePct, 1)}%)`,
+        `${formatNumber(elevationM)} m (${formatNumber(elevationPct, 1)}%)`
+      ];
+
+      return `
+        <article class="feature-card">
+          <p class="feature-card__summary">
+            <strong>${name}:</strong> ${summaryParts.join(" · ")}
+          </p>
+        </article>
+      `;
+    })
     .join("");
 }
 
@@ -1142,11 +1185,12 @@ function showDataLoadError(message) {
 
 async function init() {
   try {
-    const [projectData, ridesData, cantonPeaksData, passGalleryData, routeProfileData] = await Promise.all([
+    const [projectData, ridesData, cantonPeaksData, passGalleryData, featuredRidersData, routeProfileData] = await Promise.all([
       loadJson(dataFiles.project),
       loadJson(dataFiles.rides),
       loadJson(dataFiles.cantonPeaks),
       loadJson(dataFiles.passGallery),
+      loadJson(dataFiles.featuredRiders),
       loadJson(dataFiles.routeProfile)
     ]);
 
@@ -1154,12 +1198,14 @@ async function init() {
     rides = Array.isArray(ridesData) ? ridesData : [];
     cantonPeaks = Array.isArray(cantonPeaksData) ? cantonPeaksData : [];
     passGallery = Array.isArray(passGalleryData) ? passGalleryData : [];
+    featuredRiders = Array.isArray(featuredRidersData) ? featuredRidersData : [];
     routeProfile = routeProfileData && typeof routeProfileData === "object" ? routeProfileData : null;
 
     renderKomootMap();
     renderStats();
     renderElevationProfile();
     renderPassGallery();
+    renderFeaturedRiders();
     renderRides();
     renderCantons();
     renderSummitPhotos();

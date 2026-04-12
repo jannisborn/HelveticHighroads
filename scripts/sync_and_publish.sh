@@ -57,9 +57,9 @@ else
   python3 scripts/sync_strava.py --max-pages 5
 fi
 
-git add data/rides.json data/canton-peaks.json
+git add data/rides.json data/canton-peaks.json data/featured-riders.json
 
-if git diff --cached --quiet -- data/rides.json data/canton-peaks.json; then
+if git diff --cached --quiet -- data/rides.json data/canton-peaks.json data/featured-riders.json; then
   echo "No website data changes to publish. Leaving data/state.json local-only."
   push_branch_if_needed
   exit 0

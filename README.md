@@ -22,6 +22,7 @@ Edit the JSON files in [`data/`](./data):
 - [`data/country-crossings.json`](./data/country-crossings.json): maintain the ordered route border anchors used to generate the country strip under the profile.
 - [`data/route-profile.json`](./data/route-profile.json): generated from the shared Komoot route for the website elevation profile. Rebuild it after route edits.
 - [`data/pass-gallery.json`](./data/pass-gallery.json): update pass cards.
+- [`data/featured-riders.json`](./data/featured-riders.json): generated from Strava ride descriptions for the Featuring section.
 
 ## Build route profile
 
@@ -41,6 +42,7 @@ Use [`scripts/sync_strava.py`](./scripts/sync_strava.py) to fetch recent Strava 
 
 - [`data/rides.json`](./data/rides.json)
 - [`data/canton-peaks.json`](./data/canton-peaks.json)
+- [`data/featured-riders.json`](./data/featured-riders.json)
 - [`data/state.json`](./data/state.json)
 
 ### 1. Create local credentials file
@@ -65,6 +67,7 @@ If the title or description includes canton names, it auto-marks those canton ro
 The sync fetches full activity details for matched rides, so description text is included reliably.
 It also refreshes already tracked Strava ride IDs each run, so title/description edits on older rides are picked up.
 It also fills `countriesVisited` by scanning title + description and mapping German country names to English (for example `Deutschland` -> `Germany`, `Schweiz` -> `Switzerland`).
+It also extracts fellow riders from a `Featuring:` block in the description. Use a comma-separated list and end it with either a period or a line break, for example `Featuring: First Last, Second Rider.`.
 If no country is mentioned, it defaults to `Switzerland`.
 If incremental sync finds no tagged rides, the script retries a full lookback (bounded by `--max-pages`) automatically.
 
@@ -121,4 +124,4 @@ Notes:
 
 - The repo remote should use SSH so `git push` can authenticate non-interactively.
 - GitHub Pages must already publish from the branch you push to.
-- The script only publishes when `data/rides.json` or `data/canton-peaks.json` changes. `data/state.json` stays local-only unless a real website-data update is being committed.
+- The script only publishes when `data/rides.json`, `data/canton-peaks.json`, or `data/featured-riders.json` changes. `data/state.json` stays local-only unless a real website-data update is being committed.

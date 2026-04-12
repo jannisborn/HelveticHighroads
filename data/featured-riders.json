@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Mathieu Janier",
+    "rideCount": 1,
+    "peakCount": 3,
+    "cantons": [
+      "Basel Land",
+      "Solothurn",
+      "Jura"
+    ],
+    "distanceKm": 149.148,
+    "elevationM": 3033,
+    "rides": [
+      {
+        "date": "2026-04-11",
+        "name": "🏔️🚴Helvetic Highroads Stage 3: Basel ➡️ St Imier",
+        "stravaUrl": "https://www.strava.com/activities/18068463238"
+      }
+    ]
+  }
+]
