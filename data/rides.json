@@ -49,5 +49,21 @@
     "featuredRiders": [
       "Mathieu Janier"
     ]
+  },
+  {
+    "name": "🚴🗻Helvetic Highroads Stage 4: St Imier ➡️ Montreux (via Geneva)",
+    "date": "2026-04-18",
+    "distanceKm": 242.972,
+    "elevationM": 2418,
+    "cantons": [
+      "Neuchâtel",
+      "Genève"
+    ],
+    "countriesVisited": [
+      "France"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/18161882427",
+    "stravaActivityId": 18161882427
   }
 ]
