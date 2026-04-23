@@ -1333,9 +1333,13 @@ function setupLightboxEvents() {
 }
 
 let leafletMapInstance = null;
+let mapInitializedOnce = false; // Flag to track if this is first initialization
 const routeColors = [
-  "#FF0000", "#0000FF", "#FFD700", "#00CC00", "#FF1493",
-  "#FF8C00", "#00BFFF", "#32CD32", "#FF4500", "#8B00FF"
+  "#001bb6", // blue
+  "#2a9d5a", // teal
+  "#ce8e5a", // soft orange
+  "#db4e2b", // terracotta
+  "#6D597A", // muted purple
 ];
 let currentRouteColorIndex = 0;
 
@@ -1387,8 +1391,8 @@ function initializeLeafletMap() {
 
   leafletMapInstance = L.map("leaflet-map").setView([46.775659, 8.313925], 8); // Centered on Obwalden (Tannensee)
 
-  // Use Stamen Toner Lite for a modern, clean look
-  L.tileLayer("https://tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png", {
+  // Use OpenStreetMap standard tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19,
   }).addTo(leafletMapInstance);
@@ -1396,6 +1400,7 @@ function initializeLeafletMap() {
   renderSummitMarkersOnLeaflet();
   renderStravaRoutesOnLeaflet();
   leafletMapInstance.invalidateSize();
+  mapInitializedOnce = true; // Mark that initial load is complete
 }
 
 function renderSummitMarkersOnLeaflet() {
@@ -1510,7 +1515,10 @@ function renderSummitMarkersOnLeaflet() {
 
   if (markers.length > 0) {
     const group = new L.featureGroup(markers);
-    leafletMapInstance.fitBounds(group.getBounds().pad(0.1));
+    // Only auto-fit bounds on data refresh, not on initial load
+    if (mapInitializedOnce) {
+      leafletMapInstance.fitBounds(group.getBounds().pad(0.1));
+    }
   }
 }
 
@@ -1521,7 +1529,7 @@ function renderStravaRoutesOnLeaflet() {
 
   currentRouteColorIndex = 0;
 
-  rides.forEach((ride) => {
+  rides.forEach((ride, index) => {
     if (!ride.polyline) return;
 
     const latlngs = decodePolyline(ride.polyline);
@@ -1532,6 +1540,10 @@ function renderStravaRoutesOnLeaflet() {
     const color = routeColors[currentRouteColorIndex % routeColors.length];
     currentRouteColorIndex++;
 
+    const stageNumber = index + 1;
+    const distance = ride.distanceKm ? ride.distanceKm.toFixed(1) : "0";
+    const elevation = ride.elevationM || "0";
+
     const polyline = L.polyline(latlngs, {
       color: color,
       weight: 5,
@@ -1540,16 +1552,23 @@ function renderStravaRoutesOnLeaflet() {
       lineJoin: "round",
     })
       .addTo(leafletMapInstance)
-      .bindPopup(`<strong>${escapeHtml(ride.name)}</strong>`);
+      .bindPopup(`
+        <div style="font-weight: bold; margin-bottom: 0px;">Stage ${stageNumber}</div>
+        <div><strong>Distance:</strong> ${distance} km</div>
+        <div><strong>Elevation:</strong> ${elevation} m</div>
+      `);
 
     routeLayers.push(polyline);
   });
 
   if (routeLayers.length > 0) {
     const group = L.featureGroup(routeLayers);
-    leafletMapInstance.fitBounds(group.getBounds(), {
-      padding: [30, 30],
-    });
+    // Only auto-fit bounds on data refresh, not on initial load
+    if (mapInitializedOnce) {
+      leafletMapInstance.fitBounds(group.getBounds(), {
+        padding: [30, 30],
+      });
+    }
   }
 }
 
