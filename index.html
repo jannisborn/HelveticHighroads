@@ -64,16 +64,16 @@
         <h2>Project Overview Map</h2>
         <div class="map-toggle-wrapper">
           <div class="map-toggle" id="map-toggle">
-            <button id="komoot-view-btn" class="map-toggle-btn active" title="View Komoot map">Komoot</button>
-            <button id="leaflet-view-btn" class="map-toggle-btn" title="View interactive map">Interactive</button>
+            <button id="komoot-view-btn" class="map-toggle-btn" title="View Komoot map">Komoot</button>
+            <button id="leaflet-view-btn" class="map-toggle-btn active" title="View interactive map">Interactive</button>
           </div>
         </div>
       </div>
-      <div id="komoot-frame" class="map-frame-wrap">
+      <div id="komoot-frame" class="map-frame-wrap" style="display: none;">
         <iframe id="komoot-tour-embed" title="Helvetic Highroads Komoot Tour" src="about:blank" loading="lazy"
           allowfullscreen></iframe>
       </div>
-      <div id="leaflet-frame" class="leaflet-frame" style="display: none;">
+      <div id="leaflet-frame" class="leaflet-frame">
         <div id="leaflet-map" class="leaflet-map-container"></div>
       </div>
     </section>

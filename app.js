@@ -1211,6 +1211,8 @@ async function init() {
     renderCantons();
     renderSummitPhotos();
     setupLightboxEvents();
+    initializeLeafletMap();
+    leafletMapInstance.invalidateSize();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
