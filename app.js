@@ -1334,8 +1334,8 @@ function setupLightboxEvents() {
 
 let leafletMapInstance = null;
 const routeColors = [
-  "#FF6B35", "#004E89", "#F77F00", "#06A77D", "#D62828",
-  "#A23B72", "#2E8B57", "#C1121F", "#7209B7", "#F72585"
+  "#FF0000", "#0000FF", "#FFD700", "#00CC00", "#FF1493",
+  "#FF8C00", "#00BFFF", "#32CD32", "#FF4500", "#8B00FF"
 ];
 let currentRouteColorIndex = 0;
 
@@ -1385,9 +1385,10 @@ function initializeLeafletMap() {
   const mapContainer = document.getElementById("leaflet-map");
   if (!mapContainer) return;
 
-  leafletMapInstance = L.map("leaflet-map").setView([46.8, 8.2], 8);
+  leafletMapInstance = L.map("leaflet-map").setView([46.775659, 8.313925], 8); // Centered on Obwalden (Tannensee)
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  // Use Stamen Toner Lite for a modern, clean look
+  L.tileLayer("https://tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19,
   }).addTo(leafletMapInstance);
@@ -1402,49 +1403,104 @@ function renderSummitMarkersOnLeaflet() {
 
   const markers = [];
   const seenPeaks = new Set();
+  const peaksByLocation = {}; // Group peaks by location (for multi-canton peaks like Nufenen)
 
+  // Group peaks by location
   cantonPeaks.forEach(peak => {
     if (!peak.latitude || !peak.longitude) return;
+    
+    const locationKey = `${peak.latitude}-${peak.longitude}`;
+    if (!peaksByLocation[locationKey]) {
+      peaksByLocation[locationKey] = [];
+    }
+    peaksByLocation[locationKey].push(peak);
+  });
 
-    const peakKey = `${peak.peak}-${peak.latitude}-${peak.longitude}`;
-    if (seenPeaks.has(peakKey)) return;
-    seenPeaks.add(peakKey);
+  // Create markers for unique locations
+  Object.values(peaksByLocation).forEach(peaksAtLocation => {
+    const firstPeak = peaksAtLocation[0];
+    const latitude = firstPeak.latitude;
+    const longitude = firstPeak.longitude;
 
-    const isCompleted = peak.done === true;
-    const color = isCompleted ? "#22c55e" : "#9ca3af";
-
-    const icon = L.divIcon({
-      className: "summit-marker",
-      html: `
+    // For multi-canton peaks, check if ANY are completed
+    const isCompleted = peaksAtLocation.some(peak => peak.done === true);
+    
+    // Handle multi-canton peaks (like Nufenen with Valais and Ticino)
+    let iconHtml;
+    if (peaksAtLocation.length > 1) {
+      // Multiple cantons at same location - display split logos
+      const logoPaths = peaksAtLocation.map(peak => {
+        const code = cantonBadgeLabels[peak.canton] || "CH";
+        return `./assets/canton-logos/${code.toLowerCase()}.png`;
+      });
+      
+      // Create split-screen icon for multi-canton peaks
+      iconHtml = `
         <div style="
-          width: 24px;
-          height: 24px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
-          background: ${color};
           border: 3px solid white;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex;
+          background: ${isCompleted ? '#22c55e' : '#9ca3af'};
+          overflow: hidden;
+          position: relative;
+        ">
+          ${logoPaths.map((path, idx) => `
+            <img src="${path}" 
+              style="width: 50%; height: 100%; object-fit: cover; border-radius: 0;" 
+              alt="Canton ${idx + 1}" />
+          `).join('')}
+        </div>
+      `;
+    } else {
+      // Single canton - show full logo
+      const primaryCanton = firstPeak.canton;
+      const cantonCode = cantonBadgeLabels[primaryCanton] || "CH";
+      const logoPath = `./assets/canton-logos/${cantonCode.toLowerCase()}.png`;
+      
+      iconHtml = `
+        <div style="
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 3px solid white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 14px;
-          font-weight: bold;
-          color: white;
-        "></div>
-      `,
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-      popupAnchor: [0, -20],
+          background: ${isCompleted ? '#22c55e' : '#9ca3af'};
+          overflow: hidden;
+          position: relative;
+        ">
+          <img src="${logoPath}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="${primaryCanton}" />
+        </div>
+      `;
+    }
+
+    const icon = L.divIcon({
+      className: "summit-marker",
+      html: iconHtml,
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+      popupAnchor: [0, -25],
     });
 
-    const marker = L.marker([peak.latitude, peak.longitude], { icon }).addTo(leafletMapInstance);
+    const marker = L.marker([latitude, longitude], { icon }).addTo(leafletMapInstance);
 
-    const statusText = isCompleted ? "✓ Completed" : "Not completed";
+    // Create popup showing all cantons for this peak
+    const cantonsList = peaksAtLocation.map(p => p.canton).join(', ');
+    const elevationM = firstPeak.altitudeM;
+    const peakName = firstPeak.peak;
+    const statusText = isCompleted ? "Completed" : "Not completed";
+    
     const popupContent = `
       <div class="summit-marker-popup">
-        <h3>${escapeHtml(peak.peak)}</h3>
-        <p><strong>Canton:</strong> ${escapeHtml(peak.canton)}</p>
-        <p><strong>Elevation:</strong> ${peak.altitudeM} m</p>
-        <p><strong>Status:</strong> <span style="color: ${color};">${statusText}</span></p>
+        <h3>${escapeHtml(peakName)}</h3>
+        <p><strong>Cantons:</strong> ${escapeHtml(cantonsList)}</p>
+        <p><strong>Elevation:</strong> ${elevationM} m</p>
+        <p><strong>Status:</strong> <span style="color: ${isCompleted ? '#22c55e' : '#9ca3af'};">${statusText}</span></p>
       </div>
     `;
 
@@ -1478,8 +1534,8 @@ function renderStravaRoutesOnLeaflet() {
 
     const polyline = L.polyline(latlngs, {
       color: color,
-      weight: 3,
-      opacity: 0.85,
+      weight: 5,
+      opacity: 0.95,
       lineCap: "round",
       lineJoin: "round",
     })
