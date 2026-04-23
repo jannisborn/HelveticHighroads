@@ -289,8 +289,8 @@ a,
   background: transparent;
   color: var(--ink-soft);
   font-family: "Outfit", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 800;
+  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.25s ease;
   border-radius: 8px;

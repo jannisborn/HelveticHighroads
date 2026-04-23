@@ -1335,11 +1335,11 @@ function setupLightboxEvents() {
 let leafletMapInstance = null;
 let mapInitializedOnce = false; // Flag to track if this is first initialization
 const routeColors = [
-  "#001bb6", // blue
-  "#2a9d5a", // teal
-  "#ce8e5a", // soft orange
-  "#db4e2b", // terracotta
-  "#6D597A", // muted purple
+  "#001bb6",
+  "#2a9d5a",
+  "#ce8e5a",
+  "#db4e2b",
+  "#6D597A",
 ];
 let currentRouteColorIndex = 0;
 
