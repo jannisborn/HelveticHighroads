@@ -414,7 +414,7 @@ function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   let w = width;
   let h = height;
   if (safeCode === "CH") {
-    const s = Math.min(width, height);
+    const s = height;
     w = s;
     h = s;
   }
@@ -426,7 +426,7 @@ function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   `;
 }
 
-function buildKomootEmbedUrl(tourUrl, locale = "de-de") {
+function buildKomootEmbedUrl(tourUrl, locale = "en-en") {
   try {
     const url = new URL(tourUrl);
     const tourMatch = url.pathname.match(/\/tour\/(\d+)/);
@@ -458,7 +458,7 @@ function renderKomootMap() {
   const localeFromData =
     typeof project?.komootEmbedLocale === "string" && project.komootEmbedLocale.trim()
       ? project.komootEmbedLocale.trim().toLowerCase()
-      : "de-de";
+      : "en-en";
 
   const embedUrl = buildKomootEmbedUrl(project?.komootTourUrl || "", localeFromData);
   if (mapEmbed && embedUrl) {
@@ -1202,6 +1202,7 @@ async function init() {
     routeProfile = routeProfileData && typeof routeProfileData === "object" ? routeProfileData : null;
 
     renderKomootMap();
+    setupMapViewToggle();
     renderStats();
     renderElevationProfile();
     renderPassGallery();
@@ -1210,6 +1211,8 @@ async function init() {
     renderCantons();
     renderSummitPhotos();
     setupLightboxEvents();
+    initializeLeafletMap();
+    leafletMapInstance.invalidateSize();
   } catch (error) {
     console.error("Failed to initialize dashboard data.", error);
     showDataLoadError("Could not load data files. Start a local server and reload.");
@@ -1329,4 +1332,310 @@ function setupLightboxEvents() {
   });
 }
 
+let leafletMapInstance = null;
+let mapInitializedOnce = false; // Flag to track if this is first initialization
+const routeColors = [
+  "#001bb6",
+  "#2a9d5a",
+  "#ce8e5a",
+  "#db4e2b",
+  "#6D597A",
+];
+let currentRouteColorIndex = 0;
+
+function decodePolyline(encoded) {
+  const coordinates = [];
+  let index = 0;
+  let lat = 0;
+  let lng = 0;
+
+  while (index < encoded.length) {
+    let result = 0;
+    let shift = 0;
+    let byte;
+
+    do {
+      byte = encoded.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+
+    const deltaLat = (result & 1) ? ~(result >> 1) : (result >> 1);
+    lat += deltaLat;
+
+    result = 0;
+    shift = 0;
+
+    do {
+      byte = encoded.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+
+    const deltaLng = (result & 1) ? ~(result >> 1) : (result >> 1);
+    lng += deltaLng;
+
+    coordinates.push([lat * 1e-5, lng * 1e-5]);
+  }
+
+  return coordinates;
+  console.log(latlngs[0], latlngs.at(-1));
+}
+
+
+function initializeLeafletMap() {
+  if (leafletMapInstance) return;
+
+  const mapContainer = document.getElementById("leaflet-map");
+  if (!mapContainer) return;
+
+  leafletMapInstance = L.map("leaflet-map").setView([46.775659, 8.313925], 8); // Centered on Obwalden (Tannensee)
+
+  // Use OpenStreetMap standard tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+  }).addTo(leafletMapInstance);
+
+  renderSummitMarkersOnLeaflet();
+  renderStravaRoutesOnLeaflet();
+  leafletMapInstance.invalidateSize();
+  mapInitializedOnce = true; // Mark that initial load is complete
+}
+
+function renderSummitMarkersOnLeaflet() {
+  if (!leafletMapInstance || !cantonPeaks || cantonPeaks.length === 0) return;
+
+  const markers = [];
+  const seenPeaks = new Set();
+  const peaksByLocation = {}; // Group peaks by location (for multi-canton peaks like Nufenen)
+
+  // Group peaks by location
+  cantonPeaks.forEach(peak => {
+    if (!peak.latitude || !peak.longitude) return;
+    
+    const locationKey = `${peak.latitude}-${peak.longitude}`;
+    if (!peaksByLocation[locationKey]) {
+      peaksByLocation[locationKey] = [];
+    }
+    peaksByLocation[locationKey].push(peak);
+  });
+
+  // Create markers for unique locations
+  Object.values(peaksByLocation).forEach(peaksAtLocation => {
+    const firstPeak = peaksAtLocation[0];
+    const latitude = firstPeak.latitude;
+    const longitude = firstPeak.longitude;
+
+    // For multi-canton peaks, check if ANY are completed
+    const isCompleted = peaksAtLocation.some(peak => peak.done === true);
+    
+    // Handle multi-canton peaks (like Nufenen with Valais and Ticino)
+    let iconHtml;
+    if (peaksAtLocation.length > 1) {
+      // Multiple cantons at same location - display split logos
+      const logoPaths = peaksAtLocation.map(peak => {
+        const code = cantonBadgeLabels[peak.canton] || "CH";
+        return `./assets/canton-logos/${code.toLowerCase()}.png`;
+      });
+      
+      // Create split-screen icon for multi-canton peaks
+      iconHtml = `
+        <div style="
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 3px solid white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex;
+          background: ${isCompleted ? '#22c55e' : '#9ca3af'};
+          overflow: hidden;
+          position: relative;
+        ">
+          ${logoPaths.map((path, idx) => `
+            <img src="${path}" 
+              style="width: 50%; height: 100%; object-fit: cover; border-radius: 0;" 
+              alt="Canton ${idx + 1}" />
+          `).join('')}
+        </div>
+      `;
+    } else {
+      // Single canton - show full logo
+      const primaryCanton = firstPeak.canton;
+      const cantonCode = cantonBadgeLabels[primaryCanton] || "CH";
+      const logoPath = `./assets/canton-logos/${cantonCode.toLowerCase()}.png`;
+      
+      iconHtml = `
+        <div style="
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 3px solid white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: ${isCompleted ? '#22c55e' : '#9ca3af'};
+          overflow: hidden;
+          position: relative;
+        ">
+          <img src="${logoPath}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="${primaryCanton}" />
+        </div>
+      `;
+    }
+
+    const icon = L.divIcon({
+      className: "summit-marker",
+      html: iconHtml,
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+      popupAnchor: [0, -25],
+    });
+
+    const marker = L.marker([latitude, longitude], { icon }).addTo(leafletMapInstance);
+
+    // Create popup showing all cantons for this peak
+    const cantonsList = peaksAtLocation.map(p => p.canton).join(', ');
+    const elevationM = firstPeak.altitudeM;
+    const peakName = firstPeak.peak;
+    const statusText = isCompleted ? "Completed" : "Not completed";
+    
+    const popupContent = `
+      <div class="summit-marker-popup">
+        <h3>${escapeHtml(peakName)}</h3>
+        <p><strong>Cantons:</strong> ${escapeHtml(cantonsList)}</p>
+        <p><strong>Elevation:</strong> ${elevationM} m</p>
+        <p><strong>Status:</strong> <span style="color: ${isCompleted ? '#22c55e' : '#9ca3af'};">${statusText}</span></p>
+      </div>
+    `;
+
+    marker.bindPopup(popupContent);
+    markers.push(marker);
+  });
+
+  if (markers.length > 0) {
+    const group = new L.featureGroup(markers);
+    // Only auto-fit bounds on data refresh, not on initial load
+    if (mapInitializedOnce) {
+      leafletMapInstance.fitBounds(group.getBounds().pad(0.1));
+    }
+  }
+}
+
+function renderStravaRoutesOnLeaflet() {
+  if (!leafletMapInstance || !rides || rides.length === 0) return;
+
+  const routeLayers = [];
+
+  currentRouteColorIndex = 0;
+
+  rides.forEach((ride, index) => {
+    if (!ride.polyline) return;
+
+    const latlngs = decodePolyline(ride.polyline);
+    if (!latlngs || latlngs.length === 0) return;
+
+    console.log("Drawing ride", ride.name, latlngs.length);
+
+    const color = routeColors[currentRouteColorIndex % routeColors.length];
+    currentRouteColorIndex++;
+
+    const stageNumber = index + 1;
+    const distance = ride.distanceKm ? ride.distanceKm.toFixed(1) : "0";
+    const elevation = ride.elevationM || "0";
+
+    const polyline = L.polyline(latlngs, {
+      color: color,
+      weight: 5,
+      opacity: 0.95,
+      lineCap: "round",
+      lineJoin: "round",
+    })
+      .addTo(leafletMapInstance)
+      .bindPopup(`
+        <div style="font-weight: bold; margin-bottom: 0px;">Stage ${stageNumber}</div>
+        <div><strong>Distance:</strong> ${distance} km</div>
+        <div><strong>Elevation:</strong> ${elevation} m</div>
+      `);
+
+    routeLayers.push(polyline);
+  });
+
+  if (routeLayers.length > 0) {
+    const group = L.featureGroup(routeLayers);
+    // Only auto-fit bounds on data refresh, not on initial load
+    if (mapInitializedOnce) {
+      leafletMapInstance.fitBounds(group.getBounds(), {
+        padding: [30, 30],
+      });
+    }
+  }
+}
+
+function getPolylineFromRide(ride) {
+  if (!ride || !ride.polyline) return null;
+  try {
+    return decodePolyline(ride.polyline);
+  } catch (err) {
+    console.warn(`Failed to decode polyline for ${ride.name}:`, err);
+    return null;
+  }
+}
+
+function setupMapViewToggle() {
+  const komootBtn = document.getElementById("komoot-view-btn");
+  const leafletBtn = document.getElementById("leaflet-view-btn");
+  const komootFrame = document.getElementById("komoot-frame");
+  const leafletFrame = document.getElementById("leaflet-frame");
+
+  if (!komootBtn || !leafletBtn) return;
+
+  komootBtn.addEventListener("click", () => {
+    komootBtn.classList.add("active");
+    leafletBtn.classList.remove("active");
+    komootFrame.style.display = "block";
+    leafletFrame.style.display = "none";
+  });
+
+  leafletBtn.addEventListener("click", () => {
+    leafletBtn.classList.add("active");
+    komootBtn.classList.remove("active");
+    komootFrame.style.display = "none";
+    leafletFrame.style.display = "block";
+
+    if (!leafletMapInstance) {
+      setTimeout(() => initializeLeafletMap(), 100);
+    } else {
+      leafletMapInstance.invalidateSize();
+    }
+  });
+}
+
+function setupMapAutoRefresh() {
+  const REFRESH_INTERVAL = 5 * 60 * 1000;
+  const RIDES_DATA_URL = "./data/rides.json";
+
+  let lastRideCount = rides.length;
+
+  setInterval(async () => {
+    try {
+      const response = await fetch(RIDES_DATA_URL);
+      const newRidesData = await response.json();
+      const newRideCount = Array.isArray(newRidesData) ? newRidesData.length : 0;
+
+      if (newRideCount > lastRideCount && leafletMapInstance) {
+        console.log(`Detected new Strava activity. Updating map...`);
+        rides = newRidesData;
+        lastRideCount = newRideCount;
+        renderSummitMarkersOnLeaflet();
+        renderStravaRoutesOnLeaflet();
+      }
+    } catch (err) {
+      console.debug("Auto-refresh check failed (this is normal):", err.message);
+    }
+  }, REFRESH_INTERVAL);
+}
+
 init();
+setupMapAutoRefresh();
+

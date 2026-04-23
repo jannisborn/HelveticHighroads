@@ -10,6 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -61,11 +62,19 @@
     <section class="card map-section" id="map">
       <div class="section-head">
         <h2>Project Overview Map</h2>
-        <a id="komoot-tour-link" href="#" target="_blank" rel="noopener noreferrer">Open Komoot tour</a>
+        <div class="map-toggle-wrapper">
+          <div class="map-toggle" id="map-toggle">
+            <button id="komoot-view-btn" class="map-toggle-btn" title="View Komoot map">Komoot</button>
+            <button id="leaflet-view-btn" class="map-toggle-btn active" title="View interactive map">Interactive</button>
+          </div>
+        </div>
       </div>
-      <div class="map-frame-wrap">
+      <div id="komoot-frame" class="map-frame-wrap" style="display: none;">
         <iframe id="komoot-tour-embed" title="Helvetic Highroads Komoot Tour" src="about:blank" loading="lazy"
           allowfullscreen></iframe>
+      </div>
+      <div id="leaflet-frame" class="leaflet-frame">
+        <div id="leaflet-map" class="leaflet-map-container"></div>
       </div>
     </section>
 
@@ -138,7 +147,7 @@
       <div class="featuring-grid" id="featured-riders-list" aria-live="polite"></div>
     </section>
 
-    <section id="summit-photos" class="summit-photos" aria-labelledby="summit-photos-title">
+    <section id="summit-photos" class="card summit-photos" aria-labelledby="summit-photos-title">
       <h2 id="summit-photos-title">Summit Pictures</h2>
       <p>Pictures from each summit</p>
       <div id="summit-photos-root" aria-live="polite"></div>
@@ -149,6 +158,7 @@
     <p>Copyright &copy; Jannis Born</p>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="./app.js"></script>
 </body>
 

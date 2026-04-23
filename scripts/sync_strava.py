@@ -459,7 +459,7 @@ def activity_to_ride(
     distance_m = float(activity.get("distance") or 0.0)
     elevation_m = float(activity.get("total_elevation_gain") or 0.0)
 
-    return {
+    ride = {
         "name": name,
         "date": date_value,
         "distanceKm": round(distance_m / 1000.0, 3),
@@ -470,6 +470,26 @@ def activity_to_ride(
         "stravaUrl": ACTIVITY_WEB_URL.format(activity_id),
         "stravaActivityId": activity_id,
     }
+
+    map_data = activity.get("map", {})
+
+    summary = map_data.get("summary_polyline")
+    polyline = map_data.get("polyline")
+
+    if summary:
+        print(f"[OK] summary_polyline used ({len(summary)} chars)")
+    elif polyline:
+        print(f"[WARNING] fallback polyline used ({len(polyline)} chars)")
+    else:
+        print("[ERROR] no polyline at all")
+
+    if summary and len(summary) > 200:
+        ride["polyline"] = summary
+    elif polyline:
+        ride["polyline"] = polyline
+
+
+    return ride
 
 
 def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

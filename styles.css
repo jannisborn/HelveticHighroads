@@ -267,6 +267,105 @@ a,
   display: block;
 }
 
+.map-toggle-wrapper {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.map-toggle {
+  display: inline-flex;
+  background: var(--surface-strong);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 0.35rem;
+  gap: 0;
+}
+
+.map-toggle-btn {
+  padding: 0.45rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: "Outfit", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-radius: 8px;
+  position: relative;
+}
+
+.map-toggle-btn:hover {
+  color: var(--ink);
+}
+
+.map-toggle-btn.active {
+  background: linear-gradient(130deg, var(--green-1), var(--green-2));
+  color: white;
+  box-shadow: 0 2px 8px rgba(46, 168, 95, 0.25);
+}
+
+.komoot-link {
+  font-weight: 700;
+  color: var(--green-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.komoot-link:hover {
+  color: var(--green-1);
+}
+
+.leaflet-frame {
+  margin-top: 0.78rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: #f0f0f0;
+}
+
+.leaflet-map-container {
+  width: 100%;
+  height: min(72vh, 690px);
+  border-radius: 16px;
+}
+
+.leaflet-container {
+  background: #f8f9f6;
+  font-family: "Outfit", sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  background: var(--surface-strong);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.leaflet-popup-tip {
+  background: var(--surface-strong);
+}
+
+.summit-marker-popup h3 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1rem;
+  color: var(--green-2);
+}
+
+.summit-marker-popup p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
 .profile-section {
   background:
     radial-gradient(circle at 7% 8%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 36%),
@@ -1047,4 +1146,8 @@ td {
 
 .summit-card__img {
   cursor: zoom-in;
+}
+
+section[id] {
+  scroll-margin-top: 65px;
 }
