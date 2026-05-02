@@ -17,5 +17,22 @@
         "stravaUrl": "https://www.strava.com/activities/18068463238"
       }
     ]
+  },
+  {
+    "name": "Nina Wiedemann",
+    "rideCount": 1,
+    "peakCount": 1,
+    "cantons": [
+      "Fribourg"
+    ],
+    "distanceKm": 139.308,
+    "elevationM": 2768,
+    "rides": [
+      {
+        "date": "2026-05-02",
+        "name": "🚴🗻Helvetic Highroads Stage 5: Montreux ➡️ Spiez",
+        "stravaUrl": "https://www.strava.com/activities/18347963531"
+      }
+    ]
   }
 ]
