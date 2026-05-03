@@ -68,6 +68,7 @@ The sync fetches full activity details for matched rides, so description text is
 It also refreshes already tracked Strava ride IDs each run, so title/description edits on older rides are picked up.
 It also fills `countriesVisited` by scanning title + description and mapping German country names to English (for example `Deutschland` -> `Germany`, `Schweiz` -> `Switzerland`).
 It also extracts fellow riders from a `Featuring:` block in the description. Use a comma-separated list and end it with either a period or a line break, for example `Featuring: First Last, Second Rider.`.
+If a matched ride completes exactly one canton and has a Strava primary photo, the sync downloads that photo into `assets/summit_pictures/strava/` and links it to that canton's summit card automatically.
 If no country is mentioned, it defaults to `Switzerland`.
 If incremental sync finds no tagged rides, the script retries a full lookback (bounded by `--max-pages`) automatically.
 

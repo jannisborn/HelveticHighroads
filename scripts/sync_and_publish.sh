@@ -58,8 +58,13 @@ else
 fi
 
 git add data/rides.json data/canton-peaks.json data/featured-riders.json
+DIFF_PATHS=(data/rides.json data/canton-peaks.json data/featured-riders.json)
+if [ -d assets/summit_pictures/strava ]; then
+  git add assets/summit_pictures/strava
+  DIFF_PATHS+=(assets/summit_pictures/strava)
+fi
 
-if git diff --cached --quiet -- data/rides.json data/canton-peaks.json data/featured-riders.json; then
+if git diff --cached --quiet -- "${DIFF_PATHS[@]}"; then
   echo "No website data changes to publish. Leaving data/state.json local-only."
   push_branch_if_needed
   exit 0
