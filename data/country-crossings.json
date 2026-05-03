@@ -32,16 +32,16 @@
     {
       "fromCountryCode": "CH",
       "toCountryCode": "DE",
-      "approxKm": 172.344,
-      "lat": 47.538564,
-      "lng": 7.707214
+      "approxKm": 173.275,
+      "lat": 47.537229,
+      "lng": 7.707759
     },
     {
       "fromCountryCode": "DE",
       "toCountryCode": "CH",
-      "approxKm": 185.781,
-      "lat": 47.536336,
-      "lng": 7.708515
+      "approxKm": 179.325,
+      "lat": 47.571391,
+      "lng": 7.68951
     },
     {
       "fromCountryCode": "CH",
