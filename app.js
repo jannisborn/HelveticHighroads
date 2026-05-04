@@ -191,12 +191,21 @@ function buildSummitPhotoItems() {
       (ride) => Array.isArray(ride.cantons) && ride.cantons.includes(peak.canton)
     );
     const ride = peak.done ? (linkedRide || fallbackRide || null) : null;
+    const syncedPrimaryPhoto =
+      ride
+      && Array.isArray(ride.cantons)
+      && ride.cantons.length === 1
+      && ride.cantons[0] === peak.canton
+      && typeof ride.primaryPhotoPath === "string"
+      && ride.primaryPhotoPath.trim()
+        ? ride.primaryPhotoPath.trim()
+        : null;
 
     return {
       kind: "canton",
       region: peak.canton,
       place: peak.done ? peak.peak : undefined,
-      photo: ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      photo: syncedPrimaryPhoto || (ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO),
       date: ride ? ride.date : undefined,
       order: peak.order,
       altitudeM: peak.done ? peak.altitudeM : undefined,
@@ -1241,11 +1250,11 @@ function renderSummitPhotos() {
     const altText = `${region}${place}`;
 
     const metaParts = [];
-    if (it.place) metaParts.push(`Summit : ${escapeHtml(it.place)}`);
-    if (it.date) metaParts.push(`Date : ${it.date}`);
-    if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude : ${it.altitudeM} m`);
-    if (it.ride) metaParts.push(`Ride : <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">see</a>`);
-    if (it.note) metaParts.push(`Note : ${escapeHtml(it.note)}`);
+    if (it.place) metaParts.push(`Summit: ${escapeHtml(it.place)}`);
+    if (it.date) metaParts.push(`Date: ${it.date}`);
+    if (Number.isFinite(it.altitudeM)) metaParts.push(`Altitude: ${it.altitudeM} m`);
+    if (it.ride) metaParts.push(`Ride: <a href="${escapeHtml(it.ride)}" target="_blank" rel="noopener noreferrer">see</a>`);
+    if (it.note) metaParts.push(`Note: ${escapeHtml(it.note)}`);
     const metaHtml = metaParts.length ? `<div class="summit-card__meta">${metaParts.join(' · ')}</div>` : '';
 
     return `
@@ -1638,4 +1647,3 @@ function setupMapAutoRefresh() {
 
 init();
 setupMapAutoRefresh();
-

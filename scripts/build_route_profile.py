@@ -474,7 +474,7 @@ def build_country_sections(
             coordinates=coordinates,
             scaled_distances_m=scaled_distances_m,
             approx_km=approx_km,
-            approx_window_km=0.0,
+            approx_window_km=10.0,
         )
         crossing_km = round(scaled_distances_m[source_index] / 1000.0, 3)
         if from_country_code == "CH" or to_country_code == "CH":

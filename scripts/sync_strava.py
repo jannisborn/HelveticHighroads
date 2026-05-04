@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import mimetypes
 import re
 import sys
 import unicodedata
@@ -27,6 +28,7 @@ AUTH_URL = "https://www.strava.com/oauth/token"
 ACTIVITIES_URL = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITY_DETAIL_URL = "https://www.strava.com/api/v3/activities/{}"
 ACTIVITY_WEB_URL = "https://www.strava.com/activities/{}"
+SUMMIT_PHOTO_RELATIVE_DIR = Path("assets") / "summit_pictures" / "strava"
 
 COUNTRY_ALIAS_MAP: Dict[str, List[str]] = {
     "Germany": ["Deutschland"],
@@ -97,6 +99,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not persist rotated refresh token back to credentials file.",
     )
+    parser.add_argument(
+        "--summit-pictures-dir",
+        type=Path,
+        default=repo_root / SUMMIT_PHOTO_RELATIVE_DIR,
+        help="Directory where synced single-canton Strava photos should be stored.",
+    )
     return parser.parse_args()
 
 
@@ -110,6 +118,28 @@ def write_json(path: Path, payload: Any) -> None:
     with path.open("w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         f.write("\n")
+
+
+def download_bytes(
+    url: str,
+    *,
+    headers: Optional[Dict[str, str]] = None,
+    timeout_seconds: int = 30,
+) -> tuple[bytes, Dict[str, str]]:
+    request = Request(url, headers=headers or {})
+
+    try:
+        with urlopen(request, timeout=timeout_seconds) as response:
+            body = response.read()
+            response_headers = {key.lower(): value for key, value in response.headers.items()}
+    except HTTPError as error:
+        body = error.read()
+        preview = body.decode("utf-8", errors="replace")[:300]
+        raise RuntimeError(f"HTTP {error.code} for {url}: {preview}") from error
+    except URLError as error:
+        raise RuntimeError(f"Network error for {url}: {error}") from error
+
+    return body, response_headers
 
 
 def request_json(
@@ -449,6 +479,87 @@ def extract_featured_riders_from_activity(activity: Dict[str, Any]) -> List[str]
     return riders
 
 
+def extract_primary_photo_url(activity: Dict[str, Any]) -> Optional[str]:
+    photos = activity.get("photos")
+    if not isinstance(photos, dict):
+        return None
+
+    primary = photos.get("primary")
+    if not isinstance(primary, dict):
+        return None
+
+    urls = primary.get("urls")
+    if isinstance(urls, str) and urls:
+        return urls
+
+    if isinstance(urls, dict):
+        for key in ("600", "400", "200", "100", "source"):
+            candidate = urls.get(key)
+            if isinstance(candidate, str) and candidate:
+                return candidate
+
+        numeric_candidates: List[tuple[int, str]] = []
+        for key, value in urls.items():
+            if isinstance(value, str) and value and str(key).isdigit():
+                numeric_candidates.append((int(str(key)), value))
+        if numeric_candidates:
+            numeric_candidates.sort(reverse=True)
+            return numeric_candidates[0][1]
+
+    return None
+
+
+def detect_image_extension(photo_url: str, response_headers: Dict[str, str]) -> str:
+    content_type = str(response_headers.get("content-type") or "").split(";", 1)[0].strip().lower()
+    if content_type:
+        guessed = mimetypes.guess_extension(content_type)
+        if guessed in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
+            return ".jpg" if guessed == ".jpeg" else guessed
+
+    suffix = Path(urlparse(photo_url).path).suffix.lower()
+    if suffix in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
+        return ".jpg" if suffix == ".jpeg" else suffix
+
+    return ".jpg"
+
+
+def build_synced_summit_photo_filename(activity_id: int, canton_name: str, extension: str) -> str:
+    canton_slug = normalize_text(canton_name).replace(" ", "-")
+    return f"{activity_id}-{canton_slug}{extension}"
+
+
+def sync_primary_summit_photo(
+    *,
+    activity: Dict[str, Any],
+    ride: Dict[str, Any],
+    summit_pictures_dir: Path,
+    dry_run: bool,
+) -> Optional[str]:
+    cantons = ride.get("cantons")
+    if not isinstance(cantons, list) or len(cantons) != 1:
+        return None
+
+    canton_name = str(cantons[0] or "").strip()
+    if not canton_name:
+        return None
+
+    photo_url = extract_primary_photo_url(activity)
+    if not photo_url:
+        return None
+
+    activity_id = int(activity["id"])
+    if dry_run:
+        return str(SUMMIT_PHOTO_RELATIVE_DIR / build_synced_summit_photo_filename(activity_id, canton_name, ".jpg"))
+
+    body, response_headers = download_bytes(photo_url)
+    extension = detect_image_extension(photo_url, response_headers)
+    filename = build_synced_summit_photo_filename(activity_id, canton_name, extension)
+    destination = summit_pictures_dir / filename
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_bytes(body)
+    return str(SUMMIT_PHOTO_RELATIVE_DIR / filename)
+
+
 def activity_to_ride(
     activity: Dict[str, Any], canton_names: List[str], country_names: List[str]
 ) -> Dict[str, Any]:
@@ -525,6 +636,10 @@ def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, 
             "countriesVisited", []
         )
         existing["featuredRiders"] = list(new_ride.get("featuredRiders") or [])
+        if new_ride.get("primaryPhotoPath"):
+            existing["primaryPhotoPath"] = new_ride["primaryPhotoPath"]
+        else:
+            existing.pop("primaryPhotoPath", None)
 
     def sort_key(ride: Dict[str, Any]) -> tuple:
         dt = parse_iso_datetime(f"{ride.get('date')}T00:00:00+00:00")
@@ -782,6 +897,26 @@ def main() -> int:
         activity_to_ride(activity, canton_names, country_names)
         for activity in all_activities_to_merge
     ]
+    rides_by_activity_id = {
+        int(ride["stravaActivityId"]): ride
+        for ride in new_rides
+        if "stravaActivityId" in ride
+    }
+    for activity in all_activities_to_merge:
+        raw_id = activity.get("id")
+        if raw_id is None:
+            continue
+        ride = rides_by_activity_id.get(int(raw_id))
+        if ride is None:
+            continue
+        primary_photo_path = sync_primary_summit_photo(
+            activity=activity,
+            ride=ride,
+            summit_pictures_dir=args.summit_pictures_dir,
+            dry_run=args.dry_run,
+        )
+        if primary_photo_path:
+            ride["primaryPhotoPath"] = primary_photo_path
 
     merged_rides = merge_rides(rides, new_rides)
     updated_cantons = update_canton_peaks(canton_peaks, merged_rides)
