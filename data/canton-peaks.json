@@ -114,9 +114,10 @@
     "altitudeM": 1845,
     "profileKm": 811.544,
     "profileWaypointIndex": 16,
-    "done": false,
+    "done": true,
     "latitude": 46.366483,
-    "longitude": 7.015119
+    "longitude": 7.015119,
+    "stravaUrl": "https://www.strava.com/activities/18812187782"
   },
   {
     "order": 11,
