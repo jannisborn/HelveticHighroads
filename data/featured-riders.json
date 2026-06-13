@@ -1,5 +1,41 @@
 [
   {
+    "name": "Jules Passernig",
+    "rideCount": 1,
+    "peakCount": 2,
+    "cantons": [
+      "Valais",
+      "Ticino"
+    ],
+    "distanceKm": 105.128,
+    "elevationM": 2977,
+    "rides": [
+      {
+        "date": "2026-06-13",
+        "name": "🚴🗻Helvetic Highroads Stage 7 \n Visp ➡️ Hospental",
+        "stravaUrl": "https://www.strava.com/activities/18904911734"
+      }
+    ]
+  },
+  {
+    "name": "Lucas Almeida",
+    "rideCount": 1,
+    "peakCount": 2,
+    "cantons": [
+      "Valais",
+      "Ticino"
+    ],
+    "distanceKm": 105.128,
+    "elevationM": 2977,
+    "rides": [
+      {
+        "date": "2026-06-13",
+        "name": "🚴🗻Helvetic Highroads Stage 7 \n Visp ➡️ Hospental",
+        "stravaUrl": "https://www.strava.com/activities/18904911734"
+      }
+    ]
+  },
+  {
     "name": "Mathieu Janier",
     "rideCount": 1,
     "peakCount": 3,
@@ -32,6 +68,24 @@
         "date": "2026-05-02",
         "name": "🚴🗻Helvetic Highroads Stage 5: Montreux ➡️ Spiez",
         "stravaUrl": "https://www.strava.com/activities/18347963531"
+      }
+    ]
+  },
+  {
+    "name": "Victor Dumange",
+    "rideCount": 1,
+    "peakCount": 2,
+    "cantons": [
+      "Valais",
+      "Ticino"
+    ],
+    "distanceKm": 105.128,
+    "elevationM": 2977,
+    "rides": [
+      {
+        "date": "2026-06-13",
+        "name": "🚴🗻Helvetic Highroads Stage 7 \n Visp ➡️ Hospental",
+        "stravaUrl": "https://www.strava.com/activities/18904911734"
       }
     ]
   }
