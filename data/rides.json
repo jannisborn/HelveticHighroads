@@ -131,5 +131,26 @@
       "Valais": "assets/summit_pictures/strava/18904911734-valais.jpg",
       "Ticino": "assets/summit_pictures/strava/18904911734-ticino.jpg"
     }
+  },
+  {
+    "name": "🚴🗻Helvetic Highroads Stage 7 \n Visp ➡️ Hospental (+Down to Erstfeld)",
+    "date": "2026-06-13",
+    "distanceKm": 137.504,
+    "elevationM": 3205,
+    "cantons": [
+      "Valais",
+      "Ticino"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [
+      "Lucas Almeida",
+      "Victor Dumange",
+      "Jules Passernig"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/18911355060",
+    "stravaActivityId": 18911355060,
+    "polyline": "uupyGqlbo@dG|@l@qi@mJ{|AiJqJaNfAdEwEwJ}oC_Jk\\_Zwj@iQwy@uOm`@i|@}lDoEek@{LqCzBuDgDmShEmA}SmuAcKmMyM{As^iW{Zkv@}ZeJkKk\\wj@g{@yX_p@uZw_@eb@_tAsIsFEeQqLgZjDeS}CkPi_@sy@eEmS`IiE_FZhEqCw@qS}BbQaF{YySuf@ma@kh@uN_m@aL`@oHgY_i@keAaNwHmIxHxEiQ}AwIki@ss@c{@gnBwcA{sAgZio@aBiSiYcq@oZgQsOeWwd@e^sIm\\gJc@yCkn@_M{\\}f@wZoHg^ed@{y@sf@mq@eh@kd@uB|AeJi~@g]kt@rEkAyA_LipAk`D`Nk|@~K}H_]f@xQiKlLoRnAsc@rIvEgJmc@zEs]bcA_xAtE_NkEmPjJ_QfZkU|VuFdUaZvLXdC~ItAqDiHcVsTT~Q}HyVJkCmChEEoGwDjEK}HmFtTdDzNaNlAyIsUrLee@yi@~JbFrTgHqEo_@fBc_@oMsGeByStIhL}C{PjG`LzHiB}LcX|Gga@aIsv@rMukAdDft@~RiJsGg@oAwKzEan@Kw_AwLyZjHdAa\\ay@eWgc@y@uScKaLyL{_@qZyqA_Yi`@iNwq@sPoGaKoT}d@geB{LwaAcQo`AcM_a@gDyo@aMg_@{I}yA}ViiBtAur@eGvRoI`BoDkXkB|JkBsa@]r[`QbwAaLqT}AbG}IqKbDjVeMyVdMzp@oK_^xCxUmGsRyIiGyCfe@nFkAzCpNlG`EqBv@w^`JgNuCiHpg@{FbK_G|KyCfAdAqKwIjY|@{JeMlJdJiRuHtJwGKnB_CcEe@~BgAmIaU}KvFkKvXmN`C_Qpk@wNNtAzRqK}EkMvJsp@kWyExFah@aDwc@nLmPaFsIaQnHfBaGwMwl@y@ee@}Pi[ie@y_@dF_FlKtAf^}BhCuBqTgT{VvDb@eSi\\}Hy]uc@ck@cs@{\\qaAxFmGaK~@|LvBvBl@mGu@dd@mf@~O|AaJkRaJyIYuEwKEzFe_@}K{AvIyA}LwScTmeAwB_P}GcOpFyr@iRqVt@sh@kSiFaGu@uMjOjQ|DgA_AuDmNuNsK|AyIuPiVuL}Fq[ctAafAcUqc@ca@ka@}HeXiHh@yY{ZcVvGk^oJqItEiDqMkSuPe@yj@uPwUyHZaGkMeAa[mDe[aG_Gm_@rVoFyCa@yPoJaEg_@dNas@Rcq@~RmS`Sk^yEa^bf@at@zp@"
   }
 ]
