@@ -27,6 +27,7 @@ except ImportError:  # pragma: no cover - fallback for environments without tqdm
 AUTH_URL = "https://www.strava.com/oauth/token"
 ACTIVITIES_URL = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITY_DETAIL_URL = "https://www.strava.com/api/v3/activities/{}"
+ACTIVITY_PHOTOS_URL = "https://www.strava.com/api/v3/activities/{}/photos"
 ACTIVITY_WEB_URL = "https://www.strava.com/activities/{}"
 SUMMIT_PHOTO_RELATIVE_DIR = Path("assets") / "summit_pictures" / "strava"
 
@@ -103,7 +104,7 @@ def parse_args() -> argparse.Namespace:
         "--summit-pictures-dir",
         type=Path,
         default=repo_root / SUMMIT_PHOTO_RELATIVE_DIR,
-        help="Directory where synced single-canton Strava photos should be stored.",
+        help="Directory where synced Strava summit photos should be stored.",
     )
     return parser.parse_args()
 
@@ -285,6 +286,18 @@ def fetch_activity_detail(access_token: str, activity_id: int) -> Dict[str, Any]
     if not isinstance(payload, dict):
         raise RuntimeError(f"Unexpected activity detail payload type: {type(payload)}")
     return payload
+
+
+def fetch_activity_photos(access_token: str, activity_id: int, *, size: int = 2048) -> List[Dict[str, Any]]:
+    headers = {"Authorization": f"Bearer {access_token}"}
+    payload = request_json(
+        ACTIVITY_PHOTOS_URL.format(activity_id),
+        headers=headers,
+        query={"size": size},
+    )
+    if not isinstance(payload, list):
+        raise RuntimeError(f"Unexpected activity photos payload type: {type(payload)}")
+    return [photo for photo in payload if isinstance(photo, dict)]
 
 
 def enrich_activities_with_details(access_token: str, activities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -479,21 +492,23 @@ def extract_featured_riders_from_activity(activity: Dict[str, Any]) -> List[str]
     return riders
 
 
-def extract_primary_photo_url(activity: Dict[str, Any]) -> Optional[str]:
-    photos = activity.get("photos")
-    if not isinstance(photos, dict):
+def extract_photo_url(photo: Any) -> Optional[str]:
+    if isinstance(photo, str) and photo:
+        return photo
+    if not isinstance(photo, dict):
         return None
 
-    primary = photos.get("primary")
-    if not isinstance(primary, dict):
-        return None
+    for key in ("url", "source", "imageUrl", "image_url"):
+        candidate = photo.get(key)
+        if isinstance(candidate, str) and candidate:
+            return candidate
 
-    urls = primary.get("urls")
+    urls = photo.get("urls")
     if isinstance(urls, str) and urls:
         return urls
 
     if isinstance(urls, dict):
-        for key in ("600", "400", "200", "100", "source"):
+        for key in ("2048", "2000", "1200", "1000", "600", "400", "200", "100", "source"):
             candidate = urls.get(key)
             if isinstance(candidate, str) and candidate:
                 return candidate
@@ -506,7 +521,70 @@ def extract_primary_photo_url(activity: Dict[str, Any]) -> Optional[str]:
             numeric_candidates.sort(reverse=True)
             return numeric_candidates[0][1]
 
+    sizes = photo.get("sizes")
+    if isinstance(sizes, list):
+        size_candidates: List[tuple[int, str]] = []
+        for size in sizes:
+            if not isinstance(size, dict):
+                continue
+            candidate = size.get("url")
+            if not isinstance(candidate, str) or not candidate:
+                continue
+            try:
+                width = int(float(size.get("width") or 0))
+                height = int(float(size.get("height") or 0))
+            except (TypeError, ValueError):
+                width = 0
+                height = 0
+            size_candidates.append((max(width, height), candidate))
+        if size_candidates:
+            size_candidates.sort(reverse=True)
+            return size_candidates[0][1]
+
     return None
+
+
+def extract_primary_photo_url(activity: Dict[str, Any]) -> Optional[str]:
+    photos = activity.get("photos")
+    if not isinstance(photos, dict):
+        return None
+
+    return extract_photo_url(photos.get("primary"))
+
+
+def extract_activity_photo_count(activity: Dict[str, Any]) -> int:
+    photos = activity.get("photos")
+    if not isinstance(photos, dict):
+        return 0
+
+    count = photos.get("count")
+    if isinstance(count, int):
+        return count
+    if isinstance(count, str) and count.isdigit():
+        return int(count)
+    return 1 if extract_primary_photo_url(activity) else 0
+
+
+def extract_activity_photo_urls(
+    activity: Dict[str, Any],
+    activity_photos: List[Dict[str, Any]],
+) -> List[str]:
+    photo_urls: List[str] = []
+    seen = set()
+
+    for photo in activity_photos:
+        photo_url = extract_photo_url(photo)
+        if not photo_url or photo_url in seen:
+            continue
+        photo_urls.append(photo_url)
+        seen.add(photo_url)
+
+    if not photo_urls:
+        primary_photo_url = extract_primary_photo_url(activity)
+        if primary_photo_url:
+            photo_urls.append(primary_photo_url)
+
+    return photo_urls
 
 
 def detect_image_extension(photo_url: str, response_headers: Dict[str, str]) -> str:
@@ -528,36 +606,46 @@ def build_synced_summit_photo_filename(activity_id: int, canton_name: str, exten
     return f"{activity_id}-{canton_slug}{extension}"
 
 
-def sync_primary_summit_photo(
+def sync_summit_photos(
     *,
     activity: Dict[str, Any],
+    activity_photos: List[Dict[str, Any]],
     ride: Dict[str, Any],
     summit_pictures_dir: Path,
     dry_run: bool,
-) -> Optional[str]:
+) -> Dict[str, str]:
     cantons = ride.get("cantons")
-    if not isinstance(cantons, list) or len(cantons) != 1:
-        return None
+    if not isinstance(cantons, list) or not cantons:
+        return {}
 
-    canton_name = str(cantons[0] or "").strip()
-    if not canton_name:
-        return None
-
-    photo_url = extract_primary_photo_url(activity)
-    if not photo_url:
-        return None
+    photo_urls = extract_activity_photo_urls(activity, activity_photos)
+    if not photo_urls:
+        return {}
 
     activity_id = int(activity["id"])
-    if dry_run:
-        return str(SUMMIT_PHOTO_RELATIVE_DIR / build_synced_summit_photo_filename(activity_id, canton_name, ".jpg"))
+    summit_photo_paths: Dict[str, str] = {}
 
-    body, response_headers = download_bytes(photo_url)
-    extension = detect_image_extension(photo_url, response_headers)
-    filename = build_synced_summit_photo_filename(activity_id, canton_name, extension)
-    destination = summit_pictures_dir / filename
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_bytes(body)
-    return str(SUMMIT_PHOTO_RELATIVE_DIR / filename)
+    for raw_canton_name, photo_url in zip(cantons, photo_urls):
+        canton_name = str(raw_canton_name or "").strip()
+        if not canton_name:
+            continue
+
+        if dry_run:
+            summit_photo_paths[canton_name] = str(
+                SUMMIT_PHOTO_RELATIVE_DIR
+                / build_synced_summit_photo_filename(activity_id, canton_name, ".jpg")
+            )
+            continue
+
+        body, response_headers = download_bytes(photo_url)
+        extension = detect_image_extension(photo_url, response_headers)
+        filename = build_synced_summit_photo_filename(activity_id, canton_name, extension)
+        destination = summit_pictures_dir / filename
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(body)
+        summit_photo_paths[canton_name] = str(SUMMIT_PHOTO_RELATIVE_DIR / filename)
+
+    return summit_photo_paths
 
 
 def activity_to_ride(
@@ -622,24 +710,8 @@ def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, 
             index_by_id[ride_id] = merged[-1]
             continue
 
-        # Always refresh core activity fields from Strava.
-        existing["name"] = new_ride["name"]
-        existing["date"] = new_ride["date"]
-        existing["distanceKm"] = new_ride["distanceKm"]
-        existing["elevationM"] = new_ride["elevationM"]
-        existing["stravaUrl"] = new_ride["stravaUrl"]
-        existing["stravaActivityId"] = ride_id
-
-        # Refresh inferred fields from Strava text when available.
-        existing["cantons"] = new_ride["cantons"] or existing.get("cantons", [])
-        existing["countriesVisited"] = new_ride["countriesVisited"] or existing.get(
-            "countriesVisited", []
-        )
-        existing["featuredRiders"] = list(new_ride.get("featuredRiders") or [])
-        if new_ride.get("primaryPhotoPath"):
-            existing["primaryPhotoPath"] = new_ride["primaryPhotoPath"]
-        else:
-            existing.pop("primaryPhotoPath", None)
+        # Existing rides are local source-of-truth once imported.
+        continue
 
     def sort_key(ride: Dict[str, Any]) -> tuple:
         dt = parse_iso_datetime(f"{ride.get('date')}T00:00:00+00:00")
@@ -747,7 +819,15 @@ def build_featured_riders(rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             group["peakCount"] = len(group["cantons"])
 
     featured_riders: List[Dict[str, Any]] = []
-    for rider_key in sorted(grouped, key=lambda value: grouped[value]["name"].casefold()):
+    def featured_rider_sort_key(rider_key: str) -> tuple:
+        group = grouped[rider_key]
+        return (
+            -int(group["rideCount"]),
+            -float(group["distanceKm"]),
+            group["name"].casefold(),
+        )
+
+    for rider_key in sorted(grouped, key=featured_rider_sort_key):
         group = grouped[rider_key]
         featured_riders.append(
             {
@@ -785,7 +865,8 @@ def print_summary(
     *,
     fetched_count: int,
     matched_count: int,
-    refreshed_known_count: int,
+    new_count: int,
+    skipped_existing_count: int,
     rides_before: int,
     rides_after: int,
     featured_before: int,
@@ -797,7 +878,8 @@ def print_summary(
     mode = "DRY RUN" if dry_run else "APPLIED"
     print(f"[{mode}] fetched activities: {fetched_count}")
     print(f"[{mode}] matched title-tag ride activities: {matched_count}")
-    print(f"[{mode}] refreshed known ride activities: {refreshed_known_count}")
+    print(f"[{mode}] new ride activities: {new_count}")
+    print(f"[{mode}] skipped existing ride activities: {skipped_existing_count}")
     print(f"[{mode}] rides: {rides_before} -> {rides_after}")
     print(f"[{mode}] featured riders: {featured_before} -> {featured_after}")
     print(f"[{mode}] completed canton peaks: {canton_done_before} -> {canton_done_after}")
@@ -866,23 +948,22 @@ def main() -> int:
         fetched_activities = dedupe_activities_by_id([*fetched_activities, *full_window_activities])
         matched_activities = activities_with_prefix(fetched_activities, args.prefix)
 
+    existing_ride_ids = set(extract_existing_ride_ids(rides))
     matched_ride_activities = [activity for activity in matched_activities if activity_is_ride(activity)]
-    detailed_matched_activities = enrich_activities_with_details(access_token, matched_ride_activities)
-    detailed_matched_activities = [
-        activity for activity in detailed_matched_activities if activity_is_ride(activity)
+    new_matched_ride_activities = [
+        activity
+        for activity in matched_ride_activities
+        if int(activity.get("id") or 0) not in existing_ride_ids
     ]
-
-    existing_ride_ids = extract_existing_ride_ids(rides)
-    matched_ids = {int(activity["id"]) for activity in detailed_matched_activities if "id" in activity}
-    ids_to_refresh = [activity_id for activity_id in existing_ride_ids if activity_id not in matched_ids]
-    refreshed_known_activities = fetch_activities_by_id(access_token, ids_to_refresh)
-    refreshed_known_ride_activities = [
-        activity for activity in refreshed_known_activities if activity_is_ride(activity)
-    ]
-
-    all_activities_to_merge = dedupe_activities_by_id(
-        [*detailed_matched_activities, *refreshed_known_ride_activities]
+    skipped_existing_count = len(matched_ride_activities) - len(new_matched_ride_activities)
+    new_matched_activities = (
+        enrich_activities_with_details(access_token, new_matched_ride_activities)
+        if new_matched_ride_activities
+        else []
     )
+    new_matched_activities = [
+        activity for activity in new_matched_activities if activity_is_ride(activity)
+    ]
 
     canton_names = [str(c.get("canton")) for c in canton_peaks if c.get("canton")]
     country_names = [
@@ -895,28 +976,46 @@ def main() -> int:
 
     new_rides = [
         activity_to_ride(activity, canton_names, country_names)
-        for activity in all_activities_to_merge
+        for activity in new_matched_activities
     ]
     rides_by_activity_id = {
         int(ride["stravaActivityId"]): ride
         for ride in new_rides
         if "stravaActivityId" in ride
     }
-    for activity in all_activities_to_merge:
+    for activity in new_matched_activities:
         raw_id = activity.get("id")
         if raw_id is None:
             continue
+        activity_id = int(raw_id)
         ride = rides_by_activity_id.get(int(raw_id))
         if ride is None:
             continue
-        primary_photo_path = sync_primary_summit_photo(
+        ride_cantons = ride.get("cantons")
+        activity_photos: List[Dict[str, Any]] = []
+        photo_count = extract_activity_photo_count(activity)
+        if isinstance(ride_cantons, list) and ride_cantons and (len(ride_cantons) > 1 or photo_count > 1):
+            try:
+                activity_photos = fetch_activity_photos(access_token, activity_id)
+            except Exception as error:  # noqa: BLE001
+                print(
+                    f"Warning: could not fetch photos for activity {activity_id}: {error}",
+                    file=sys.stderr,
+                )
+
+        summit_photo_paths = sync_summit_photos(
             activity=activity,
+            activity_photos=activity_photos,
             ride=ride,
             summit_pictures_dir=args.summit_pictures_dir,
             dry_run=args.dry_run,
         )
-        if primary_photo_path:
-            ride["primaryPhotoPath"] = primary_photo_path
+        if summit_photo_paths:
+            ride["summitPhotoPaths"] = summit_photo_paths
+            if isinstance(ride_cantons, list) and len(summit_photo_paths) == 1:
+                primary_photo_path = summit_photo_paths.get(str(ride_cantons[0] or "").strip())
+                if primary_photo_path:
+                    ride["primaryPhotoPath"] = primary_photo_path
 
     merged_rides = merge_rides(rides, new_rides)
     updated_cantons = update_canton_peaks(canton_peaks, merged_rides)
@@ -930,16 +1029,19 @@ def main() -> int:
     updated_state["lastStravaSyncAt"] = now_utc.isoformat()
     updated_state["lastFetchedAfterEpoch"] = to_unix_timestamp(now_utc)
     updated_state["lastFetchedActivityCount"] = len(fetched_activities)
-    updated_state["lastMatchedActivityCount"] = len(detailed_matched_activities)
-    if detailed_matched_activities:
+    updated_state["lastMatchedActivityCount"] = len(matched_ride_activities)
+    updated_state["lastNewRideActivityCount"] = len(new_matched_activities)
+    updated_state["lastSkippedExistingRideActivityCount"] = skipped_existing_count
+    if new_matched_activities:
         updated_state["lastProcessedActivityId"] = max(
-            int(a["id"]) for a in detailed_matched_activities if "id" in a
+            int(a["id"]) for a in new_matched_activities if "id" in a
         )
 
     print_summary(
         fetched_count=len(fetched_activities),
-        matched_count=len(detailed_matched_activities),
-        refreshed_known_count=len(refreshed_known_ride_activities),
+        matched_count=len(matched_ride_activities),
+        new_count=len(new_matched_activities),
+        skipped_existing_count=skipped_existing_count,
         rides_before=len(rides),
         rides_after=len(merged_rides),
         featured_before=len(featured_riders),

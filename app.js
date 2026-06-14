@@ -191,6 +191,14 @@ function buildSummitPhotoItems() {
       (ride) => Array.isArray(ride.cantons) && ride.cantons.includes(peak.canton)
     );
     const ride = peak.done ? (linkedRide || fallbackRide || null) : null;
+    const syncedCantonPhoto =
+      ride
+      && ride.summitPhotoPaths
+      && typeof ride.summitPhotoPaths === "object"
+      && typeof ride.summitPhotoPaths[peak.canton] === "string"
+      && ride.summitPhotoPaths[peak.canton].trim()
+        ? ride.summitPhotoPaths[peak.canton].trim()
+        : null;
     const syncedPrimaryPhoto =
       ride
       && Array.isArray(ride.cantons)
@@ -205,7 +213,7 @@ function buildSummitPhotoItems() {
       kind: "canton",
       region: peak.canton,
       place: peak.done ? peak.peak : undefined,
-      photo: syncedPrimaryPhoto || (ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO),
+      photo: syncedCantonPhoto || syncedPrimaryPhoto || (ride ? buildSummitPhotoPath(peak.canton, ride.date) : FALLBACK_SUMMIT_PHOTO),
       date: ride ? ride.date : undefined,
       order: peak.order,
       altitudeM: peak.done ? peak.altitudeM : undefined,
@@ -283,6 +291,24 @@ function splitPeakLabel(value, maxSingleLineLength = 10) {
 
 function getCompletedKm() {
   return rides.reduce((sum, ride) => sum + (ride.distanceKm || 0), 0);
+}
+
+function getCompletedProfileKm() {
+  if (!rides.length) {
+    return 0;
+  }
+
+  const latestRide = [...rides].sort((a, b) => {
+    const timestampDiff = getDateTimestamp(a?.date) - getDateTimestamp(b?.date);
+    if (timestampDiff !== 0) {
+      return timestampDiff;
+    }
+
+    return (Number(a?.stravaActivityId) || 0) - (Number(b?.stravaActivityId) || 0);
+  })[rides.length - 1];
+  const profileEndKm = Number(latestRide?.profileEndKm);
+
+  return Number.isFinite(profileEndKm) ? profileEndKm : getCompletedKm();
 }
 
 function getCompletedElevation() {
@@ -586,6 +612,16 @@ function renderFeaturedRiders() {
   }
 
   host.innerHTML = featuredRiders
+    .slice()
+    .sort((a, b) => {
+      const rideDelta = (Number(b?.rideCount) || 0) - (Number(a?.rideCount) || 0);
+      if (rideDelta) return rideDelta;
+
+      const distanceDelta = (Number(b?.distanceKm) || 0) - (Number(a?.distanceKm) || 0);
+      if (distanceDelta) return distanceDelta;
+
+      return String(a?.name || "").localeCompare(String(b?.name || ""), undefined, { sensitivity: "base" });
+    })
     .map((rider) => {
       const name = escapeHtml(rider?.name || "Guest rider");
       const rideCount = Number(rider?.rideCount) || 0;
@@ -799,7 +835,7 @@ function renderElevationProfile() {
     return;
   }
 
-  const completedKm = clampNumber(getCompletedKm(), 0, totalKm);
+  const completedKm = clampNumber(getCompletedProfileKm(), 0, totalKm);
 
   const width = 1600;
   const height = 548;
