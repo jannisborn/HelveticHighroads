@@ -29,7 +29,7 @@ ACTIVITIES_URL = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITY_DETAIL_URL = "https://www.strava.com/api/v3/activities/{}"
 ACTIVITY_PHOTOS_URL = "https://www.strava.com/api/v3/activities/{}/photos"
 ACTIVITY_WEB_URL = "https://www.strava.com/activities/{}"
-SUMMIT_PHOTO_RELATIVE_DIR = Path("assets") / "summit_pictures" / "strava"
+SUMMIT_PHOTO_RELATIVE_DIR = Path("assets") / "summit_pictures"
 
 COUNTRY_ALIAS_MAP: Dict[str, List[str]] = {
     "Germany": ["Deutschland"],

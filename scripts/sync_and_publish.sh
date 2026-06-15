@@ -58,10 +58,9 @@ else
 fi
 
 git add data/rides.json data/canton-peaks.json data/featured-riders.json
-DIFF_PATHS=(data/rides.json data/canton-peaks.json data/featured-riders.json)
-if [ -d assets/summit_pictures/strava ]; then
-  git add assets/summit_pictures/strava
-  DIFF_PATHS+=(assets/summit_pictures/strava)
+DIFF_PATHS=(data/rides.json data/canton-peaks.json data/featured-riders.json assets/summit_pictures)
+if [ -d assets/summit_pictures ]; then
+  git add assets/summit_pictures
 fi
 
 if git diff --cached --quiet -- "${DIFF_PATHS[@]}"; then

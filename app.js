@@ -461,7 +461,7 @@ function buildCountryFlagSvg(code, width = 22, height = 15, className = "") {
   `;
 }
 
-function buildKomootEmbedUrl(tourUrl, locale = "en-en") {
+function buildKomootEmbedUrl(tourUrl, locale = "de-de") {
   try {
     const url = new URL(tourUrl);
     const tourMatch = url.pathname.match(/\/tour\/(\d+)/);
@@ -493,7 +493,7 @@ function renderKomootMap() {
   const localeFromData =
     typeof project?.komootEmbedLocale === "string" && project.komootEmbedLocale.trim()
       ? project.komootEmbedLocale.trim().toLowerCase()
-      : "en-en";
+      : "de-de";
 
   const embedUrl = buildKomootEmbedUrl(project?.komootTourUrl || "", localeFromData);
   if (mapEmbed && embedUrl) {
