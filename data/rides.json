@@ -153,5 +153,26 @@
       "Bern": "assets/summit_pictures/19585432377-bern.jpg",
       "Uri": "assets/summit_pictures/19585432377-uri.jpg"
     }
+  },
+  {
+    "name": "🚴‍♂️🏔️Helvetic Highroads Stage 8: Hospental ➡️ Sachseln",
+    "date": "2026-08-03",
+    "distanceKm": 102.787,
+    "elevationM": 2092,
+    "cantons": [
+      "Bern",
+      "Uri"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/19588059130",
+    "stravaActivityId": 19588059130,
+    "polyline": "mts{Gqdms@`HdKpKtDnAaDsDoC|FsGrGf_@ls@vtAjNvQbEvNxDjAjAzD}@fNnJhVfGnj@hXhpAYxUzq@zeCnK~}@xIpPbK`FhFvIfAjJbFbDvIvP~GhAfBcENfHxEpCmL`FfRlAxD~FgK{BoQ`KtEnAvLoErOzX}P_NgBtCDdCjCy@|GzLlCzUaBdNiF{KsEcBfCvHKdR_Ld[aFbx@uM~]hCzIbOnJfU~dAxCfc@kDdUxCrHvVxQ`ClF`KjBrCs@rCtEyCw@vOhN|Q`\\fEdQtGnKrAlWoHj[aGtIsCr]]ff@}CtJtDmCl@yFXzDkKxVhOqNkL|WhLuJ~CyHjDgb@_@|g@hFyf@jFgFdAzl@zFjStX~j@bHnn@jL`]d@vM{@}JqH_N|Nxk@n@~QaGgWcDgDoAdDbAzC}A`B~GhMfArVfC~HwFmJsEkSLvNrGdTkRed@nE~_@rEpIqFgFoNs]qL_KjIzNxK`g@pNpTkFhf@tIbVkAz`@oKfJwD~Mb@`j@gC`ZpA|EuAgEjCsZe@_j@dDeMvK}I`@a^eFaGsTmGnGbRsBdTm@iP}FgDkGiNfGpZBdWaBuP_Ske@eV{DsMxC~LdClClNoAwEsFeCuHjEeEoA}SpYySOmGfAiJhJmFaAsMf\\oFfJwK}E~GbJxI_B{SdM_HeCsDeNiGpCaCpRiHfHqDrKiQrPgHcLwLdHvL]~AxOeA|Fm\\jXmM_CiLtGm@vTuCqRe@dIqB`Cql@}IcRrSuKgEoXk@ac@fFyIxGe_@rAmYx`@yCjM}LxFeU|a@oHdAeFzFsB~WgI`RfB|OmJCcHzPgF}KkFlVaJpLa@fHeAMPkHyFdDoJlc@uGrHyK|]qPhJ}FnPyYnU{EnXgJtFeD}GmDq@mX~XsTGe]bi@sT`SoKhCrBjKiRno@aAlZ{On@wC_IfBrJ`KfEmMgAaD_JpAnFm@tF{I|JuG|QhBh]tDfLaHrc@_OhXsHnGqKlCoSyGqDnDgJfTyChT}[pt@sNzc@qHxEeLqAqD`Eo^jfAaHdf@qA_ESrMcD`Kz@jEuHgDhF|Ko@fYs]`L{HrJ`Kbl@pEtAoFbDaGiWeRoUfE_JoGuGoCuSsEwAkCdI}^gc@_PnHsRPwEdImKbDmGYXmLvMsAaOea@z@i^iIwWwFvDuMTev@mQ}R{UqPt@_AdMcClAsN_OkKgc@}T~CaJqBwKkJcH}SaGuEoOn@hAf@Qjb@aMmEsG~IkHoDoTfDgi@c@}BwBaLim@mDyGie@d^}h@fJsCo]wAmy@nMqtAmA_GqPg_@}UkU{LqSkYcVufAehCkDxQkGaL",
+    "summitPhotoPaths": {
+      "Bern": "assets/summit_pictures/19588059130-bern.jpg",
+      "Uri": "assets/summit_pictures/19588059130-uri.jpg"
+    }
   }
 ]
