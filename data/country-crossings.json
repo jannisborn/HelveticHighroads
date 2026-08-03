@@ -4,86 +4,86 @@
     {
       "fromCountryCode": "CH",
       "toCountryCode": "DE",
-      "approxKm": 39.219,
+      "approxKm": 39.152,
       "lat": 47.647722,
       "lng": 8.60235
     },
     {
       "fromCountryCode": "DE",
       "toCountryCode": "CH",
-      "approxKm": 42.5,
+      "approxKm": 42.327,
       "lat": 47.673402,
       "lng": 8.606019
     },
     {
       "fromCountryCode": "CH",
       "toCountryCode": "DE",
-      "approxKm": 71.875,
+      "approxKm": 71.735,
       "lat": 47.748885,
       "lng": 8.454844
     },
     {
       "fromCountryCode": "DE",
       "toCountryCode": "CH",
-      "approxKm": 115.625,
+      "approxKm": 115.648,
       "lat": 47.561446,
       "lng": 8.074182
     },
     {
       "fromCountryCode": "CH",
       "toCountryCode": "DE",
-      "approxKm": 173.275,
+      "approxKm": 173.161,
       "lat": 47.537229,
       "lng": 7.707759
     },
     {
       "fromCountryCode": "DE",
       "toCountryCode": "CH",
-      "approxKm": 179.325,
+      "approxKm": 179.177,
       "lat": 47.571391,
       "lng": 7.68951
     },
     {
       "fromCountryCode": "CH",
       "toCountryCode": "FR",
-      "approxKm": 505.934,
+      "approxKm": 506.236,
       "lat": 46.199124,
       "lng": 6.223427
     },
     {
       "fromCountryCode": "FR",
       "toCountryCode": "CH",
-      "approxKm": 564.663,
+      "approxKm": 565.589,
       "lat": 46.392146,
       "lng": 6.806966
     },
     {
       "fromCountryCode": "CH",
       "toCountryCode": "IT",
-      "approxKm": 1551.675,
+      "approxKm": 1637.976,
       "lat": 46.538847,
       "lng": 10.434533
     },
     {
       "fromCountryCode": "IT",
       "toCountryCode": "AT",
-      "approxKm": 1609.933,
+      "approxKm": 1696.234,
       "lat": 46.848106,
       "lng": 10.50574
     },
     {
       "fromCountryCode": "AT",
       "toCountryCode": "LI",
-      "approxKm": 1752.209,
+      "approxKm": 1838.611,
       "lat": 47.248598,
       "lng": 9.556706
     },
     {
       "fromCountryCode": "LI",
       "toCountryCode": "CH",
-      "approxKm": 1757.876,
-      "lat": 47.259712,
-      "lng": 9.527682
+      "approxKm": 1841.899,
+      "lat": 47.243645,
+      "lng": 9.520301
     }
   ]
 }

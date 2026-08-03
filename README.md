@@ -7,10 +7,10 @@ Website for the 2026 project to road-bike the highest paved road in every Swiss 
 Serve the folder (the app loads JSON data via `fetch`):
 
 ```bash
-python3 -m http.server
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Then open `http://localhost:8000`.
+Then open `http://127.0.0.1:8000`.
 
 ## Update project progress
 
