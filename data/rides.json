@@ -136,8 +136,9 @@
   {
     "name": "🚴‍♂️🏔️Helvetic Highroads Stage 8: Hospental ➡️ Sachseln",
     "date": "2026-08-03",
-    "distanceKm": 102.838,
-    "elevationM": 1846,
+    "distanceKm": 99.813,
+    "profileEndKm": 1141.234,
+    "elevationM": 2061,
     "cantons": [
       "Bern",
       "Uri"
@@ -146,12 +147,12 @@
       "Switzerland"
     ],
     "featuredRiders": [],
-    "stravaUrl": "https://www.strava.com/activities/19585432377",
-    "stravaActivityId": 19585432377,
-    "polyline": "its{Ggdms@rGjJfKjE`BiDuDiC|FyGnHv[k@bCnXvb@nLxIbKtb@lQjVtDdNbDl@jApD_AzMjJ`V`G`j@zX`rAa@jUnr@pgC|Jl|@hJhQjJxDvHjU|P~U|GbAdBcENjH~EnCsL`FjRhAvD`GgKuBmQdKtEjArLwEzO|XsOgMqChB?|ChCy@zGpLtCfVcB`NoE_KkFaCtCtLYxM}Kn[gFfx@uM~]fCbJdOjJfU|dAzCdc@oDpTxCjIpWfRbBbFdOb@HjCtCbFjFbB`QbYtStf@nAjXiHfZeGvIoD|dAcDvJxDaCdAmG?`FoKrUzOmN}LrWrLaJ`D}HpDsb@a@ph@bFyf@pFwFt@xk@bGpTdX~i@tHpo@hL`]X|Mo@{JwHcN~Ntk@|@hR_GoWeDiDuAbDQ~FnGnLtEna@eHqMoDwPb@nPjGxRyRgb@nF``@nEzGqFaFiOq^kLiJxIvO`Kpe@zNhTiFbg@jIxUm@dZ_@lG{JdH}DpMh@|j@qCnZ|ArEaBuCtCg[oAeb@pEkVnKqI^}]eFgGyTmGtGfRwBdTc@ePeGcDkGuNjGfYBvX}AqP{Rge@uUcEqN`DbMzBpCtNiA}EuE_CwIhE}EuAqSzYwR_@gHlAcJnJuFkAcMn\\uFfJgLuEtHjJdIyAuUzLaFqCcDqNkHjDgBzQyGdGiEpLmQnP}G}KuMrHjMy@vA~OeAnGs\\bXgOoBwD`IcFjBgA~MgAyQmC|Mob@qI}OvFsJrKqe@eGwb@dFcItG_a@vAaY`a@{BzL}MnGaU~a@gOdHkBjWeJrTrBbMcL`BkFvOyFcLoFjWoIhKSlHsA]d@cHkGhDmErWyLtT}IrZqRhMsG|PcY|TwEnXaJdGcEeIaEQyC~GcShPwTSs[lh@gUrSqKjCtBfKiRvo@_AnZuOt@aDaI`BvJjKrEoM_BeDwIj@lMoIbJiH`SpBn]vDfLuGlb@aPjZ_HrFmKhCsSuGoDdDkJxQ}BdT}Ln^{NvWsNdd@mHvE{J{AcEjCac@bsAuA~S}A|FaAgEg@~OoC`Hx@zEuHiDzErI_@nZk]`MsInKrKzk@jE|@wFjD}FmWaRmU|DkJgGgGkEiUkDa@wBhIma@{c@qMvHgSNgFhIsIpCeHMVgLpMeBkNs`@x@e^iIaX{FdEuMPiv@oQmR_VaQv@{@hMiCjAuMeOqKec@a`@`AoLwJkGcSeH{F_O\\jAtAYdb@iLuF_HjKoH_E}TlD{h@k@}BuByKgm@uD{Gyd@v]ki@vJmF_xApMqtAcBoHyO}]aVeUqLiSuZaXieAqfCyDzQcGcL",
+    "stravaUrl": "https://www.strava.com/activities/19588059130",
+    "stravaActivityId": 19588059130,
+    "polyline": "grp{Gkais@tCfDbEvNxDjAjAzD}@fNnJhVfGnj@hXhpAYxUzq@zeCnK~}@xIpPbK`FhFvIfAjJbFbDvIvP~GhAfBcENfHxEpCmL`FfRlAxD~FgK{BoQ`KtEnAvLoErOzX}P_NgBtCDdCjCy@|GzLlCzUaBdNiF{KsEcBfCvHKdR_Ld[aFbx@uM~]hCzIbOnJfU~dAxCfc@kDdUxCrHvVxQ`ClF`KjBrCs@rCtEyCw@vOhN|Q`\\fEdQtGnKrAlWoHj[aGtIsCr]]ff@}CtJtDmCl@yFXzDkKxVhOqNkL|WhLuJ~CyHjDgb@_@|g@hFyf@jFgFdAzl@zFjStX~j@bHnn@jL`]d@vM{@}JqH_N|Nxk@n@~QaGgWcDgDoAdDbAzC}A`B~GhMfArVfC~HwFmJsEkSLvNrGdTkRed@nE~_@rEpIqFgFoNs]qL_KjIzNxK`g@pNpTkFhf@tIbVkAz`@oKfJwD~Mb@`j@gC`ZpA|EuAgEjCsZe@_j@dDeMvK}I`@a^eFaGsTmGnGbRsBdTm@iP}FgDkGiNfGpZBdWaBuP_Ske@eV{DsMxC~LdClClNoAwEsFeCuHjEeEoA}SpYySOmGfAiJhJmFaAsMf\\oFfJwK}E~GbJxI_B{SdM_HeCsDeNiGpCaCpRiHfHqDrKiQrPgHcLwLdHvL]~AxOeA|Fm\\jXmM_CiLtGm@vTuCqRe@dIqB`Cql@}IcRrSuKgEoXk@ac@fFyIxGe_@rAmYx`@yCjM}LxFeU|a@oHdAeFzFsB~WgI`RfB|OmJCcHzPgF}KkFlVaJpLa@fHeAMPkHyFdDoJlc@uGrHyK|]qPhJ}FnPyYnU{EnXgJtFeD}GmDq@mX~XsTGe]bi@sT`SoKhCrBjKiRno@aAlZ{On@wC_IfBrJ`KfEmMgAaD_JpAnFm@tF{I|JuG|QhBh]tDfLaHrc@_OhXsHnGqKlCoSyGqDnDgJfTyChT}[pt@sNzc@qHxEeLqAqD`Eo^jfAaHdf@qA_ESrMcD`Kz@jEuHgDhF|Ko@fYs]`L{HrJ`Kbl@pEtAoFbDaGiWeRoUfE_JoGuGoCuSsEwAkCdI}^gc@_PnHsRPwEdImKbDmGYXmLvMsAaOea@z@i^iIwWwFvDuMTev@mQ}R{UqPt@_AdMcClAsN_OkKgc@}T~CaJqBwKkJcH}SaGuEoOn@hAf@Qjb@aMmEsG~IkHoDoTfDgi@c@}BwBaLim@mDyGie@d^}h@fJsCo]wAmy@nMqtAmA_GqPg_@}UkU{LqSkYcVufAehCkDxQkGaL",
     "summitPhotoPaths": {
-      "Bern": "assets/summit_pictures/19585432377-bern.jpg",
-      "Uri": "assets/summit_pictures/19585432377-uri.jpg"
+      "Bern": "assets/summit_pictures/19585432377-uri.jpg",
+      "Uri": "assets/summit_pictures/19585432377-bern.jpg"
     }
   },
   {
