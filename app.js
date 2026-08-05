@@ -298,14 +298,18 @@ function getCompletedProfileKm() {
     return 0;
   }
 
-  const latestRide = [...rides].sort((a, b) => {
+  const sortedRides = [...rides].sort((a, b) => {
     const timestampDiff = getDateTimestamp(a?.date) - getDateTimestamp(b?.date);
     if (timestampDiff !== 0) {
       return timestampDiff;
     }
 
     return (Number(a?.stravaActivityId) || 0) - (Number(b?.stravaActivityId) || 0);
-  })[rides.length - 1];
+  });
+  const latestRideWithProfileEnd = [...sortedRides]
+    .reverse()
+    .find((ride) => Number.isFinite(Number(ride?.profileEndKm)));
+  const latestRide = latestRideWithProfileEnd || sortedRides[sortedRides.length - 1];
   const profileEndKm = Number(latestRide?.profileEndKm);
 
   return Number.isFinite(profileEndKm) ? profileEndKm : getCompletedKm();
