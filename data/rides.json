@@ -175,5 +175,26 @@
       "Bern": "assets/summit_pictures/19588059130-bern.jpg",
       "Uri": "assets/summit_pictures/19588059130-uri.jpg"
     }
+  },
+  {
+    "name": "🚴‍♂️🏔️Helvetic Highroads Stage 9: Sachseln ➡️ Stans",
+    "date": "2026-08-26",
+    "distanceKm": 70.785,
+    "elevationM": 2422,
+    "cantons": [
+      "Nidwalden",
+      "Obwalden"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/19913250602",
+    "stravaActivityId": 19913250602,
+    "polyline": "ula}Gu}gq@IyB~GyDpAbBtH{Bd@yD[gNyHsW_GcIeE{d@X_BpIKs@eNvAqDHkL|CgN_CqG\\oGlNwWzBCbEsEf@gF|BmAf@gDfIgLvBgH@_EbC{By@cEf@qMtEaNvCcAfAqDrFeBJcC~HeGx@eExBIWkLtMqMnJwRtGOjFeDbGvAlCdD~OtBjR|LfUhHrYx[fXz@bPmHpOvRfKlGlMh@zE_DnF@hExFv[nHlJLlW|NlN[zDxGbCz^zEiDzBVdClQdBg@nAbDbBX~@mQrElM?dDfAoAfCeJaG}]pA{IYoDt@w@t@bIbGlHpLtDzDzEpI`WvGrPtBt@cA_E|F~Fy@xIj@xHdFdC}AuFvBsAo@_DbAMrAdKdEzFuBmG\\gE\\bEnGnHlFL~ApGx@~QlEwMo@qNvB{ItNGpNcKMcFlEcK{DwZf@_PvKkGbGqTvC_`@wBuKTuV{Eo^sKyIkByEgIsGmAaO|B{RsCaTZcItAiBMcENxDwArB]~IrCpSqAzDi@fLfAdNfAlD|FdCbCrFdKjI`Fn_@]dUzBfLwCr_@_GlT{KdGi@tPxDrZmEfKDfFeNnJuNLeCpLt@jLiElMe@wOeBqIyF_@oGmH[aEc@|E|BxF}DgFyAuKgABj@xCwBdB`BrF_F{Bu@uHz@gJwF}F|@tDuBq@iG_PsIeWkEoFiLoDeGmHu@gI[~EuA`J~Fz]cCbJkArABcDsEkM_AlQcB[eA}CiBj@cCiQeEAsCbCeCa_@{FgIoNl@_UuMig@cIeFkGaFFqE`DyMg@uJ_GaPeS_PpHyVm@qZa\\}U{HoQoLcPyBsKeGqMW}IbEoG`LcS`Q_HfU_IvB{I|I{FxQ\\dMeCvHsGpAsFjM_ROkSqNcNwNuFyPwV_Nod@u\\cS}F{H?wExDmDeBeGbBcGcDw[s@e@wGqHuPdE_PoNyXvBd@s@wDmLIeSkNyIoBwEwM}I_KlVMbCn@`@mGdDWnZlGvD~CjN]yLwGsCaIkEmDeIoPcGaFrXlGfAiGsIwE|AkCbIxAeGeLgIlCNcFuEcPCiF|CuQbH{MKwDmGoLuIcAoAwDdApD`Db@wC[kB}FeDq@KsPiE}IcD_@{H}KpDwAc@wKlEiEpL}C{NaJkMj@wA_Dg@oLmPkSU_D{F{G}BKiFrEkA{@wKnCiB|EiB_IcI}BM|DaACcBcEGcHyC_Bv@mFoCiJ`EV_FiGnJ}DwG}L{BiOGeOuEqM|KnK`@pFLsHqAwA|ARhEtFsNe`@bEg@iDiEbDIYaCpCd@yAaFzFpAoGyk@_LaQuTuFgjAlGyOhUyKtLqI^oIhSm\\jTqCjJmAzn@sFh@",
+    "summitPhotoPaths": {
+      "Nidwalden": "assets/summit_pictures/19913250602-nidwalden.jpg",
+      "Obwalden": "assets/summit_pictures/19913250602-obwalden.jpg"
+    }
   }
 ]
