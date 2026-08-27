@@ -306,13 +306,25 @@ function getCompletedProfileKm() {
 
     return (Number(a?.stravaActivityId) || 0) - (Number(b?.stravaActivityId) || 0);
   });
-  const latestRideWithProfileEnd = [...sortedRides]
-    .reverse()
-    .find((ride) => Number.isFinite(Number(ride?.profileEndKm)));
-  const latestRide = latestRideWithProfileEnd || sortedRides[sortedRides.length - 1];
-  const profileEndKm = Number(latestRide?.profileEndKm);
+  let anchorIndex = -1;
+  for (let index = sortedRides.length - 1; index >= 0; index -= 1) {
+    const ride = sortedRides[index];
+    if (ride?.profileEndKm != null && Number.isFinite(Number(ride.profileEndKm))) {
+      anchorIndex = index;
+      break;
+    }
+  }
 
-  return Number.isFinite(profileEndKm) ? profileEndKm : getCompletedKm();
+  if (anchorIndex === -1) {
+    return getCompletedKm();
+  }
+
+  const anchorKm = Number(sortedRides[anchorIndex].profileEndKm);
+  const distanceAfterAnchorKm = sortedRides
+    .slice(anchorIndex + 1)
+    .reduce((sum, ride) => sum + (Number(ride?.distanceKm) || 0), 0);
+
+  return anchorKm + distanceAfterAnchorKm;
 }
 
 function getCompletedElevation() {
