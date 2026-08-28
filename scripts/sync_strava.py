@@ -425,22 +425,20 @@ def extract_terms_from_text(text: str, alias_map: Dict[str, List[str]]) -> List[
             if normalized_alias:
                 alias_entries.append((canonical, normalized_alias))
 
-    # Longest first to avoid partial overlaps with similar names.
+    # Check longer aliases first, then restore the order in which the canonical
+    # terms occur in the activity text. Photo assignment depends on this order.
     alias_entries.sort(key=lambda item: len(item[1]), reverse=True)
 
-    matches: List[str] = []
+    first_position_by_canonical: Dict[str, int] = {}
     for canonical, normalized_alias in alias_entries:
-        if re.search(rf"\b{re.escape(normalized_alias)}\b", normalized_text):
-            matches.append(canonical)
-
-    seen = set()
-    unique_matches: List[str] = []
-    for match in matches:
-        if match in seen:
+        match = re.search(rf"\b{re.escape(normalized_alias)}\b", normalized_text)
+        if match is None:
             continue
-        unique_matches.append(match)
-        seen.add(match)
-    return unique_matches
+        current_position = first_position_by_canonical.get(canonical)
+        if current_position is None or match.start() < current_position:
+            first_position_by_canonical[canonical] = match.start()
+
+    return sorted(first_position_by_canonical, key=first_position_by_canonical.get)
 
 
 def extract_cantons_from_activity(activity: Dict[str, Any], canton_names: List[str]) -> List[str]:
@@ -692,13 +690,21 @@ def activity_to_ride(
 
 
 def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    merged = deepcopy(existing_rides)
+    merged: List[Dict[str, Any]] = []
     index_by_id: Dict[int, Dict[str, Any]] = {}
 
-    for ride in merged:
+    for ride in deepcopy(existing_rides):
         ride_id = extract_activity_id_from_ride(ride)
         if ride_id is None:
+            merged.append(ride)
             continue
+
+        # Preserve the first local entry as the source of truth, but never let
+        # duplicate Strava IDs inflate ride totals or dashboard counts.
+        if ride_id in index_by_id:
+            continue
+
+        merged.append(ride)
         index_by_id[ride_id] = ride
 
     for new_ride in new_rides:
