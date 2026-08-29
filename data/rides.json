@@ -180,6 +180,29 @@
   {
     "name": "🏔️🚴‍♂️ Helvetic Highroads Stage 10 - Stans ➡️ Mitlödi",
     "date": "2026-08-29",
+    "distanceKm": 186.654,
+    "elevationM": 3935,
+    "cantons": [
+      "Luzern",
+      "Schwyz",
+      "Zug"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/19951348974",
+    "stravaActivityId": 19951348974,
+    "polyline": "}nr}Gebar@hDrB{NdXiE~i@fZt{Bh{BxcCrc@bvAhfBzVp`@xT`Tbe@xOzy@vJdKqBhNtUjx@tE`l@iKngAvOzQrJze@cE~TnXbs@fSj\\zFz{@rq@bgDyEbSeNzEh[bsA_HsG_HtdBhCdU{S_Zr@j_@_JxYgLxVyVxKyNbt@fXtaAgNxp@{_@sRwf@gL|B~U_i@uIccAw_Aov@kHLvH}p@_dAmf@_OcE~L{k@b[qm@nHgc@dx@iLzgAsf@nJiHrlA{Jdb@u^rTiHpToKm^p@m[_]hCod@cc@uu@rPku@ig@qm@usBmGau@}Vi_@lJwG{b@k_@cPun@aJdFxAmJoNL}C_gFs^qxB}CiuAxL_aAeFolAjDqNar@euBed@usEnOcv@mNi{@oDqxAxLwkAaEeZrD{I|MlF_F_D_@o\\|Po}BiQo|@rFeAg@sQ_d@wpAiy@}tAqo@caB{bAucAeOug@a`@ie@d@sQ_JoHjGqi@vt@ocBnf@clA~^sn@p]wnA`j@ca@Ao[cJ{RdXus@ba@yg@sKw~@bL{GzDq_AxFo`@gSk[eCsZjMqTaBsZhGwK_JeJ}O|P_RyIcEgDaGoHsCdSua@w_@r@~UmT_UBd[y\\wp@o@t}@vHv\\mQqCcE}L|Fdd@qOy\\tDxs@}[}cACzUFcV`\\bdAgEss@pOt\\qFkd@vD~LvRzAsIwYLe{@xFnG~Dw_@iKqc@pRbE~ChLzDwSeG{OvAiYwKeYlCsd@yf@ucBoTu[uUkhAkMa~A{s@em@uoA_c@eFrSrAb]c[dLod@cDaIpN{V}Qkw@_bBaJvTqd@eD~_@t_@eVjIxCziAcKjMsJuBkNvUmX|BeGvScMjH|L~KrF~a@s@nsA}IYzDeY}BaZk]hLcDoPkAxU~O~Mip@xEuJl\\uLfc@iLc~AuIpYyAcg@uKee@xCsnAeDsm@cT{l@kJ_wAgAofAf\\iiAiJwo@mZ_i@}KkbBwO}_@_Aq_BoDo`@uSki@dHd@tSwi@k@gRjMkThGod@eO}^cF{hBaWwv@cF}Zzb@{kBd@ez@mKgGrwAwmFkHi]aA{uAnBc_AjMmW}K_|@C_|@t[ozCzg@gwBhbAuxC|k@y_@rpBu|Dp_@t@bVkb@tvAwh@x[lQbQcExeAtp@x|BwLrk@|a@ry@yp@fd@qJzYgq@vUwP~i@qGjUwa@||@iLtb@tNgAkJ",
+    "summitPhotoPaths": {
+      "Luzern": "assets/summit_pictures/19951348974-luzern.jpg",
+      "Schwyz": "assets/summit_pictures/19951348974-schwyz.jpg",
+      "Zug": "assets/summit_pictures/19951348974-zug.jpg"
+    }
+  },
+  {
+    "name": "🏔️🚴‍♂️ Helvetic Highroads Stage 10 - Stans ➡️ Mitlödi",
+    "date": "2026-08-29",
     "distanceKm": 107.647,
     "elevationM": 2174,
     "cantons": [],
