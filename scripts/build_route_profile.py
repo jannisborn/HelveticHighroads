@@ -50,6 +50,12 @@ def parse_args() -> argparse.Namespace:
         help="Optional path to the static country-crossing anchor data.",
     )
     parser.add_argument(
+        "--canton-peaks",
+        type=Path,
+        default=repo_root / "data" / "canton-peaks.json",
+        help="Optional canton peak data whose route positions should be refreshed.",
+    )
+    parser.add_argument(
         "--sample-distance-m",
         type=float,
         default=250.0,
@@ -250,6 +256,60 @@ def build_waypoints(
         waypoints.append(waypoint)
 
     return waypoints
+
+
+def update_canton_peak_profiles(
+    canton_peaks: List[Dict[str, Any]],
+    *,
+    coordinates: List[Dict[str, Any]],
+    scaled_distances_m: List[float],
+    waypoints: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    updated: List[Dict[str, Any]] = []
+
+    for peak in canton_peaks:
+        if not isinstance(peak, dict):
+            updated.append(peak)
+            continue
+
+        row = dict(peak)
+        try:
+            latitude = float(row["latitude"])
+            longitude = float(row["longitude"])
+        except (KeyError, TypeError, ValueError):
+            updated.append(row)
+            continue
+
+        approx_km_raw = row.get("profileKm")
+        try:
+            approx_km = float(approx_km_raw) if approx_km_raw is not None else None
+        except (TypeError, ValueError):
+            approx_km = None
+
+        source_index = find_nearest_coordinate_index(
+            lat=latitude,
+            lng=longitude,
+            coordinates=coordinates,
+            scaled_distances_m=scaled_distances_m,
+            approx_km=approx_km,
+            approx_window_km=30.0,
+        )
+        row["profileKm"] = round(scaled_distances_m[source_index] / 1000.0, 3)
+
+        if waypoints:
+            row["profileWaypointIndex"] = min(
+                range(len(waypoints)),
+                key=lambda index: haversine_distance_m(
+                    latitude,
+                    longitude,
+                    float(waypoints[index]["lat"]),
+                    float(waypoints[index]["lng"]),
+                ),
+            )
+
+        updated.append(row)
+
+    return updated
 
 
 def build_route_segments(
@@ -891,8 +951,11 @@ def main() -> int:
     args = parse_args()
     project = read_json(args.project)
     country_crossings_payload = read_country_crossings(args.country_crossings)
+    canton_peaks = read_json(args.canton_peaks) if args.canton_peaks.exists() else None
     if not isinstance(project, dict):
         raise ValueError(f"{args.project} must contain a JSON object.")
+    if canton_peaks is not None and not isinstance(canton_peaks, list):
+        raise ValueError(f"{args.canton_peaks} must contain a JSON list.")
 
     tour_url = str(project.get("komootTourUrl") or "").strip()
     if not tour_url:
@@ -948,6 +1011,16 @@ def main() -> int:
         scaled_distances_m,
         coordinates,
     )
+    updated_canton_peaks = (
+        update_canton_peak_profiles(
+            canton_peaks,
+            coordinates=coordinates,
+            scaled_distances_m=scaled_distances_m,
+            waypoints=waypoints_payload,
+        )
+        if canton_peaks is not None
+        else None
+    )
     route_segments_payload = build_route_segments(
         segments if isinstance(segments, list) else [],
         scaled_distances_m,
@@ -990,7 +1063,15 @@ def main() -> int:
     }
 
     write_json(args.output, payload)
+    project["totalDistanceKm"] = payload["meta"]["tourDistanceKm"]
+    project["totalElevationM"] = payload["meta"]["tourElevationM"]
+    write_json(args.project, project)
+    if updated_canton_peaks is not None:
+        write_json(args.canton_peaks, updated_canton_peaks)
     print(f"Wrote {args.output}")
+    print(f"Updated route totals in {args.project}")
+    if updated_canton_peaks is not None:
+        print(f"Updated canton peak positions in {args.canton_peaks}")
     print(
         f"Tour: {payload['meta']['tourDistanceKm']} km, "
         f"{payload['meta']['tourElevationM']} m, "

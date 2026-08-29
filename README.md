@@ -32,6 +32,8 @@ Generate the simplified whole-route profile JSON from the Komoot tour configured
 uv run scripts/build_route_profile.py
 ```
 
+The builder also synchronizes the Komoot distance/elevation totals in `data/project.json` and recalculates every `profileKm` and `profileWaypointIndex` in `data/canton-peaks.json`.
+
 Useful option:
 
 - `--sample-distance-m 250`: control how densely the profile is sampled
@@ -66,6 +68,7 @@ The sync script only considers ride activities whose title contains all words fr
 If the title or description includes canton names, it auto-marks those canton rows as done (including common aliases such as `Tessin` -> `Ticino`).
 The sync fetches full activity details for new matched rides, so description text is included reliably.
 Already tracked Strava ride IDs are skipped on later syncs; once imported, the local JSON stays the source of truth for ride stats and metadata.
+If different Strava activity IDs use the same `Stage N` title, the sync keeps the more complete record and stores the discarded IDs in `data/state.json` so they are not imported again.
 It also fills `countriesVisited` by scanning title + description and mapping German country names to English (for example `Deutschland` -> `Germany`, `Schweiz` -> `Switzerland`).
 It also extracts fellow riders from a `Featuring:` block in the description. Use a comma-separated list and end it with either a period or a line break, for example `Featuring: First Last, Second Rider.`.
 If a matched ride has Strava photos, the sync downloads summit photos into `assets/summit_pictures/` and links them to canton summit cards automatically. For a ride with `k` cantons, the first `k` Strava photos are assigned to the `k` cantons in the order in which their names appear in the activity title and description.

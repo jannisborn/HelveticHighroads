@@ -198,6 +198,11 @@ def normalize_text(value: str) -> str:
     return value.strip()
 
 
+def extract_stage_number(value: str) -> Optional[int]:
+    match = re.search(r"\bstage\s*(\d+)\b", normalize_text(value))
+    return int(match.group(1)) if match else None
+
+
 def activity_datetime(activity: Dict[str, Any]) -> Optional[datetime]:
     return parse_iso_datetime(activity.get("start_date_local") or activity.get("start_date"))
 
@@ -376,6 +381,27 @@ def extract_existing_ride_ids(rides: List[Dict[str, Any]]) -> List[int]:
     for ride in rides:
         ride_id = extract_activity_id_from_ride(ride)
         if ride_id is None or ride_id in seen:
+            continue
+        ids.append(ride_id)
+        seen.add(ride_id)
+    return ids
+
+
+def extract_superseded_ride_ids(state: Dict[str, Any]) -> List[int]:
+    raw_ids = state.get("supersededStravaActivityIds")
+    if not isinstance(raw_ids, list):
+        return []
+
+    ids: List[int] = []
+    seen = set()
+    for raw_id in raw_ids:
+        if isinstance(raw_id, int):
+            ride_id = raw_id
+        elif isinstance(raw_id, str) and raw_id.isdigit():
+            ride_id = int(raw_id)
+        else:
+            continue
+        if ride_id in seen:
             continue
         ids.append(ride_id)
         seen.add(ride_id)
@@ -689,35 +715,65 @@ def activity_to_ride(
     return ride
 
 
+def ride_preference_key(ride: Dict[str, Any]) -> tuple:
+    cantons = ride.get("cantons")
+    canton_count = len([canton for canton in cantons if canton]) if isinstance(cantons, list) else 0
+
+    summit_paths = ride.get("summitPhotoPaths")
+    summit_photo_count = (
+        len([path for path in summit_paths.values() if path])
+        if isinstance(summit_paths, dict)
+        else 0
+    )
+    if ride.get("primaryPhotoPath"):
+        summit_photo_count += 1
+
+    return (
+        canton_count,
+        summit_photo_count,
+        float(ride.get("distanceKm") or 0.0),
+        float(ride.get("elevationM") or 0.0),
+        len(str(ride.get("polyline") or "")),
+        extract_activity_id_from_ride(ride) or 0,
+    )
+
+
 def merge_rides(existing_rides: List[Dict[str, Any]], new_rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     merged: List[Dict[str, Any]] = []
     index_by_id: Dict[int, Dict[str, Any]] = {}
+    index_by_stage: Dict[int, int] = {}
 
-    for ride in deepcopy(existing_rides):
+    def consider_ride(ride: Dict[str, Any]) -> None:
         ride_id = extract_activity_id_from_ride(ride)
-        if ride_id is None:
-            merged.append(ride)
-            continue
+        if ride_id is not None and ride_id in index_by_id:
+            return
 
-        # Preserve the first local entry as the source of truth, but never let
-        # duplicate Strava IDs inflate ride totals or dashboard counts.
-        if ride_id in index_by_id:
-            continue
+        stage_number = extract_stage_number(str(ride.get("name") or ""))
+        existing_index = index_by_stage.get(stage_number) if stage_number is not None else None
+        if existing_index is not None:
+            existing = merged[existing_index]
+            if ride_preference_key(ride) <= ride_preference_key(existing):
+                return
+
+            existing_id = extract_activity_id_from_ride(existing)
+            if existing_id is not None:
+                index_by_id.pop(existing_id, None)
+            merged[existing_index] = ride
+            if ride_id is not None:
+                index_by_id[ride_id] = ride
+            return
 
         merged.append(ride)
-        index_by_id[ride_id] = ride
+        if ride_id is not None:
+            index_by_id[ride_id] = ride
+        if stage_number is not None:
+            index_by_stage[stage_number] = len(merged) - 1
+
+    for ride in deepcopy(existing_rides):
+        consider_ride(ride)
 
     for new_ride in new_rides:
-        ride_id = int(new_ride["stravaActivityId"])
-        existing = index_by_id.get(ride_id)
-
-        if existing is None:
-            merged.append(new_ride)
-            index_by_id[ride_id] = merged[-1]
-            continue
-
-        # Existing rides are local source-of-truth once imported.
-        continue
+        consider_ride(deepcopy(new_ride))
 
     def sort_key(ride: Dict[str, Any]) -> tuple:
         dt = parse_iso_datetime(f"{ride.get('date')}T00:00:00+00:00")
@@ -954,7 +1010,8 @@ def main() -> int:
         fetched_activities = dedupe_activities_by_id([*fetched_activities, *full_window_activities])
         matched_activities = activities_with_prefix(fetched_activities, args.prefix)
 
-    existing_ride_ids = set(extract_existing_ride_ids(rides))
+    superseded_ride_ids = set(extract_superseded_ride_ids(state))
+    existing_ride_ids = set(extract_existing_ride_ids(rides)) | superseded_ride_ids
     matched_ride_activities = [activity for activity in matched_activities if activity_is_ride(activity)]
     new_matched_ride_activities = [
         activity
@@ -1038,6 +1095,11 @@ def main() -> int:
     updated_state["lastMatchedActivityCount"] = len(matched_ride_activities)
     updated_state["lastNewRideActivityCount"] = len(new_matched_activities)
     updated_state["lastSkippedExistingRideActivityCount"] = skipped_existing_count
+    candidate_ride_ids = set(extract_existing_ride_ids([*rides, *new_rides]))
+    kept_ride_ids = set(extract_existing_ride_ids(merged_rides))
+    superseded_ride_ids.update(candidate_ride_ids - kept_ride_ids)
+    if superseded_ride_ids:
+        updated_state["supersededStravaActivityIds"] = sorted(superseded_ride_ids)
     if new_matched_activities:
         updated_state["lastProcessedActivityId"] = max(
             int(a["id"]) for a in new_matched_activities if "id" in a

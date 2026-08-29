@@ -111,7 +111,7 @@
     "name": "🚴🗻Helvetic Highroads Stage 7 \n Visp ➡️ Hospental",
     "date": "2026-06-13",
     "distanceKm": 105.128,
-    "profileEndKm": 1036.202,
+    "profileEndKm": 1036.188,
     "elevationM": 2977,
     "cantons": [
       "Valais",
@@ -137,7 +137,7 @@
     "name": "🚴‍♂️🏔️Helvetic Highroads Stage 8: Hospental ➡️ Sachseln",
     "date": "2026-08-03",
     "distanceKm": 99.813,
-    "profileEndKm": 1141.237,
+    "profileEndKm": 1141.221,
     "elevationM": 2061,
     "cantons": [
       "Uri",
@@ -159,7 +159,7 @@
     "name": "🚴‍♂️🏔️Helvetic Highroads Stage 9: Sachseln ➡️ Stans",
     "date": "2026-08-26",
     "distanceKm": 70.785,
-    "profileEndKm": 1212.856,
+    "profileEndKm": 1212.839,
     "elevationM": 2422,
     "cantons": [
       "Obwalden",
@@ -181,6 +181,7 @@
     "name": "🏔️🚴‍♂️ Helvetic Highroads Stage 10 - Stans ➡️ Mitlödi",
     "date": "2026-08-29",
     "distanceKm": 186.654,
+    "profileEndKm": 1397.137,
     "elevationM": 3935,
     "cantons": [
       "Luzern",
@@ -199,19 +200,5 @@
       "Schwyz": "assets/summit_pictures/19951348974-schwyz.jpg",
       "Zug": "assets/summit_pictures/19951348974-zug.jpg"
     }
-  },
-  {
-    "name": "🏔️🚴‍♂️ Helvetic Highroads Stage 10 - Stans ➡️ Mitlödi",
-    "date": "2026-08-29",
-    "distanceKm": 107.647,
-    "elevationM": 2174,
-    "cantons": [],
-    "countriesVisited": [
-      "Switzerland"
-    ],
-    "featuredRiders": [],
-    "stravaUrl": "https://www.strava.com/activities/19951364889",
-    "stravaActivityId": 19951364889,
-    "polyline": "qzl~Gkcqr@r@yPyG}CqAwE`HuXQkNdi@q`AnJab@pSqc@|LcP~CmVtJ_IlSod@dPqe@vBkPhFiEpAaQdN{EnZsYF{ZyD}MiDsC~AuCm@sAlCM`Rim@`a@}g@cCyHsGot@bLcHvGic@{A}ZbDgS]eGrBkDuIyRsHqGRwJyCaOjMcTmCqLj@sLjGqL{I{I_PzPaRuIWmGkC_E_@`H_GmHgA^uAlKJxEgKcGoAgFaIyBaIqLp@~UoK}MyGcFHh[qCuCwB}C{H}M_KeXzAr`@uB`JjAdLyA|C`HtQTxIsD`@{KsDeE_MlArSjDrOqO{\\|Dfa@GpQ{[{cA@|UBeV~[`dA@cQaEma@vOp\\wD{PcAkRfEdM`F[dGbF~BoCqIwXvAwDeAyKlB_JqBo]f@qBbEhKBcJ~EmI_BeQaEoCl@yHoDqN~RfEnC|KrCiDo@mJzAuBaG{ObCsKs@wL_EmTqEyCEyInCiZsc@onAeBsSyJiFcQ}l@uGmd@sDiKb@gRwEkUcCqd@gCwMat@qm@mi@cRaKZcYyPlA`BmEjBeBdMfAn]yZzK}d@_DaEnBsB|JsAyCeTcMiJaVsKsMeNua@qP{YiI`MK|FiZoFqIjA|WvOjGzNsGm@oCrEyE@iBxCxCjjAcKdMiJyBeEdLmHrHuImBeNrFoDlGkAfKuGt@kDpFjFnCzE|G~E`b@eAve@x@`PcD|SzBhFuIS`EoXiB}ZwE\\qH|IyNUA}I{B_EyAvUpOjPoV}CyXlJwF`YkDrGHpIx@cO_DtDe@pKqFvP{@wUyEiSp@iRyDaPOcOqCByB|XeA`@mAue@aLkf@Oiy@hDkUqDmYLeRwG{VkKcUkJ{vAcAqx@AiMtUar@lE_VkHkk@cEuKmIoE{KsZ}KibBeHyJkFuSgFiz@dDud@mD_`@aHaNC}GcEgCkD_M|B|CdD_CfB}PfFwNdIeHr@wFyAwJdM}SfG}e@yC_KcEo@cD}OqC_s@wC}Q`A}a@iNw\\cCoUoCqBb@qMsA_JsD{AvMgo@xNy`@fDgYd@gz@cKoG`GaMveAypEpHeNkHy\\cAyuAtB_`AfMiW{Kmz@Ia|@jKio@hOqjBjNu\\fXiyAjbA}xCbO}Ph\\{NnS}c@fH_Jh\\y{@~p@gjAtIiHzIdGpMaAhHkE~Mu\\lGgCdMv@zaAqf@jYbR`QaEvm@zd@dWrJ|RnA`lAoFv[wGnIxJna@dVd}@is@h`@_H|F{IhAaPlKgHvCgLhUoPxi@sGxU{a@v}@eL`N~@lRvLvAoEkDgD"
   }
 ]
