@@ -1,5 +1,39 @@
 [
   {
+    "name": "Andrea R",
+    "rideCount": 1,
+    "peakCount": 1,
+    "cantons": [
+      "Glarus"
+    ],
+    "distanceKm": 187.785,
+    "elevationM": 3634,
+    "rides": [
+      {
+        "date": "2026-09-20",
+        "name": "🗻🚲 Helvetic Highroads Stage 11 - Mitlödi ➡️ Zernez",
+        "stravaUrl": "https://www.strava.com/activities/20257886199"
+      }
+    ]
+  },
+  {
+    "name": "Paul",
+    "rideCount": 1,
+    "peakCount": 1,
+    "cantons": [
+      "Glarus"
+    ],
+    "distanceKm": 187.785,
+    "elevationM": 3634,
+    "rides": [
+      {
+        "date": "2026-09-20",
+        "name": "🗻🚲 Helvetic Highroads Stage 11 - Mitlödi ➡️ Zernez",
+        "stravaUrl": "https://www.strava.com/activities/20257886199"
+      }
+    ]
+  },
+  {
     "name": "Mathieu Janier",
     "rideCount": 1,
     "peakCount": 3,

@@ -200,5 +200,28 @@
       "Schwyz": "assets/summit_pictures/19951348974-schwyz.jpg",
       "Zug": "assets/summit_pictures/19951348974-zug.jpg"
     }
+  },
+  {
+    "name": "🗻🚲 Helvetic Highroads Stage 11 - Mitlödi ➡️ Zernez",
+    "date": "2026-09-20",
+    "distanceKm": 187.785,
+    "elevationM": 3634,
+    "cantons": [
+      "Glarus"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [
+      "Andrea R",
+      "Paul"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/20257886199",
+    "stravaActivityId": 20257886199,
+    "polyline": "qs|}Gorlv@nPfO|OqFxRxMla@E{CsfBmNup@\\osAfIcj@z`Ak|Btw@axA|m@o|@pYoQ|d@`@lXyOf^fFvb@aGzZ~NhvAcYhe@vBpa@tg@zQbg@bq@rsCh_@|[eFjLt^pXhFn]f@v\\gRw\\iTWnNt\\eK}Eq@rXx@wX|JbFwNi\\dFuEtU`MjJjUsGcz@u^qXbFwLo_@k\\_Y_~@qh@_{Bmb@qa@ic@oKozApYoX}Nad@zFy]kFiWtOog@G{XlQ}u@zuAiw@`zAa`@dl@u`@p{AmBxb@h@lu@dNbm@hHrvAuEzQw^eAgRuMyPjFep@aU{|@lKsT|UoSmPi`@rl@ik@vMqQzR{t@rc@gYpDgfA_F|AeNqe@qM}f@_s@ka@|AwNpTwZ_OgIxRmbB_XmMm_@aVj@uLck@_Ue]rD}J_H{QzV{j@oQcu@_M{EzHkk@uCyuAzVorAzDy`AzGw@nAmp@jNuj@nGsdAfFcGoFuY~QgmBgGa}@nPgeAeDgqBcVs}BdRsuAmCkl@qJ_RhA}g@q]euA~Aom@~E|@xm@sjAxSqH~fAcjB~w@un@`vBoxCruAymEdD_`@t[_n@yCcN|a@cfBhu@ogAnn@gjAyQse@l_B}cD|HvCrQij@yDoTrH{Ttv@w\\_Ze_AnpAkrAd|Agz@hx@a_AaIkeD|FcP}GsKq@uo@uNuRoLap@{Fe|@hFkvBwEs^{Nkv@~v@uwEvb@qv@dt@}g@f|@nFpdAaf@p}@g`BfKci@hGepBd]yg@`Qe{@mIk{@vIe{C|WejAx\\qTlNk~Ajq@u|@jUq{@nP}Q`M{j@@kaAnP_d@ru@_Exe@mVv\\|L}S`Kxf@pIjZoItFnGlLqDzEeWpTQxi@pd@rG`UqFp|Ajr@`]dSkWhg@pj@zTfH|MjW~MeFjQxJpQfb@|VzJwX_NwReo@`Ea{@nOyy@dOaxCl_@uy@`x@g|AhYma@xAfGh^eWdX}}@zc@qSjUu^bNOmAfIvz@sFi@tI~P{Ljj@qz@|RgpArLgViCcj@qM{_AtAcFBwMaf@ydBwFgjAmSw|@dZgsCgHwz@hErT[aWpFou@tIs_@zJcEyPcCt@_QjKxF|`@cKlo@|Ffx@}InEjNfSbEzQgInIiXheA_j@jPca@hFo@vNb\\",
+    "summitPhotoPaths": {
+      "Glarus": "assets/summit_pictures/20257886199-glarus.jpg"
+    },
+    "primaryPhotoPath": "assets/summit_pictures/20257886199-glarus.jpg"
   }
 ]

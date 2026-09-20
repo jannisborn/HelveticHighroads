@@ -1,11 +1,11 @@
 {
-  "lastStravaSyncAt": "2026-08-29T17:32:12.644631+00:00",
-  "lastFetchedAfterEpoch": 1788024732,
+  "lastStravaSyncAt": "2026-09-20T17:51:04.861514+00:00",
+  "lastFetchedAfterEpoch": 1789926664,
   "lastFetchedActivityCount": 1,
   "lastMatchedActivityCount": 1,
-  "lastProcessedActivityId": 19951348974,
-  "lastNewRideActivityCount": 0,
-  "lastSkippedExistingRideActivityCount": 1,
+  "lastProcessedActivityId": 20257886199,
+  "lastNewRideActivityCount": 1,
+  "lastSkippedExistingRideActivityCount": 0,
   "supersededStravaActivityIds": [
     19951364889
   ]
