@@ -1,6 +1,6 @@
 [
   {
-    "name": "Andrea R",
+    "name": "Andrea Richiardone",
     "rideCount": 1,
     "peakCount": 1,
     "cantons": [
@@ -17,14 +17,12 @@
     ]
   },
   {
-    "name": "Paul",
+    "name": "Paul Muringer",
     "rideCount": 1,
     "peakCount": 1,
-    "cantons": [
-      "Glarus"
-    ],
-    "distanceKm": 187.785,
-    "elevationM": 3634,
+    "cantons": [],
+    "distanceKm": 110.0,
+    "elevationM": 1100,
     "rides": [
       {
         "date": "2026-09-20",
