@@ -973,6 +973,7 @@ td {
   .profile-marker-name {
     font-size: 10.5px;
   }
+
 }
 
 @media (max-width: 640px) {
@@ -1056,6 +1057,65 @@ td {
 
 .summit-photos {
   margin-block: 1rem 2rem;
+}
+
+.climbfinity-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(252, 176, 62, 0.24), rgba(252, 176, 62, 0) 34%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.92), rgba(247, 239, 218, 0.9));
+  border-color: rgba(117, 92, 44, 0.22);
+}
+
+.climbfinity-brand {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  color: #b47419;
+  font-family: "Sora", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.climbfinity-copy h2 {
+  max-width: 27ch;
+  font-size: clamp(1.25rem, 2.6vw, 1.9rem);
+}
+
+.climbfinity-copy p {
+  max-width: 52ch;
+  margin-top: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.climbfinity-media {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(117, 92, 44, 0.2);
+  border-radius: 16px;
+  background: #f4ead4;
+}
+
+.climbfinity-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.climbfinity-media:hover img {
+  transform: scale(1.02);
+}
+
+@media (max-width: 920px) {
+  .climbfinity-section {
+    grid-template-columns: 1fr;
+  }
 }
 
 .summit-photos__grid {
