@@ -1,5 +1,28 @@
 [
   {
+    "name": "Nina Wiedemann",
+    "rideCount": 2,
+    "peakCount": 2,
+    "cantons": [
+      "Fribourg",
+      "Graubünden"
+    ],
+    "distanceKm": 295.833,
+    "elevationM": 5989,
+    "rides": [
+      {
+        "date": "2026-05-02",
+        "name": "🚴🗻Helvetic Highroads Stage 5: Montreux ➡️ Spiez",
+        "stravaUrl": "https://www.strava.com/activities/18347963531"
+      },
+      {
+        "date": "2026-10-11",
+        "name": "⛰️🚴‍♂️ Helvetic Highroads Stage 12: Zernez ➡️ Landeck (AT)",
+        "stravaUrl": "https://www.strava.com/activities/20545059066"
+      }
+    ]
+  },
+  {
     "name": "Andrea Richiardone",
     "rideCount": 1,
     "peakCount": 1,
@@ -49,23 +72,6 @@
         "date": "2026-04-11",
         "name": "🏔️🚴Helvetic Highroads Stage 3: Basel ➡️ St Imier",
         "stravaUrl": "https://www.strava.com/activities/18068463238"
-      }
-    ]
-  },
-  {
-    "name": "Nina Wiedemann",
-    "rideCount": 1,
-    "peakCount": 1,
-    "cantons": [
-      "Fribourg"
-    ],
-    "distanceKm": 139.308,
-    "elevationM": 2768,
-    "rides": [
-      {
-        "date": "2026-05-02",
-        "name": "🚴🗻Helvetic Highroads Stage 5: Montreux ➡️ Spiez",
-        "stravaUrl": "https://www.strava.com/activities/18347963531"
       }
     ]
   },

@@ -222,9 +222,10 @@
     "altitudeM": 2501,
     "profileKm": 1631.118,
     "profileWaypointIndex": 39,
-    "done": false,
+    "done": true,
     "latitude": 46.5416,
-    "longitude": 10.4332
+    "longitude": 10.4332,
+    "stravaUrl": "https://www.strava.com/activities/20545059066"
   },
   {
     "order": 22,

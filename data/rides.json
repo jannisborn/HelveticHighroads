@@ -223,5 +223,28 @@
       "Glarus": "assets/summit_pictures/20257886199-glarus.jpg"
     },
     "primaryPhotoPath": "assets/summit_pictures/20257886199-glarus.jpg"
+  },
+  {
+    "name": "⛰️🚴‍♂️ Helvetic Highroads Stage 12: Zernez ➡️ Landeck (AT)",
+    "date": "2026-10-11",
+    "distanceKm": 156.525,
+    "elevationM": 3221,
+    "cantons": [
+      "Graubünden"
+    ],
+    "countriesVisited": [
+      "Italy",
+      "Austria"
+    ],
+    "featuredRiders": [
+      "Nina Wiedemann"
+    ],
+    "stravaUrl": "https://www.strava.com/activities/20545059066",
+    "stravaActivityId": 20545059066,
+    "polyline": "it_|Gqwq|@}C{NnKyLwFmO|JiOiLqo@`A_WvRsq@e@kNlHiFhIqy@qHmd@lQbKpHml@zVu]jTit@fS{SoMw^xPnHt^uWnI~NpWg@t[mQe@}Kra@eQvV}`@iD{_AeQs\\gWqPeP_`@nAigBdIgR|Ta{BzKod@jKmGdCqa@~h@_{AZsn@bLkG~D_h@jM}LtIm^RmKcJcEV{StKzCfFgSbP]wCkQdD_j@xDuEeAbOtDcMfB`MjM_ToA{U|Mwo@eI}Nr^gpAxFYhLqo@`[cg@tRujArp@m|@r@kmAfXeo@sBkIbPe~@eEwxAcFcJzWaGqJuZrI`@qCsPdOfOxB|A[qG`I~SvGaIEuCuDaA~WSlBy@`aAuy@vNjIcKlCnm@jGpFyGdHrGLyFtFzGhAgGhb@~S|WoH_IhQh`@_OfQoKiGnKlb@sEuOzJ`n@fMx[wa@hWgGmFoN~JaNwIo@fEkShJjDi@wGbH{B}CoKtGiKqOgNpJp@oJaLaBmClJtDoSoWpPfKoOa\\bLhRsIyVxCvFoHqz@gBs]p@AfCrHkCqj@xBxK[gL}BqTFeHvGtNgFc\\|HjOeGeY{Ouh@aHkJqJrA|JyGiXjJhByOqAiD`E\\{\\}JzJRaFwC_VFmWqXvFqB}~@u`@ot@yx@_g@s`Biu@wg@}j@wL}hAuz@etA_jEyO`e@mzBzvAgrBrh@cPoEg^zYoZpq@gp@lHiXxLcOtXqI}FkSxHmd@phAqTzTuO}Foo@fNmMcO{NMyg@pKil@kBcu@gUgTtEsP{Oo_BkPyTvRwi@`Jw]hAmA{MgB|b@uJ|Eed@lCwwAzD}eBvdAeLkDqn@pj@_RpCsZc\\qeA~q@[sMen@bGoW{Poj@_Hck@sNueBjd@s[zRRxO_v@`Jy\\jSr[|J_^pG_e@}VeU`FuJ`FeI|a@i{@mIc[uUmNda@mBaMg^eX}OqZ}Ykv@_YiFcLqTwRpEsXiUlNpK`BaM{Nmy@_IwD}b@usA_f@}j@s{@ilBgGc\\wg@mi@gVyJsEhHcf@gaAu_AogAyTeKyJ}Zea@_d@uMas@{[{q@oVgVoS{JeKdL_UsFuw@waByf@oy@ar@uRkl@qa@uTTmc@jWc^kViq@cO}t@xOyu@|d@uSpb@cExaBnChjAqDdb@iLpUa@fp@}b@r|@wU|fBeV``AeQrUiUt@?lIoRpEgGcQwYmRsOqp@",
+    "summitPhotoPaths": {
+      "Graubünden": "assets/summit_pictures/20545059066-graubunden.jpg"
+    },
+    "primaryPhotoPath": "assets/summit_pictures/20545059066-graubunden.jpg"
   }
 ]
