@@ -630,6 +630,25 @@ def build_synced_summit_photo_filename(activity_id: int, canton_name: str, exten
     return f"{activity_id}-{canton_slug}{extension}"
 
 
+def extract_photo_regions(activity: Dict[str, Any], ride: Dict[str, Any]) -> List[str]:
+    description = str(activity.get("description") or "")
+    cantons = ride.get("cantons") or []
+    ordered_cantons = extract_cantons_from_text(description, cantons)
+    ordered_cantons.extend(canton for canton in cantons if canton not in ordered_cantons)
+    extra_checks = max(0, description.count("✅") - len(cantons))
+    countries: List[str] = []
+    aliases = {
+        country: COUNTRY_ALIAS_MAP.get(country, [])
+        for country in ride.get("countriesVisited", [])
+    }
+    # Each check completes the country immediately before it, in description order.
+    for segment in description.split("✅")[:-1]:
+        matches = extract_terms_from_text(segment, aliases)
+        if matches and matches[-1] not in countries:
+            countries.append(matches[-1])
+    return [*ordered_cantons, *countries[:extra_checks]]
+
+
 def sync_summit_photos(
     *,
     activity: Dict[str, Any],
@@ -638,8 +657,8 @@ def sync_summit_photos(
     summit_pictures_dir: Path,
     dry_run: bool,
 ) -> Dict[str, str]:
-    cantons = ride.get("cantons")
-    if not isinstance(cantons, list) or not cantons:
+    regions = extract_photo_regions(activity, ride)
+    if not regions:
         return {}
 
     photo_urls = extract_activity_photo_urls(activity, activity_photos)
@@ -649,7 +668,7 @@ def sync_summit_photos(
     activity_id = int(activity["id"])
     summit_photo_paths: Dict[str, str] = {}
 
-    for raw_canton_name, photo_url in zip(cantons, photo_urls):
+    for raw_canton_name, photo_url in zip(regions, photo_urls):
         canton_name = str(raw_canton_name or "").strip()
         if not canton_name:
             continue
@@ -865,8 +884,9 @@ def build_featured_riders(rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             group["_seen_ride_keys"].add(ride_entry_key)
             group["rides"].append(ride_entry)
             group["rideCount"] += 1
-            group["distanceKm"] += float(ride.get("distanceKm") or 0.0)
-            group["elevationM"] += round(float(ride.get("elevationM") or 0.0))
+            rider_stats = ride.get("featuredRiderStats", {}).get(rider_name, {})
+            group["distanceKm"] += float(rider_stats.get("distanceKm", ride.get("distanceKm")) or 0.0)
+            group["elevationM"] += round(float(rider_stats.get("elevationM", ride.get("elevationM")) or 0.0))
 
             ride_cantons = ride.get("cantons")
             if isinstance(ride_cantons, list):
@@ -1057,7 +1077,8 @@ def main() -> int:
         ride_cantons = ride.get("cantons")
         activity_photos: List[Dict[str, Any]] = []
         photo_count = extract_activity_photo_count(activity)
-        if isinstance(ride_cantons, list) and ride_cantons and (len(ride_cantons) > 1 or photo_count > 1):
+        photo_regions = extract_photo_regions(activity, ride)
+        if photo_regions and (len(photo_regions) > 1 or photo_count > 1):
             try:
                 activity_photos = fetch_activity_photos(access_token, activity_id)
             except Exception as error:  # noqa: BLE001

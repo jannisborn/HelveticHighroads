@@ -71,7 +71,7 @@ Already tracked Strava ride IDs are skipped on later syncs; once imported, the l
 If different Strava activity IDs use the same `Stage N` title, the sync keeps the more complete record and stores the discarded IDs in `data/state.json` so they are not imported again.
 It also fills `countriesVisited` by scanning title + description and mapping German country names to English (for example `Deutschland` -> `Germany`, `Schweiz` -> `Switzerland`).
 It also extracts fellow riders from a `Featuring:` block in the description. Use a comma-separated list and end it with either a period or a line break, for example `Featuring: First Last, Second Rider.`.
-If a matched ride has Strava photos, the sync downloads summit photos into `assets/summit_pictures/` and links them to canton summit cards automatically. For a ride with `k` cantons, the first `k` Strava photos are assigned to the `k` cantons in the order in which their names appear in the activity title and description.
+If a matched ride has Strava photos, the sync downloads summit photos into `assets/summit_pictures/`. Photos follow description order: cantons first, then completed countries. Extra green checks beyond the canton count identify country completions; their photos are stored in `summitPhotoPaths` alongside canton photos.
 If no country is mentioned, it defaults to `Switzerland`.
 If incremental sync finds no tagged rides, the script retries a full lookback (bounded by `--max-pages`) automatically.
 `profileEndKm` is an optional exact route-progress anchor. If a later synced ride has no anchor, the elevation profile advances from the latest anchor by the later ride distance instead of remaining frozen.

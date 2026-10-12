@@ -233,7 +233,7 @@ function buildSummitPhotoItems() {
     return {
       kind: "country",
       region: country,
-      photo: ride ? buildSummitPhotoPath(country, ride.date) : FALLBACK_SUMMIT_PHOTO,
+      photo: ride?.summitPhotoPaths?.[country] || (ride ? buildSummitPhotoPath(country, ride.date) : FALLBACK_SUMMIT_PHOTO),
       date: ride ? ride.date : undefined,
       order: index + 1,
       ride: ride ? ride.stravaUrl : undefined
