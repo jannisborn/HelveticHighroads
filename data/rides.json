@@ -254,5 +254,27 @@
       "Austria": "assets/summit_pictures/20545059066-austria.jpg"
     },
     "primaryPhotoPath": "assets/summit_pictures/20545059066-graubunden.jpg"
+  },
+  {
+    "name": "🏔️🚴‍♂️ Helvetic Highroads Stage 13: Landeck ➡️ Urnäsch",
+    "date": "2026-10-31",
+    "distanceKm": 148.14,
+    "elevationM": 2813,
+    "cantons": [
+      "Appenzell Innerrhoden",
+      "St. Gallen"
+    ],
+    "countriesVisited": [
+      "Liechtenstein"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/20806776692",
+    "stravaActivityId": 20806776692,
+    "polyline": "ktw~G{}p_AlObo@v_@b`@_K`PtJ~l@yDfR~@p_AnMzw@~KrPvCj|@zKnU}E`[hWx`@d@jYfLz`@`OiAvX~JtHhGdJ~ZcBdy@eMjYaE|h@kLza@qKtNmIjk@qPhwC_b@xx@sSnIko@jm@wLba@j@l_@sFty@aKx\\dDrj@gFt\\tMjdA{Fh]t@lP|I|QhB`^dM|l@uC~f@lB~\\lXj]SdkAnSvfC|Ibb@dR~PnAnc@|RpPr^nu@yAxGvTtx@}BjQbFj\\Qb\\~FdYbLdFpJpaAtK`C~DnJ_B|Ku{@~i@iM`Agl@~n@aQ|fCpAji@sJrYyBfq@_GyArHjGzDoHwCbNlH[iGvC`CnBcJo@vCdIiEwDkBfEzO~^rSxwAnHbaBtIrRmE`b@xEfHdJ~{@TbZkKp\\vDji@cBpeAhDhP_Cjk@hCt^iKfdA~Wxr@]zbAjMnu@Cvn@tKxL`Mn|CmF|_@ya@~z@y@~aBgYx`AoVh~AqDBeUlk@}VtdAtAvLgKh{BrAncAvM~jAmCxTMpyEiy@|aA{H~WfClFkPd\\N~Mis@rbBtDvJChVcIo@_Txx@kDzp@wJmPkX~aGoGaAmjAreBoFdJiLzTuRluBrDlCuPtsAwIaBeNnZ}AnIdCnCeMlAwL~Mi@dTcf@l~@rHpLwaAnwBuJxlBhAr_@yDtS_IjM_PTsLpS}QlHQ`NmRfOz@xQmcBzcAnA`x@nRxeAhp@xkA{Pns@dVzpAqMfh@|CrAivBy_Ae}@sHeh@}jAeMiIeJ~As_Abc@`EdJuLgLeFxNkMNwVel@wHiF|JpYPn_AgHgf@gIuO~BzTaFfj@tD~UhIjKeDxBiM{MrEb[yIyCjB|FkItH~KoBUdIwCWvAfFeO~E`GgBtB|FaEzt@vMnTnMkSB`SvNlMeGfGJtL`FgA|I~Wi@cWtHfUfNE~@`VbWzChH}LXtHaCbDjByMmH`M}VcDkC_FbAyNiN?mHeUj@bWsI}WiFlAG}LlGyF}NgMWaTeLfSuEqAuGgR`E_m@}BaNmXp_@Jx[oTlH^fTeDlDkTeImRvE_BjDaQ{I|JKxKej@eaAru@pEdg@gKbk@lQjdAqIxm@xa@|`DoTf}Bx@xQqM|g@aCv`@a@|eAiRh~@f@nYlOzs@m@nv@fMbpAb`@`p@vSzk@dErn@kGdj@lDhX}Ens@nFve@qB`x@tU~W`D~c@tRhI",
+    "summitPhotoPaths": {
+      "Appenzell Innerrhoden": "assets/summit_pictures/20806776692-appenzell-innerrhoden.jpg",
+      "St. Gallen": "assets/summit_pictures/20806776692-st-gallen.jpg",
+      "Liechtenstein": "assets/summit_pictures/20806776692-liechtenstein.jpg"
+    }
   }
 ]
