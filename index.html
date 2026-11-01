@@ -22,6 +22,7 @@
 <body>
   <div class="bg-noise" aria-hidden="true"></div>
 
+  <div class="sticky-celebration">
   <header class="topbar shell">
     <a class="brand" href="#">
       <span class="brand-dot" aria-hidden="true"></span>
@@ -37,7 +38,41 @@
     </nav>
   </header>
 
+    <section class="celebration shell" aria-labelledby="celebration-title" tabindex="0">
+      <h2 id="celebration-title">Helvetic Highroads 2026 is done!</h2>
+      <p class="celebration-message">What a ride! Thank you to everyone who joined us along the way.</p>
+      <!-- Replace the dashes with your final numbers and edit the message above. -->
+      <dl class="celebration-stats">
+        <div><dt>Average speed</dt><dd>23.2 km/h</dd></div>
+        <div><dt>Hours of riding</dt><dd>86 h</dd></div>
+        <div><dt>Total calories</dt><dd>101,000 kcal</dd></div>
+        <div><dt>Sugar consumed</dt><dd>6.9 kg</dd></div>
+        <div><dt>Total wheel rotations</dt><dd>959,000</dd></div>
+        <div><dt>Total pedal strokes</dt><dd>700,000</dd></div>
+        <div><dt>Flat tires</dt><dd>1</dd></div>
+        <div title="Based on about 34 L per four-minute shower"><dt>Total Sweat</dt><dd>104 L<br>(3 showers)</dd></div>
+        <div><dt>Gasoline equivalent</dt><dd>12.5 L<br>(0.3 L / 100 km)</dd></div>
+        <div title="Estimated per person from Zürich HB, with a return and outbound trip at each stage stop."><dt>Train distance</dt><dd>3,200 km</dd></div>
+        <div class="stat-detail"><dt>3 hardest climbs <a href="https://inrng.com/2015/07/tour-climbs-category-formula/" target="_blank" rel="noopener noreferrer" aria-label="How climb difficulty is scored">ⓘ</a></dt><dd>1. Kamor (1,246)<br>2. Stelvio (1,110)<br>3. Nufenen (933)</dd></div>
+        <div id="best-view-stat"><dt>Best view</dt><dd><a href="#chasseral-view">Chasseral</a></dd></div>
+        <div class="stat-detail stat-detail-long"><dt>Longest distance between peaks</dt><dd>223 km<br>Umbrail (GR) – Kamor (AI)</dd></div>
+        <div class="stat-detail"><dt>Shortest distance between peaks</dt><dd>0 m<br>Nufenen (TI / VS)</dd></div>
+      </dl>
+    </section>
+  </div>
+
   <main class="shell">
+    <section class="rider-photos" aria-label="The riders">
+      <figure>
+        <img src="./assets/jannis.jpg" alt="Jannis holding his bike aloft on a mountain road">
+        <figcaption>Jannis</figcaption>
+      </figure>
+      <figure>
+        <img src="./assets/mathis.jpg" alt="Mathis holding his bike aloft on a mountain road">
+        <figcaption>Mathis</figcaption>
+      </figure>
+    </section>
+
     <section class="hero">
       <div class="hero-copy">
         <h1>Helvetic Highroads</h1>
@@ -91,8 +126,8 @@
       </p>
       <p>
         Tobi's site:
-        <a href="https://tobiasrenggli.ch/about.html" target="_blank"
-          rel="noopener noreferrer">tobiasrenggli.ch/about.html</a>
+        <a href="https://www.tobiasrenggli.com" target="_blank"
+          rel="noopener noreferrer">tobiasrenggli.com</a>
       </p>
     </section>
 
@@ -153,6 +188,40 @@
       <div id="summit-photos-root" aria-live="polite"></div>
     </section>
 
+    <section class="card climbs-section" aria-labelledby="climbs-title">
+      <h2 id="climbs-title">Top 10 Hardest Climbs <a class="climbs-score-link" href="https://inrng.com/2015/07/tour-climbs-category-formula/" target="_blank" rel="noopener noreferrer" aria-label="How climb difficulty is scored">ⓘ</a></h2>
+      <p class="muted">Score = average gradient (%)² × climb length (km), using the supplied GPX analysis. Climb boundaries affect the scores.</p>
+      <div class="table-wrap">
+        <table class="climbs-table">
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Climb</th>
+              <th scope="col">Stage</th>
+              <th scope="col">Canton</th>
+              <th scope="col">Canton peak?</th>
+              <th scope="col">Distance</th>
+              <th scope="col">Ascent</th>
+              <th scope="col">Gradient</th>
+              <th scope="col">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Kamor / Trestenkopf</td><td>13</td><td>AI / SG</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>12.70 km</td><td>1,258 m</td><td>9.91%</td><td>1,246</td></tr>
+            <tr><td>2</td><td>Stelvio</td><td>12</td><td>GR</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>16.40 km</td><td>1,349 m</td><td>8.23%</td><td>1,110</td></tr>
+            <tr><td>3</td><td>Nufenenpass</td><td>7</td><td>VS / TI</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>13.15 km</td><td>1,108 m</td><td>8.42%</td><td>933</td></tr>
+            <tr><td>4</td><td>Tannensee / Melchsee-Frutt</td><td>9</td><td>OW</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>23.90 km</td><td>1,488 m</td><td>6.23%</td><td>927</td></tr>
+            <tr><td>5</td><td>Wildspitz</td><td>10</td><td>SZ</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>10.25 km</td><td>949 m</td><td>9.26%</td><td>880</td></tr>
+            <tr><td>6</td><td>Glaubenbergpass</td><td>10</td><td>LU</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>14.35 km</td><td>1,057 m</td><td>7.37%</td><td>779</td></tr>
+            <tr><td>7</td><td>Ächerlipass</td><td>9</td><td>NW</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>7.80 km</td><td>746 m</td><td>9.56%</td><td>713</td></tr>
+            <tr><td>8</td><td>Gotthardpass (Airolo)</td><td>7</td><td>TI / UR</td><td><span class="climb-other"><span aria-hidden="true">🚴</span> No</span></td><td>13.45 km</td><td>943 m</td><td>7.01%</td><td>661</td></tr>
+            <tr><td>9</td><td>Obererbs</td><td>11</td><td>GL</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>6.70 km</td><td>661 m</td><td>9.87%</td><td>653</td></tr>
+            <tr><td>10</td><td>Refuge de Mayen / Leysin</td><td>6</td><td>VD</td><td><span class="climb-peak"><span aria-hidden="true">⛰️</span> Yes</span></td><td>10.60 km</td><td>826 m</td><td>7.79%</td><td>643</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="card climbfinity-section" aria-labelledby="climbfinity-title">
       <div class="climbfinity-copy">
         <div class="climbfinity-brand" aria-label="Climbfinity">Climbfinity</div>
@@ -163,6 +232,28 @@
       <a class="climbfinity-media" href="https://climbfinity.com/products/100-passes-challenge-cycling-scratch-map-switzerland" target="_blank" rel="noopener noreferrer">
         <img src="https://climbfinity.com/cdn/shop/files/product_features_ch.png?v=1766403659&width=1200" alt="Climbfinity 100 Passes Challenge map of Switzerland" loading="lazy">
       </a>
+    </section>
+
+    <section class="card best-view-section" id="chasseral-view" aria-labelledby="best-view-title">
+      <div class="section-head">
+        <h2 id="best-view-title">Best View: Chasseral</h2>
+        <a href="#best-view-stat">Back to the stats ↑</a>
+      </div>
+      <img src="./assets/chasseral.jpg" alt="Panoramic view from Chasseral across lakes and countryside towards the Alps" loading="lazy">
+    </section>
+
+    <section class="card bikes-section" aria-labelledby="bikes-title">
+      <h2 id="bikes-title">The Bikes</h2>
+      <div class="bike-grid">
+        <figure>
+          <img src="./assets/jannis_bike.jpg" alt="Jannis’s Canyon bike with mountain views" loading="lazy">
+          <figcaption><strong>Jannis</strong><br>Canyon Aeroad CF SLX8 Cosmic</figcaption>
+        </figure>
+        <figure>
+          <img src="./assets/mathis_bike.jpg" alt="Mathis’s Specialized bike with mountain views" loading="lazy">
+          <figcaption><strong>Mathis</strong><br>Specialized Tarmac SL8 S-WORKS</figcaption>
+        </figure>
+      </div>
     </section>
   </main>
 

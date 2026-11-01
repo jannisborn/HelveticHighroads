@@ -1,6 +1,7 @@
 {
-  "totalDistanceKm": 2004.475,
-  "totalElevationM": 37746.0,
+  "totalDistanceKm": 2014.183,
+  "totalElevationM": 36837,
+  "preserveRecordedTotals": true,
   "komootTourUrl": "https://www.komoot.com/tour/2745092627?share_token=aMSgEnqZ0U58u6BF6agh7q1F19FuaaKWmipk3lSURDSYrIxkQP&ref=wtd",
   "neighboringCountries": [
     "Germany",

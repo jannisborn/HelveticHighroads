@@ -1,14 +1,14 @@
 [
   {
     "name": "Nina Wiedemann",
-    "rideCount": 2,
+    "rideCount": 3,
     "peakCount": 2,
     "cantons": [
       "Fribourg",
       "Graubünden"
     ],
-    "distanceKm": 295.833,
-    "elevationM": 5989,
+    "distanceKm": 315.833,
+    "elevationM": 6189,
     "rides": [
       {
         "date": "2026-05-02",
@@ -19,6 +19,11 @@
         "date": "2026-10-11",
         "name": "⛰️🚴‍♂️ Helvetic Highroads Stage 12: Zernez ➡️ Landeck (AT)",
         "stravaUrl": "https://www.strava.com/activities/20545059066"
+      },
+      {
+        "date": "2026-11-01",
+        "name": "🏔️🚴‍♂️🇨🇭Helvetic Highroads FINAL STAGE: Urnäsch ➡️ Zurich",
+        "stravaUrl": "https://www.strava.com/activities/20818197449"
       }
     ]
   },

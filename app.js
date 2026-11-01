@@ -1443,6 +1443,35 @@ function decodePolyline(encoded) {
   console.log(latlngs[0], latlngs.at(-1));
 }
 
+function trimRideAtBellevue(points, trimStart) {
+  const bellevue = [47.366945, 8.543183];
+  const lngScale = Math.cos(bellevue[0] * Math.PI / 180);
+  let best = null;
+  const start = trimStart ? 0 : Math.max(0, points.length - 30);
+  const end = trimStart ? Math.min(points.length - 1, 30) : points.length - 1;
+
+  for (let index = start; index < end; index += 1) {
+    const a = points[index];
+    const b = points[index + 1];
+    const lat = b[0] - a[0];
+    const lng = (b[1] - a[1]) * lngScale;
+    const lengthSquared = lat * lat + lng * lng;
+    const fraction = lengthSquared ? clampNumber(
+      ((bellevue[0] - a[0]) * lat + (bellevue[1] - a[1]) * lngScale * lng) / lengthSquared,
+      0, 1
+    ) : 0;
+    const point = [a[0] + fraction * lat, a[1] + fraction * (b[1] - a[1])];
+    const distance = Math.hypot(point[0] - bellevue[0], (point[1] - bellevue[1]) * lngScale);
+    if (!best || distance < best.distance) best = { index, point, distance };
+  }
+
+  // Leave the track intact if its recorded path does not pass close to Bellevue.
+  if (!best || best.distance > 0.001) return points;
+  return trimStart
+    ? [best.point, ...points.slice(best.index + 1)]
+    : [...points.slice(0, best.index + 1), best.point];
+}
+
 
 function initializeLeafletMap() {
   if (leafletMapInstance) return;
@@ -1593,7 +1622,9 @@ function renderStravaRoutesOnLeaflet() {
   rides.forEach((ride, index) => {
     if (!ride.polyline) return;
 
-    const latlngs = decodePolyline(ride.polyline);
+    let latlngs = decodePolyline(ride.polyline);
+    if (Number(ride.stravaActivityId) === 17641922761) latlngs = trimRideAtBellevue(latlngs, true);
+    if (Number(ride.stravaActivityId) === 20818197449) latlngs = trimRideAtBellevue(latlngs, false);
     if (!latlngs || latlngs.length === 0) return;
 
     console.log("Drawing ride", ride.name, latlngs.length);
@@ -1697,5 +1728,67 @@ function setupMapAutoRefresh() {
   }, REFRESH_INTERVAL);
 }
 
+function setupCelebrationConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const colors = ["#fc8f1f", "#2ea85f", "#ffd447", "#ef476f", "#4d96ff", "#9b5de5", "#ffffff"];
+  const stream = document.createElement("div");
+  const pile = document.createElement("div");
+  stream.className = "confetti-stream";
+  pile.className = "confetti-pile";
+  stream.setAttribute("aria-hidden", "true");
+  pile.setAttribute("aria-hidden", "true");
+  document.body.append(stream, pile);
+
+  const edgePosition = () => Math.random() < 0.82
+    ? (Math.random() < 0.5 ? Math.random() * 15 : 85 + Math.random() * 15)
+    : 18 + Math.random() * 64;
+
+  function addFallingPiece(fillScreen = false) {
+    const piece = document.createElement("i");
+    const duration = 7 + Math.random() * 6;
+    piece.className = `confetti-piece${Math.random() < 0.22 ? " confetti-piece--round" : ""}`;
+    piece.style.setProperty("--x", `${edgePosition()}vw`);
+    piece.style.setProperty("--drift", `${-55 + Math.random() * 110}px`);
+    piece.style.setProperty("--spin", `${360 + Math.random() * 1080}deg`);
+    piece.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+    piece.style.animationDuration = `${duration}s`;
+    if (fillScreen) piece.style.animationDelay = `${-Math.random() * duration}s`;
+    piece.addEventListener("animationend", () => piece.remove(), { once: true });
+    stream.append(piece);
+  }
+
+  function addPilePiece() {
+    if (pile.childElementCount >= 90) return;
+    const piece = document.createElement("i");
+    piece.style.left = `${edgePosition()}vw`;
+    piece.style.bottom = `${Math.random() * 18}px`;
+    piece.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+    piece.style.transform = `rotate(${Math.random() * 180}deg)`;
+    pile.append(piece);
+  }
+
+  for (let index = 0; index < 49; index += 1) addFallingPiece(true);
+  for (let index = 0; index < 18; index += 1) addPilePiece();
+
+  let streamTimer;
+  let pileTimer;
+  const start = () => {
+    if (streamTimer || document.hidden) return;
+    streamTimer = setInterval(() => addFallingPiece(), 100);
+    pileTimer = setInterval(addPilePiece, 650);
+  };
+  const stop = () => {
+    clearInterval(streamTimer);
+    clearInterval(pileTimer);
+    streamTimer = null;
+    pileTimer = null;
+  };
+
+  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  start();
+}
+
+setupCelebrationConfetti();
 init();
 setupMapAutoRefresh();

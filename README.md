@@ -18,7 +18,7 @@ Edit the JSON files in [`data/`](./data):
 
 - [`data/rides.json`](./data/rides.json): add one entry per completed ride (date, km, elevation, cantons, Strava URL).
 - [`data/canton-peaks.json`](./data/canton-peaks.json): set `done` to `true` and add `stravaUrl` when a canton peak is completed.
-- [`data/project.json`](./data/project.json): keep route totals aligned with Komoot, set the map tour URL (`komootTourUrl`), and optionally set `komootEmbedLocale` (for example `de-de`, `en-us`).
+- [`data/project.json`](./data/project.json): set the dashboard totals, map tour URL (`komootTourUrl`), and optionally `komootEmbedLocale` (for example `de-de`, `en-us`). `preserveRecordedTotals` keeps the final recorded ride totals when rebuilding the planned route profile.
 - [`data/country-crossings.json`](./data/country-crossings.json): maintain the ordered route border anchors used to generate the country strip under the profile.
 - [`data/route-profile.json`](./data/route-profile.json): generated from the shared Komoot route for the website elevation profile. Rebuild it after route edits.
 - [`data/pass-gallery.json`](./data/pass-gallery.json): update pass cards.
@@ -32,7 +32,7 @@ Generate the simplified whole-route profile JSON from the Komoot tour configured
 uv run scripts/build_route_profile.py
 ```
 
-The builder also synchronizes the Komoot distance/elevation totals in `data/project.json` and recalculates every `profileKm` and `profileWaypointIndex` in `data/canton-peaks.json`.
+The builder also synchronizes Komoot distance/elevation totals in `data/project.json` unless `preserveRecordedTotals` is true, and recalculates every `profileKm` and `profileWaypointIndex` in `data/canton-peaks.json`.
 
 Useful option:
 

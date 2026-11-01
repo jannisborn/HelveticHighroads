@@ -983,7 +983,7 @@ def main() -> int:
     if not isinstance(coordinates, list) or not coordinates:
         raise RuntimeError("Komoot coordinates payload did not include any items.")
 
-    if not project_data_matches_route(project, tour):
+    if not project.get("preserveRecordedTotals") and not project_data_matches_route(project, tour):
         print(
             "Warning: project totals do not exactly match the Komoot tour totals. "
             "Using Komoot as the source of truth.",
@@ -1063,13 +1063,15 @@ def main() -> int:
     }
 
     write_json(args.output, payload)
-    project["totalDistanceKm"] = payload["meta"]["tourDistanceKm"]
-    project["totalElevationM"] = payload["meta"]["tourElevationM"]
-    write_json(args.project, project)
+    if not project.get("preserveRecordedTotals"):
+        project["totalDistanceKm"] = payload["meta"]["tourDistanceKm"]
+        project["totalElevationM"] = payload["meta"]["tourElevationM"]
+        write_json(args.project, project)
     if updated_canton_peaks is not None:
         write_json(args.canton_peaks, updated_canton_peaks)
     print(f"Wrote {args.output}")
-    print(f"Updated route totals in {args.project}")
+    if not project.get("preserveRecordedTotals"):
+        print(f"Updated route totals in {args.project}")
     if updated_canton_peaks is not None:
         print(f"Updated canton peak positions in {args.canton_peaks}")
     print(

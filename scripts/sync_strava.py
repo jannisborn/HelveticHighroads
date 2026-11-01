@@ -888,7 +888,7 @@ def build_featured_riders(rides: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             group["distanceKm"] += float(rider_stats.get("distanceKm", ride.get("distanceKm")) or 0.0)
             group["elevationM"] += round(float(rider_stats.get("elevationM", ride.get("elevationM")) or 0.0))
 
-            ride_cantons = ride.get("cantons")
+            ride_cantons = rider_stats.get("cantons", ride.get("cantons"))
             if isinstance(ride_cantons, list):
                 for raw_canton in ride_cantons:
                     canton = str(raw_canton).strip()
