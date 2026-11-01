@@ -276,5 +276,28 @@
       "St. Gallen": "assets/summit_pictures/20806776692-st-gallen.jpg",
       "Liechtenstein": "assets/summit_pictures/20806776692-liechtenstein.jpg"
     }
+  },
+  {
+    "name": "🏔️🚴‍♂️🇨🇭Helvetic Highroads FINAL STAGE: Urnäsch ➡️ Zurich",
+    "date": "2026-11-01",
+    "distanceKm": 123.366,
+    "elevationM": 2373,
+    "cantons": [
+      "Zürich",
+      "Appenzell Ausserrhoden",
+      "Thurgau"
+    ],
+    "countriesVisited": [
+      "Switzerland"
+    ],
+    "featuredRiders": [],
+    "stravaUrl": "https://www.strava.com/activities/20818197449",
+    "stravaActivityId": 20818197449,
+    "polyline": "w_x_H_tsw@fKfIe@xHbGrE|d@bMzZzCxMjKbKkA`QwWjX{RfYqDxMnM`LJpYg_@pLyf@tHsGbJnBlm@im@NcJyW|M`CmMoH`IbHuW|]}W|Lq[nV~HAcP~EyCiH}f@|Gbf@wEbERnY~QvZvApKkFle@jQbZ`Jnd@xRrj@nTlb@cGxl@_KnS~Dn]yHf\\rMl`AvCx{@cB`RzIlOgBfQtG`^`Bfu@~FvGxHoFm@r[nKnNfMzi@`KhOmP~UcNfFop@`n@k]j|@uEhi@_RfXmL`d@yEnl@uJtSsElb@xC|Z}Av^ii@lj@wu@djAaj@tb@q[tGaAdRpJ|f@hIr@e@`GlWpc@v{@r|Bn@pJfa@ff@`AnVtHbQmExZrGnSjCxn@~SnZdS~p@pP`KfEnLfBji@kJ~OeHpeAvQhn@hIviAnJtLrRtcA|Cr`AgEjRtCbPkDx@iAsEuAxI{TLoB`KwQ{UaGf@wApRuP~EoFb[qKxQ_WdZ}Jz[a@xb@}Vzl@iMfMyi@{`@cAbGe[iWsf@wj@eH{ZvFcKgF_u@_PeXsLwLaBiVqSvVhF|NwFhRyUkHnUhH~FuQeF{N|SwVdApUvL~LxOvWlFpt@oFdGd@dPq[jPuC`Quz@bJsGdYgTxGkJhNiT{WqdAuAaScF{KmOui@eXaQqReV{DwX{[uFm@ei@~g@mMnkAiFpFaLp`AuIpUv@nh@eEbeAwHbLqIgFbDqZ_CcGaFzFeN}f@|@gGiG|HqAvXkIyc@}]u\\aAaPzGgp@qEgFsF~Bg@{IkDqBqDrAqFaR{@cZpGaYe@}TnJ_FaAmV`Gc_@rUc@~E_^{D_CvCVgEra@eUHeGx^`A|VuJhFf@zT_H`a@bBfP_PrTb@hOyJzUbBrM`NzM}GpCwCvU~BkH^lD__@~zAbB`WfR|m@`BtYbRdi@gA|RuS`BoIlSrm@xeApFzg@zNdSsB~OjYdeAoEhcAcLbK_Oxm@cN~X}Flc@cJbJ|B`]kOvIgNvUzDjo@jZpU|FlRqDhc@mWpo@jK|w@vCxp@oIpW]fRxBpO|SnSj@j\\_\\dvBzB`jB{Mvh@}P|qA{IhgCyLpg@vHlOcCno@|If{Al]rZCfOxM[rNkSvOPpElF[n\\gIr[lAlPzHvVzEbAK|W|Sh\\EjOvKtm@^zZ~L|o@~ZpXbJpXoC{D{c@pGqT}G}c@nP{TrD_Rac@",
+    "summitPhotoPaths": {
+      "Appenzell Ausserrhoden": "assets/summit_pictures/20818197449-appenzell-ausserrhoden.jpg",
+      "Zürich": "assets/summit_pictures/20818197449-zurich.jpg",
+      "Thurgau": "assets/summit_pictures/20818197449-thurgau.jpg"
+    }
   }
 ]

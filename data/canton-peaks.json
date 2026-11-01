@@ -258,9 +258,10 @@
     "altitudeM": 1299,
     "profileKm": 1896.608,
     "profileWaypointIndex": 46,
-    "done": false,
+    "done": true,
     "latitude": 47.2558,
-    "longitude": 9.30688
+    "longitude": 9.30688,
+    "stravaUrl": "https://www.strava.com/activities/20818197449"
   },
   {
     "order": 18,
@@ -293,9 +294,10 @@
     "altitudeM": 1196,
     "profileKm": 1943.472,
     "profileWaypointIndex": 48,
-    "done": false,
+    "done": true,
     "latitude": 47.303324,
-    "longitude": 8.943799
+    "longitude": 8.943799,
+    "stravaUrl": "https://www.strava.com/activities/20818197449"
   },
   {
     "order": 26,
@@ -304,8 +306,9 @@
     "altitudeM": 952,
     "profileKm": 1965.671,
     "profileWaypointIndex": 51,
-    "done": false,
+    "done": true,
     "latitude": 47.376752,
-    "longitude": 8.943064
+    "longitude": 8.943064,
+    "stravaUrl": "https://www.strava.com/activities/20818197449"
   }
 ]
